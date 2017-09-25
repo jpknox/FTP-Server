@@ -13,6 +13,7 @@ public class LoginAuthentication {
 	public LoginAuthentication() {
 		users = new ArrayList<String>();
 		users.add("user1");
+		users.add("anonymous");
 	}
 
 	public boolean validate(String username) {
