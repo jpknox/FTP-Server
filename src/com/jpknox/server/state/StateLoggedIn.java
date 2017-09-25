@@ -8,57 +8,54 @@ import com.jpknox.server.authentication.LoginAuthentication;
  */
 public class StateLoggedIn implements SessionState {
 
-	FTPServer context;
-	private final LoginAuthentication loginAuthentication = new LoginAuthentication();
-
-	public StateLoggedIn(FTPServer ftpServer) {
-		this.context = ftpServer;
+	public StateLoggedIn() {
 	}
 
 	@Override
-	public int user(String username) {
+	public int user(FTPServer context, String username) {
 		context.log("Client attempting to login whilst already logged in.");
 		context.sendToClient("You are already logged in.");
 		return 0;
 	}
 
 	@Override
-	public int quit() {
+	public int quit(FTPServer context) {
 		return 0;
 	}
 
 	@Override
-	public int port(int portToUse) {
+	public int port(FTPServer context, int portToUse) {
 		return 0;
 	}
 
 	@Override
-	public int type(String format) {
+	public int type(FTPServer context, String format) {
 		return 0;
 	}
 
 	@Override
-	public int mode(String modeToUse) {
+	public int mode(FTPServer context, String modeToUse) {
 		return 0;
 	}
 
 	@Override
-	public int stru(String structureToUse) {
+	public int stru(FTPServer context, String structureToUse) {
 		return 0;
 	}
 
 	@Override
-	public int retr(String pathToFile) {
+	public int retr(FTPServer context, String pathToFile) {
 		return 0;
 	}
 
 	@Override
-	public int stor(String pathToFile) {
+	public int stor(FTPServer context, String pathToFile) {
 		return 0;
 	}
 
 	@Override
-	public int noop() {
+	public int noop(FTPServer context) {
 		return 0;
 	}
+
 }

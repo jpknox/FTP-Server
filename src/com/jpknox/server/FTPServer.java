@@ -7,6 +7,9 @@ import com.jpknox.server.state.SessionState;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Created by joaok on 24/09/2017.
@@ -14,15 +17,14 @@ import java.net.Socket;
 public class FTPServer {
 
 	private SessionState currentState;
-	private SessionState notLoggedIn;
-	private SessionState loggedIn;
 	private ServerSocket serverSocket;
 	private Socket clientConnection;
 	private BufferedReader input;
 	private PrintWriter output;
+	private String clientName = "client";
 
 	public FTPServer() {
-		this.currentState = new StateNotLoggedIn(this);
+		this.currentState = new StateNotLoggedIn();
 		log("server starting up.");
 		try {
 			this.serverSocket = new ServerSocket(21);
@@ -37,22 +39,24 @@ public class FTPServer {
 			this.input = new BufferedReader(new InputStreamReader(this.clientConnection.getInputStream()));
 			this.output = new PrintWriter(new OutputStreamWriter(this.clientConnection.getOutputStream()));
 
+			output.write("\r\n");
+			output.flush();
+
 			String dataFromClient = null;
 			String dataToClient = null;
 			while (true) {
 				dataFromClient = input.readLine();
-				log("client said: \"" + dataFromClient + "\".");
+				log(clientName + ": " + dataFromClient);
 				dataToClient = "Echo: " + dataFromClient;
 				output.write(dataToClient + "\r\n");
 				output.flush();
-				log("sent to client: " + dataToClient);
 
 				if (dataFromClient.length() > 5 && dataFromClient.substring(0, 5).equals("USER ")) {
-					log("Username: " + dataFromClient.substring(5, dataFromClient.length()));
-					currentState.user(dataFromClient.substring(5, dataFromClient.length())); //Extract username
+//					log("Username: " + dataFromClient.substring(5, dataFromClient.length()));
+					currentState.user(this, dataFromClient.substring(5, dataFromClient.length())); //Extract username
 				}
 				if (dataFromClient.equals("quit")) {
-					log("client disconnected.");
+					log(clientName + " disconnected.");
 					break;
 				}
 			}
@@ -69,16 +73,10 @@ public class FTPServer {
 		return 0;
 	}
 
-	public SessionState getNotLoggedIn() {
-		return notLoggedIn != null ? notLoggedIn : (notLoggedIn = new StateNotLoggedIn(this));
-	}
-
-	public SessionState getLoggedIn() {
-		return loggedIn != null ? loggedIn : (loggedIn = new StateLoggedIn(this));
-	}
-
 	public int log(String text) {
-		System.out.println("Log: " + text);
+		DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+		Date date = new Date();
+		System.out.println(dateFormat.format(date) + ":\t" + text);
 		return 0;
 	}
 
@@ -86,5 +84,13 @@ public class FTPServer {
 		output.write(text);
 		output.flush();
 		return 0;
+	}
+
+	public String getClientName() {
+		return clientName;
+	}
+
+	public void setClientName(String clientName) {
+		this.clientName = clientName;
 	}
 }
