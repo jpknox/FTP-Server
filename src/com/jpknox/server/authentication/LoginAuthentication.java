@@ -8,15 +8,26 @@ import java.util.List;
  */
 public class LoginAuthentication {
 
-	List<String> users;
+    List<String> users;
+    List<String> passwords;
 
-	public LoginAuthentication() {
-		users = new ArrayList<String>();
-		users.add("user1");
-		users.add("anonymous");
-	}
+    public LoginAuthentication() {
+        users = new ArrayList<String>();
+        users.add("user1");
+        users.add("anonymous");
+        passwords = new ArrayList<String>();
+        passwords.add("pass1");
+    }
 
-	public boolean validate(String username) {
-		return users.contains(username);
-	}
+    public boolean doesExist(String username) {
+        return users.contains(username);
+    }
+
+    public boolean hasPassword(String username) {
+        return true;
+    }
+
+    public boolean doesExist(String username, String password) {
+        return users.contains(username) && passwords.contains(password); //TODO: add password validation
+    }
 }

@@ -39,7 +39,7 @@ public class FTPServer {
 			this.input = new BufferedReader(new InputStreamReader(this.clientConnection.getInputStream()));
 			this.output = new PrintWriter(new OutputStreamWriter(this.clientConnection.getOutputStream()));
 
-			output.write("220 - Welcome to Jay's FTP Server!\r\n");
+			output.write("220 Welcome to Jay's FTP Server!\r\n");
 			output.flush();
 
 			String dataFromClient = null;
@@ -65,6 +65,10 @@ public class FTPServer {
 //					log("Username: " + dataFromClient.substring(5, dataFromClient.length()));
 					currentState.user(this, dataFromClient.substring(5, dataFromClient.length())); //Extract username
 				}
+                if (dataFromClient.length() > 5 && dataFromClient.substring(0, 5).toUpperCase().equals("PASS ")) {
+//					log("Username: " + dataFromClient.substring(5, dataFromClient.length()));
+                    currentState.pass(this, dataFromClient.substring(5, dataFromClient.length())); //Extract username
+                }
 				if (dataFromClient.equals("quit")) {
 					log(clientName + " disconnected.");
 					break;
@@ -97,6 +101,7 @@ public class FTPServer {
 	}
 
 	public int setState(SessionState nextState) {
+        log("switch from: " + this.currentState.getClass().getSimpleName() + " to " + nextState.getClass().getSimpleName() + ".");
 		this.currentState = nextState;
 		return 0;
 	}

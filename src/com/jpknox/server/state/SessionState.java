@@ -8,6 +8,7 @@ import com.jpknox.server.FTPServer;
 public interface SessionState {
 
     int user(FTPServer context, String username);          	//Login username
+    int pass(FTPServer context, String password);           //Login password
     int quit(FTPServer context);                         	//Disconnect
     int port(FTPServer context, int portToUse);				//Data connection port
     int type(FTPServer context, String format);            	//Representation type (Default: ASCII non-print)
