@@ -24,7 +24,7 @@ public class LoginAuthentication {
     }
 
     public boolean hasPassword(String username) {
-        return true;
+        return true;                                                    //TODO: Add password detection
     }
 
     public boolean doesExist(String username, String password) {
