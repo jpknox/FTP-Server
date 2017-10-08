@@ -57,13 +57,13 @@ public class LoginAuthenticationTest {
     }
 
     @Test
-    public void testUserHasPasswordTrue() {
+    public void testUserHasPassword() {
         boolean hasPassword = loginAuthentication.hasPassword("user1");
         assertTrue(hasPassword);
     }
 
     @Test
-    public void testUserHasPasswordFalse() {
+    public void testNonexistentUserHasNoPassword() {
         boolean hasPassword = loginAuthentication.hasPassword("userNoPwd");
         assertFalse(hasPassword);
     }
