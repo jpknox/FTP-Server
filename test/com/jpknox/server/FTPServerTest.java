@@ -127,6 +127,39 @@ public class FTPServerTest {
         assertEquals(StateNotLoggedIn.class.getSimpleName(), state);
     }
 
+    @Test
+    public void testCannotReenterPassword() throws IOException {
+        sendLine("USER user1");
+        sendLine("PASS badPassword");
+        sendLine("PASS badPassword");
+        sendLine("quit");
+        ftpServer = new FTPServer(mockServerSocket);
+        String state = ftpServer.getState();
+        assertTrue(serverOutputReader.readLine().equals("220 Welcome to Jay's FTP Server!"));
+        assertTrue(serverOutputReader.readLine().equals("331 User name okay, need password."));
+        assertTrue(serverOutputReader.readLine().equals("530 Not logged in."));
+        assertTrue(serverOutputReader.readLine().equals("503 Bad sequence of commands."));
+        assertEquals(StateNotLoggedIn.class.getSimpleName(), state);
+    }
+
+    @Test
+    public void testStateLoggedInAfterOneFailedAttempt() throws IOException {
+        sendLine("USER user1");
+        sendLine("PASS badPassword");
+        sendLine("PASS badPassword");
+        sendLine("USER user1");
+        sendLine("PASS pass1");
+        sendLine("quit");
+        ftpServer = new FTPServer(mockServerSocket);
+        String state = ftpServer.getState();
+        assertTrue(serverOutputReader.readLine().equals("220 Welcome to Jay's FTP Server!"));
+        assertTrue(serverOutputReader.readLine().equals("331 User name okay, need password."));
+        assertTrue(serverOutputReader.readLine().equals("530 Not logged in."));
+        assertTrue(serverOutputReader.readLine().equals("503 Bad sequence of commands."));
+        assertTrue(serverOutputReader.readLine().equals("331 User name okay, need password."));
+        assertTrue(serverOutputReader.readLine().equals("230 User1 logged in, proceed."));
+        assertEquals(StateLoggedIn.class.getSimpleName(), state);
+    }
 
     //TODO: TDD for scenario of missing parameters e.g. "PASS " instead of "PASS password"
     //TODO: TDD for illegal/missing/too short command/message given to server
