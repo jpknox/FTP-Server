@@ -6,5 +6,5 @@ package com.jpknox.server;
 public class FTPServerConfig {
 
     public static final String SERVER_NAME = "Jay's FTP Server V1.0";
-    public static final String OPERATING_SYSTEM = System.getProperty("os.type");
+    public static final String OPERATING_SYSTEM = System.getProperty("os.name");
 }
