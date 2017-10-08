@@ -12,14 +12,17 @@ public class LoginAuthentication {
     List<String> passwords;
 
     public LoginAuthentication() {
-        users = new ArrayList<String>();
-        users.add("user1");
-        users.add("anonymous");
+        this.users = new ArrayList<String>();
+        this.users.add("user1");
+        this.users.add("anonymous");
         passwords = new ArrayList<String>();
         passwords.add("pass1");
     }
 
-    public boolean doesExist(String username) {
+    public LoginAuthentication(List<Account> initialUsers) {
+    }
+
+    public boolean authenticate(String username) {
         return users.contains(username);
     }
 
@@ -27,7 +30,7 @@ public class LoginAuthentication {
         return true;                                                    //TODO: Add password detection
     }
 
-    public boolean doesExist(String username, String password) {
+    public boolean authenticate(String username, String password) {
         return users.contains(username) && passwords.contains(password); //TODO: add password validation
     }
 }

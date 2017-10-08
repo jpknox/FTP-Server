@@ -13,7 +13,7 @@ public class LoginService {
     LoginAuthentication loginAuthentication = new LoginAuthentication();
 
     public int login(FTPServer context, String username) {
-        if (loginAuthentication.doesExist(username)) {
+        if (loginAuthentication.authenticate(username)) {
             if(!loginAuthentication.hasPassword(username)) {
                 context.setState(new StateLoggedIn());
                 context.log("Username \"" + username + "\" logged in.");
@@ -31,7 +31,7 @@ public class LoginService {
     }
 
     public int login(FTPServer context, String username, String password) {
-        if (loginAuthentication.doesExist(username, password)) {
+        if (loginAuthentication.authenticate(username, password)) {
             context.setState(new StateLoggedIn());
             context.sendToClient("230 User logged in, proceed.");
         } else {
