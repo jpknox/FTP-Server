@@ -88,18 +88,18 @@ public class FTPServerTest {
         String state = ftpServer.getState();
         assertTrue(serverOutputReader.readLine().equals("220 Welcome to Jay's FTP Server!"));
         assertTrue(serverOutputReader.readLine().equals("331 User name okay, need password."));
-        assertTrue(serverOutputReader.readLine().equals("230 User logged in, proceed."));
+        assertTrue(serverOutputReader.readLine().equals("230 User1 logged in, proceed."));
         assertEquals(StateLoggedIn.class.getSimpleName(), state);
     }
 
     @Test
     public void testStateLoggedInWithNoPassword() throws IOException {
-        sendLine("USER user1");
+        sendLine("USER anonymous");
         sendLine("quit");
         ftpServer = new FTPServer(mockServerSocket);
         String state = ftpServer.getState();
         assertTrue(serverOutputReader.readLine().equals("220 Welcome to Jay's FTP Server!"));
-        assertTrue(serverOutputReader.readLine().equals("230 User logged in, proceed."));
+        assertTrue(serverOutputReader.readLine().equals("230 Anonymous logged in, proceed."));
         assertEquals(StateLoggedIn.class.getSimpleName(), state);
     }
 

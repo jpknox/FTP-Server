@@ -8,29 +8,37 @@ import java.util.List;
  */
 public class LoginAuthentication {
 
-    List<String> users;
-    List<String> passwords;
+    List<Account> accounts;
 
     public LoginAuthentication() {
-        this.users = new ArrayList<String>();
-        this.users.add("user1");
-        this.users.add("anonymous");
-        passwords = new ArrayList<String>();
-        passwords.add("pass1");
+        this.accounts = new ArrayList<Account>();
+        this.accounts.add(new Account("user1", "pass1"));
+        this.accounts.add(new Account("anonymous"));
     }
 
     public LoginAuthentication(List<Account> initialUsers) {
+        accounts = initialUsers;
     }
 
     public boolean authenticate(String username) {
-        return users.contains(username);
+        for (Account accnt : accounts) {
+            if (accnt.getUsername().equals(username)) return true;
+        }   return false;
     }
 
     public boolean hasPassword(String username) {
-        return true;                                                    //TODO: Add password detection
+        if (username.length() == 0 || username.equals(null)) return false;
+        for (Account accnt : accounts) {
+            if (accnt.getUsername().equals(username)) return accnt.hasPassword();
+        }   return false;
     }
 
     public boolean authenticate(String username, String password) {
-        return users.contains(username) && passwords.contains(password); //TODO: add password validation
+        if (username.length() == 0 || username.equals(null) ||
+            password.length() == 0 || password.equals(null)) return false;
+        for (Account accnt : accounts) {
+            if (accnt.getUsername().equals(username) && accnt.getPassword().equals(password)) return true;
+            //TODO: Override Account's equals method
+        }   return false;
     }
 }

@@ -33,7 +33,9 @@ public class Account {
         return password;
     }
 
-    public boolean isHasPassword() {
+    public boolean hasPassword() {
         return hasPassword;
     }
+
+    //TODO: Override equals method (and maybe also hashcode)
 }

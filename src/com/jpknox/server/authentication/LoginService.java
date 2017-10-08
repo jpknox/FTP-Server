@@ -18,7 +18,7 @@ public class LoginService {
                 context.setState(new StateLoggedIn());
                 context.log("Username \"" + username + "\" logged in.");
                 context.setClientName(username);    //TODO: what if the client changes, and fails to login?
-                context.sendToClient("230 " + username + " logged in, proceed.");
+                context.sendToClient("230 " + firstCharUpper(username) + " logged in, proceed.");
             } else {
                 context.setState(new StateNeedPassword(username));
                 context.sendToClient("331 User name okay, need password.");
@@ -33,7 +33,7 @@ public class LoginService {
     public int login(FTPServer context, String username, String password) {
         if (loginAuthentication.authenticate(username, password)) {
             context.setState(new StateLoggedIn());
-            context.sendToClient("230 User logged in, proceed.");
+            context.sendToClient("230 "+ firstCharUpper(username) + " logged in, proceed.");
         } else {
             context.setState(new StateNotLoggedIn());
             context.sendToClient("530 Not logged in.");
@@ -41,4 +41,7 @@ public class LoginService {
         return 0;
     }
 
+    public String firstCharUpper(String username) {
+        return username.substring(0, 1).toUpperCase() + username.substring(1);
+    }
 }
