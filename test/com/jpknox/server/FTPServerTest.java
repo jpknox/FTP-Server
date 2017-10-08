@@ -23,7 +23,7 @@ public class FTPServerTest {
 
     public static final String NEWLINE = System.getProperty("line.separator");
 
-    FTPServer ftpServer;
+    private FTPServer ftpServer;
     private ServerSocket mockServerSocket;
     private Socket mockSocket;
     private PipedOutputStream serverInputWriter;
@@ -37,11 +37,13 @@ public class FTPServerTest {
         mockServerSocket = Mockito.mock(ServerSocket.class);
         mockSocket = Mockito.mock(Socket.class);
         when(mockServerSocket.accept()).thenReturn(mockSocket);
+
+        //To send data to the server
         serverInputWriter = new PipedOutputStream();
         serverInputStream = new PipedInputStream(serverInputWriter);
         when(mockSocket.getInputStream()).thenReturn(serverInputStream);
 
-        //TODO: Read what the socket/client is sent in response to its messages
+        //To read data sent by the server
         serverOutputStream = new PipedOutputStream();
         serverOutputInputStream = new PipedInputStream();
         serverOutputStream.connect(serverOutputInputStream);
@@ -93,12 +95,10 @@ public class FTPServerTest {
     @Test
     public void testStateLoggedInWithNoPassword() throws IOException {
         sendLine("USER user1");
-        sendLine("PASS pass1");
         sendLine("quit");
         ftpServer = new FTPServer(mockServerSocket);
         String state = ftpServer.getState();
         assertTrue(serverOutputReader.readLine().equals("220 Welcome to Jay's FTP Server!"));
-        assertTrue(serverOutputReader.readLine().equals("331 User name okay, need password."));
         assertTrue(serverOutputReader.readLine().equals("230 User logged in, proceed."));
         assertEquals(StateLoggedIn.class.getSimpleName(), state);
     }
@@ -126,6 +126,11 @@ public class FTPServerTest {
         assertTrue(serverOutputReader.readLine().equals("530 Not logged in."));
         assertEquals(StateNotLoggedIn.class.getSimpleName(), state);
     }
+
+
+    //TODO: TDD for scenario of missing parameters e.g. "PASS " instead of "PASS password"
+    //TODO: TDD for illegal/missing/too short command/message given to server
+            // Command out of sequence
 
     private void sendLine(String txt) {
         try {
