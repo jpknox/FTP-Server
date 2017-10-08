@@ -85,10 +85,10 @@ public class FTPServerTest {
         sendLine("PASS pass1");
         sendLine("quit");
         ftpServer = new FTPServer(mockServerSocket);
-        String state = ftpServer.getState();
         assertTrue(serverOutputReader.readLine().equals("220 Welcome to Jay's FTP Server!"));
         assertTrue(serverOutputReader.readLine().equals("331 User name okay, need password."));
         assertTrue(serverOutputReader.readLine().equals("230 User1 logged in, proceed."));
+        String state = ftpServer.getState();
         assertEquals(StateLoggedIn.class.getSimpleName(), state);
     }
 
@@ -97,9 +97,9 @@ public class FTPServerTest {
         sendLine("USER anonymous");
         sendLine("quit");
         ftpServer = new FTPServer(mockServerSocket);
-        String state = ftpServer.getState();
         assertTrue(serverOutputReader.readLine().equals("220 Welcome to Jay's FTP Server!"));
         assertTrue(serverOutputReader.readLine().equals("230 Anonymous logged in, proceed."));
+        String state = ftpServer.getState();
         assertEquals(StateLoggedIn.class.getSimpleName(), state);
     }
 
@@ -108,9 +108,9 @@ public class FTPServerTest {
         sendLine("USER user1");
         sendLine("quit");
         ftpServer = new FTPServer(mockServerSocket);
-        String state = ftpServer.getState();
         assertTrue(serverOutputReader.readLine().equals("220 Welcome to Jay's FTP Server!"));
         assertTrue(serverOutputReader.readLine().equals("331 User name okay, need password."));
+        String state = ftpServer.getState();
         assertEquals(StateNeedPassword.class.getSimpleName(), state);
     }
 
@@ -120,10 +120,10 @@ public class FTPServerTest {
         sendLine("PASS badPassword");
         sendLine("quit");
         ftpServer = new FTPServer(mockServerSocket);
-        String state = ftpServer.getState();
         assertTrue(serverOutputReader.readLine().equals("220 Welcome to Jay's FTP Server!"));
         assertTrue(serverOutputReader.readLine().equals("331 User name okay, need password."));
         assertTrue(serverOutputReader.readLine().equals("530 Not logged in."));
+        String state = ftpServer.getState();
         assertEquals(StateNotLoggedIn.class.getSimpleName(), state);
     }
 
@@ -134,11 +134,11 @@ public class FTPServerTest {
         sendLine("PASS badPassword");
         sendLine("quit");
         ftpServer = new FTPServer(mockServerSocket);
-        String state = ftpServer.getState();
         assertTrue(serverOutputReader.readLine().equals("220 Welcome to Jay's FTP Server!"));
         assertTrue(serverOutputReader.readLine().equals("331 User name okay, need password."));
         assertTrue(serverOutputReader.readLine().equals("530 Not logged in."));
         assertTrue(serverOutputReader.readLine().equals("503 Bad sequence of commands."));
+        String state = ftpServer.getState();
         assertEquals(StateNotLoggedIn.class.getSimpleName(), state);
     }
 
@@ -151,13 +151,13 @@ public class FTPServerTest {
         sendLine("PASS pass1");
         sendLine("quit");
         ftpServer = new FTPServer(mockServerSocket);
-        String state = ftpServer.getState();
         assertTrue(serverOutputReader.readLine().equals("220 Welcome to Jay's FTP Server!"));
         assertTrue(serverOutputReader.readLine().equals("331 User name okay, need password."));
         assertTrue(serverOutputReader.readLine().equals("530 Not logged in."));
         assertTrue(serverOutputReader.readLine().equals("503 Bad sequence of commands."));
         assertTrue(serverOutputReader.readLine().equals("331 User name okay, need password."));
         assertTrue(serverOutputReader.readLine().equals("230 User1 logged in, proceed."));
+        String state = ftpServer.getState();
         assertEquals(StateLoggedIn.class.getSimpleName(), state);
     }
 
