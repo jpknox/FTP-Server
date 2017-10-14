@@ -19,7 +19,7 @@ import static org.mockito.Mockito.when;
 /**
  * Created by JoaoPaulo on 08-Oct-17.
  */
-public class FTPServerTest {
+public class FTPServerIntegrationTest {
 
     public static final String NEWLINE = System.getProperty("line.separator");
 

@@ -8,11 +8,8 @@ import java.io.File;
 public class FileManager {
 
     private static FileManager instance;
-    File rootNode = new File("resources");
-    File displayNode = new File(rootNode.toString());
-
-    private FileManager() {
-    }
+    private File rootNode = new File("resources");
+    private File displayNode = new File(rootNode.toString());
 
     public static FileManager getInstance() {
         if (instance == null) {

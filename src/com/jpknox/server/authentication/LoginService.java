@@ -14,6 +14,13 @@ public class LoginService {
 
     LoginAuthentication loginAuthentication = new LoginAuthentication();
 
+    public LoginService() {
+    }
+
+    public LoginService(LoginAuthentication loginAuthentication) {
+        this.loginAuthentication = loginAuthentication;
+    }
+
     public String login(ClientSession context, String username) {
         if (loginAuthentication.usernameExists(username)) {
             if(!loginAuthentication.hasPassword(username)) {
