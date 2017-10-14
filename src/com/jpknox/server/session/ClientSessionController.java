@@ -25,30 +25,30 @@ public class ClientSessionController {
 
     public void start() {
         try {
-            System.out.println("Setting up I/O.");
+            log("Setting up I/O.");
             this.input = new BufferedReader(new InputStreamReader(this.clientConnection.getInputStream()));
             this.output = new PrintWriter(new OutputStreamWriter(this.clientConnection.getOutputStream()));
-            System.out.println("I/O set up successfully.");
+            log("I/O set up successfully.");
 
             output.write("220 Welcome to Jay's FTP Server!\r\n");
             output.flush();
-            System.out.println("Sent welcome message.");
+            log("Sent welcome message.");
 
             String dataFromClient;
 //            String dataToClient = null;
             String tempData;
             while (true) {
-                System.out.println("Entered primary input loop");
+                log("Entered primary input loop");
 
                 //Loop over never ending null chars sent by FTP clients
                 while (true) {
-                    System.out.println("Entered the keep-connection-alive loop.");
+                    log("Entered the keep-connection-alive loop.");
                     dataFromClient = (tempData = input.readLine()) == null ? "Null char" : tempData;
-                    System.out.println("Received input from client.");
+                    log("Received input from client.");
                     if (!dataFromClient.equals("Null char")) {
                         break;
                     } else {
-                        System.out.println("Sleeping for 100 millis");
+                        log("Sleeping for 100 millis");
                         Thread.sleep(100);
                     }
                 }
