@@ -1,10 +1,11 @@
 package com.jpknox.server.state;
 
-import com.jpknox.server.FTPServer;
 import com.jpknox.server.FTPServerConfig;
 import com.jpknox.server.FileManager;
-import com.jpknox.server.authentication.LoginAuthentication;
 import com.jpknox.server.authentication.LoginService;
+import com.jpknox.server.session.ClientSession;
+
+import static com.jpknox.server.utility.Logger.log;
 
 /**
  * Created by joaok on 24/09/2017.
@@ -18,82 +19,76 @@ public class StateNotLoggedIn implements SessionState {
     private LoginService loginService = new LoginService();
 
     @Override 
-    public int user(FTPServer context, String username) {
-        loginService.login(context, username);
-        return 0;
+    public String user(ClientSession session, String username) {
+        return loginService.login(session, username);
     }
 
     @Override
-    public int pass(FTPServer context, String password) {
-        context.sendToClient("503 Bad sequence of commands.");
-        return 0;
+    public String pass(ClientSession session, String password) {
+        return "503 Bad sequence of commands.";
     }
 
     @Override
-    public int quit(FTPServer context) {
-        return 0;
+    public String quit(ClientSession session) {
+        return "Not Implemented";
     }
 
     @Override
-    public int port(FTPServer context, int portToUse) {
-        return 0;
+    public String port(ClientSession session, int portToUse) {
+        return "Not Implemented";
     }
 
     @Override
-    public int type(FTPServer context, String format) {
-        return 0;
+    public String type(ClientSession session, String format) {
+        return "Not Implemented";
     }
 
     @Override
-    public int mode(FTPServer context, String modeToUse) {
-        return 0;
+    public String mode(ClientSession session, String modeToUse) {
+        return "Not Implemented";
     }
 
     @Override
-    public int stru(FTPServer context, String structureToUse) {
-        return 0;
+    public String stru(ClientSession session, String structureToUse) {
+        return "Not Implemented";
     }
 
     @Override
-    public int retr(FTPServer context, String pathToFile) {
-        return 0;
+    public String retr(ClientSession session, String pathToFile) {
+        return "Not Implemented";
     }
 
     @Override
-    public int stor(FTPServer context, String pathToFile) {
-        return 0;
+    public String stor(ClientSession session, String pathToFile) {
+        return "Not Implemented";
     }
 
     @Override
-    public int noop(FTPServer context) {
-        return 0;
+    public String noop(ClientSession session) {
+        return "Not Implemented";
     }
 
     @Override
-    public int auth(FTPServer context) {
-        context.sendToClient("502 AUTH command not implemented.");
-        context.log(context.getClientName() + ": 502 command not implemented.");
-        return 0;
+    public String auth(ClientSession session) {
+        log(session.getClientName() + ": 502 command not implemented.");
+        return "502 AUTH command not implemented.";
     }
 
     @Override
-    public int syst(FTPServer context) {
-        context.sendToClient("215 " + config.OPERATING_SYSTEM + ": " + config.SERVER_NAME);
-        context.log(context.getClientName() + ": 215 " + config.OPERATING_SYSTEM + ": " + config.SERVER_NAME);
-        return 0;
+    public String syst(ClientSession session) {
+        log(session.getClientName() + ": 215 " + config.OPERATING_SYSTEM + ": " + config.SERVER_NAME);
+        return "215 " + config.OPERATING_SYSTEM + ": " + config.SERVER_NAME;
     }
 
     @Override
-    public int feat(FTPServer context) {
-        context.sendToClient("502 FEAT command not implemented.");
-        context.log(context.getClientName() + ": 502 FEAT command not implemented.");
-        return 0;
+    public String feat(ClientSession session) {
+        log(session.getClientName() + ": 502 FEAT command not implemented.");
+        return "502 FEAT command not implemented.";
     }
 
     @Override
-    public int pwd(FTPServer context) {
-        context.sendToClient("257 " + fileManager.getCurrentDirectory());
-        context.log(context.getClientName() + ": 257 " + fileManager.getCurrentDirectory());
-        return 0;
+    public String pwd(ClientSession session) {
+        log(session.getClientName() + ": 257 " + fileManager.getCurrentDirectory());
+        return "257 " + fileManager.getCurrentDirectory();
     }
 }

@@ -1,8 +1,8 @@
 package com.jpknox.server.state;
 
-import com.jpknox.server.FTPServer;
 import com.jpknox.server.authentication.LoginAuthentication;
 import com.jpknox.server.authentication.LoginService;
+import com.jpknox.server.session.ClientSession;
 
 /**
  * Created by joaok on 03/10/2017.
@@ -20,74 +20,72 @@ public class StateNeedPassword implements SessionState {
     }
 
     @Override
-    public int user(FTPServer context, String username) {
-        loginService.login(context, username);
-        return 0;
+    public String user(ClientSession session, String username) {
+        return loginService.login(session, username);
     }
 
     @Override
-    public int pass(FTPServer context, String password) {
-        loginService.login(context, this.username, password);
-        return 0;
+    public String pass(ClientSession session, String password) {
+        return loginService.login(session, this.username, password);
     }
 
     @Override
-    public int quit(FTPServer context) {
-        return 0;
+    public String quit(ClientSession session) {
+        return "Not Implemented";
     }
 
     @Override
-    public int port(FTPServer context, int portToUse) {
-        return 0;
+    public String port(ClientSession session, int portToUse) {
+        return "Not Implemented";
     }
 
     @Override
-    public int type(FTPServer context, String format) {
-        return 0;
+    public String type(ClientSession session, String format) {
+        return "Not Implemented";
     }
 
     @Override
-    public int mode(FTPServer context, String modeToUse) {
-        return 0;
+    public String mode(ClientSession session, String modeToUse) {
+        return "Not Implemented";
     }
 
     @Override
-    public int stru(FTPServer context, String structureToUse) {
-        return 0;
+    public String stru(ClientSession session, String structureToUse) {
+        return "Not Implemented";
     }
 
     @Override
-    public int retr(FTPServer context, String pathToFile) {
-        return 0;
+    public String retr(ClientSession session, String pathToFile) {
+        return "Not Implemented";
     }
 
     @Override
-    public int stor(FTPServer context, String pathToFile) {
-        return 0;
+    public String stor(ClientSession session, String pathToFile) {
+        return "Not Implemented";
     }
 
     @Override
-    public int noop(FTPServer context) {
-        return 0;
+    public String noop(ClientSession session) {
+        return "Not Implemented";
     }
 
     @Override
-    public int auth(FTPServer context) {
-        return 0;
+    public String auth(ClientSession session) {
+        return "Not Implemented";
     }
 
     @Override
-    public int syst(FTPServer context) {
-        return 0;
+    public String syst(ClientSession session) {
+        return "Not Implemented";
     }
 
     @Override
-    public int feat(FTPServer context) {
-        return 0;
+    public String feat(ClientSession session) {
+        return "Not Implemented";
     }
 
     @Override
-    public int pwd(FTPServer context) {
-        return 0;
+    public String pwd(ClientSession session) {
+        return "Not Implemented";
     }
 }

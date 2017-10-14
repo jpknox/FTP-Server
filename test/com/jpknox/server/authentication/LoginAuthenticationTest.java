@@ -33,8 +33,8 @@ public class LoginAuthenticationTest {
     }
 
     @Test
-    public void testAuthenticateValidUserNoPassword() {
-        boolean doesExist = loginAuthentication.authenticate("user1");
+    public void testUsernameExistsValidUserNoPassword() {
+        boolean doesExist = loginAuthentication.usernameExists("user1");
         assertTrue(doesExist);
     }
 
@@ -57,13 +57,13 @@ public class LoginAuthenticationTest {
     }
 
     @Test
-    public void testUserHasPassword() {
+    public void testHasPasswordExistingUserHasPassword() {
         boolean hasPassword = loginAuthentication.hasPassword("user1");
         assertTrue(hasPassword);
     }
 
     @Test
-    public void testNonexistentUserHasNoPassword() {
+    public void testHasPasswordNonexistentUserHasNoPassword() {
         boolean hasPassword = loginAuthentication.hasPassword("userNoPwd");
         assertFalse(hasPassword);
     }

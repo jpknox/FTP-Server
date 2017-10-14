@@ -20,7 +20,7 @@ public class LoginAuthentication {
         accounts = initialUsers;
     }
 
-    public boolean authenticate(String username) {
+    public boolean usernameExists(String username) {
         for (Account accnt : accounts) {
             if (accnt.getUsername().equals(username)) return true;
         }   return false;
