@@ -10,37 +10,32 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  * Created by JoaoPaulo on 14-Oct-17.
  */
-public class StateNeedPasswordTest {
+public class StateLoggedInTest {
 
-    private StateNeedPassword stateNeedPassword;
+    private StateLoggedIn stateLoggedIn;
     private ClientSession clientSession;
-    private String username;
     private LoginService loginService;
     private FileManager fileManager;
 
     @Before
     public void setup() {
-        username = "username";
-        stateNeedPassword = new StateNeedPassword(username);
+        stateLoggedIn = new StateLoggedIn();
         loginService = Mockito.mock(LoginService.class);
         fileManager = Mockito.mock(FileManager.class);
         when(fileManager.getCurrentDirectory()).thenReturn("/");
-        stateNeedPassword.setLoginService(loginService);
-        stateNeedPassword.setFileManager(fileManager);
+        stateLoggedIn.setLoginService(loginService);
+        stateLoggedIn.setFileManager(fileManager);
         clientSession = Mockito.mock(ClientSession.class);
     }
 
     @After
     public void teardown() {
-        stateNeedPassword = null;
-        username = null;
+        stateLoggedIn = null;
         loginService = null;
         fileManager = null;
         clientSession = null;
@@ -48,86 +43,87 @@ public class StateNeedPasswordTest {
 
     @Test
     public void testUser() {
-        stateNeedPassword.user(clientSession, username);
+        String username = "username";
+        stateLoggedIn.user(clientSession, username);
         verify(loginService).login(clientSession, username);
     }
 
     @Test
     public void testPass() {
         String password = "password";
-        stateNeedPassword.pass(clientSession, password);
-        verify(loginService).login(clientSession, username, password);
+        String message = stateLoggedIn.pass(clientSession, password);
+        assertEquals("503 Bad sequence of commands.", message);
     }
 
     @Test
     public void testQuit() {
-        String message = stateNeedPassword.quit(clientSession);
+        String message = stateLoggedIn.quit(clientSession);
         assertEquals("221 Service closing control connection.", message);
     }
 
     @Test
     public void testPort() {
-        String message = stateNeedPassword.port(clientSession, 9001);
+        String message = stateLoggedIn.port(clientSession, 9001);
         assertEquals("530 Not logged in.", message);
     }
 
     @Test
     public void testType() {
-        String message = stateNeedPassword.type(clientSession, "NON PRINT");
+        String message = stateLoggedIn.type(clientSession, "NON PRINT");
         assertEquals("530 Not logged in.", message);
     }
 
     @Test
     public void testMode() {
-        String message = stateNeedPassword.mode(clientSession, "S");
+        String message = stateLoggedIn.mode(clientSession, "S");
         assertEquals("530 Not logged in.", message);
     }
 
     @Test
     public void testStru() {
-        String message = stateNeedPassword.stru(clientSession, "F");
+        String message = stateLoggedIn.stru(clientSession, "F");
         assertEquals("530 Not logged in.", message);
     }
 
     @Test
     public void testRetr() {
-        String message = stateNeedPassword.retr(clientSession, "/file.txt");
+        String message = stateLoggedIn.retr(clientSession, "/file.txt");
         assertEquals("530 Not logged in.", message);
     }
 
     @Test
     public void testStor() {
-        String message = stateNeedPassword.stor(clientSession, "/file.txt");
+        String message = stateLoggedIn.stor(clientSession, "/file.txt");
         assertEquals("530 Not logged in.", message);
     }
 
     @Test
     public void testNoop() {
-        String message = stateNeedPassword.noop(clientSession);
+        String message = stateLoggedIn.noop(clientSession);
         assertEquals("200 Command okay.", message);
     }
 
     @Test
     public void testAuth() {
-        String message = stateNeedPassword.auth(clientSession);
+        String message = stateLoggedIn.auth(clientSession);
         assertEquals("502 Command not implemented.", message);
     }
 
     @Test
     public void testSyst() {
-        String message = stateNeedPassword.syst(clientSession);
+        String message = stateLoggedIn.syst(clientSession);
         assertEquals("215 " + FTPServerConfig.OPERATING_SYSTEM + ": " + FTPServerConfig.SERVER_NAME, message);
     }
 
     @Test
     public void testFeat() {
-        String message = stateNeedPassword.feat(clientSession);
+        String message = stateLoggedIn.feat(clientSession);
         assertEquals("502 Command not implemented.", message);
     }
 
     @Test
     public void testPwd() {
-        String message = stateNeedPassword.pwd(clientSession);
+        String message = stateLoggedIn.pwd(clientSession);
         assertEquals("257 /", message);
         verify(fileManager, times(2)).getCurrentDirectory();
     }

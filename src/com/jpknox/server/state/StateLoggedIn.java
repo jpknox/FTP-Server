@@ -33,48 +33,48 @@ public class StateLoggedIn implements SessionState {
 
     @Override
     public String quit(ClientSession session) {
-        return "Not Implemented";
+        return "221 Service closing control connection.";
     }
 
     @Override
     public String port(ClientSession session, int portToUse) {
-        return "Not Implemented";
+        return "530 Not logged in.";
     }
 
     @Override
     public String type(ClientSession session, String format) {
-        return "Not Implemented";
+        return "530 Not logged in.";
     }
 
     @Override
     public String mode(ClientSession session, String modeToUse) {
-        return "Not Implemented";
+        return "530 Not logged in.";
     }
 
     @Override
     public String stru(ClientSession session, String structureToUse) {
-        return "Not Implemented";
+        return "530 Not logged in.";
     }
 
     @Override
     public String retr(ClientSession session, String pathToFile) {
-        return "Not Implemented";
+        return "530 Not logged in.";
     }
 
     @Override
     public String stor(ClientSession session, String pathToFile) {
-        return "Not Implemented";
+        return "530 Not logged in.";
     }
 
     @Override
     public String noop(ClientSession session) {
-        return "Not Implemented";
+        return "200 Command okay.";
     }
 
     @Override
     public String auth(ClientSession session) {
-        log(session.getClientName() + ": 502 - command not implemented.");
-        return "502 AUTH command not implemented.";
+        log(session.getClientName() + ": 502 command not implemented.");
+        return "502 Command not implemented.";
     }
 
     @Override
@@ -86,7 +86,7 @@ public class StateLoggedIn implements SessionState {
     @Override
     public String feat(ClientSession session) {
         log(session.getClientName() + ": 502 FEAT command not implemented.");
-        return "502 FEAT command not implemented.";
+        return "502 Command not implemented.";
     }
 
     @Override
@@ -95,4 +95,11 @@ public class StateLoggedIn implements SessionState {
         return "257 " + fileManager.getCurrentDirectory();
     }
 
+    public void setLoginService(LoginService loginService) {
+        this.loginService = loginService;
+    }
+
+    public void setFileManager(FileManager fileManager) {
+        this.fileManager = fileManager;
+    }
 }

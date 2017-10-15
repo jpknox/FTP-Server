@@ -19,7 +19,6 @@ public class StateNotLoggedInTest {
 
     private StateNotLoggedIn stateNotLoggedIn;
     private ClientSession clientSession;
-    private String username;
     private LoginService loginService;
     private FileManager fileManager;
 
@@ -37,7 +36,6 @@ public class StateNotLoggedInTest {
     @After
     public void teardown() {
         stateNotLoggedIn = null;
-        username = null;
         loginService = null;
         fileManager = null;
         clientSession = null;
@@ -45,7 +43,7 @@ public class StateNotLoggedInTest {
 
     @Test
     public void testUser() {
-        username = "anonymous";
+        String username = "username";
         stateNotLoggedIn.user(clientSession, username);
         verify(loginService).login(clientSession, username);
     }
