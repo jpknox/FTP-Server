@@ -66,7 +66,9 @@ public class ClientSessionController {
                     actionResponse = clientSession.getState().pass(clientSession, dataFromClient.substring(5, dataFromClient.length())); //Extract username
                 }
                 if (dataFromClient.equals("quit")) {
+                    actionResponse = clientSession.getState().quit(clientSession);
                     log(clientSession.getClientName() + " disconnected.");
+                    sendToClient(actionResponse);
                     break;
                 }
                 if (dataFromClient.length() > 3) {

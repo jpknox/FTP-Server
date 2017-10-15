@@ -19,7 +19,7 @@ import static org.mockito.Mockito.when;
 /**
  * Created by JoaoPaulo on 08-Oct-17.
  */
-public class FTPServerIntegrationTest {
+public class IntegrationTest {
 
     public static final String NEWLINE = System.getProperty("line.separator");
 
@@ -88,6 +88,7 @@ public class FTPServerIntegrationTest {
         assertTrue(serverOutputReader.readLine().equals("220 Welcome to Jay's FTP Server!"));
         assertTrue(serverOutputReader.readLine().equals("331 User name okay, need password."));
         assertTrue(serverOutputReader.readLine().equals("230 User1 logged in, proceed."));
+        assertTrue(serverOutputReader.readLine().equals("221 Service closing control connection."));
         String state = ftpServer.getClientSessionController(0).getClientSession().getState().getClass().getSimpleName();
         assertEquals(StateLoggedIn.class.getSimpleName(), state);
     }
@@ -99,6 +100,7 @@ public class FTPServerIntegrationTest {
         ftpServer = new FTPServer(mockServerSocket);
         assertTrue(serverOutputReader.readLine().equals("220 Welcome to Jay's FTP Server!"));
         assertTrue(serverOutputReader.readLine().equals("230 Anonymous logged in, proceed."));
+        assertTrue(serverOutputReader.readLine().equals("221 Service closing control connection."));
         String state = ftpServer.getClientSessionController(0).getClientSession().getState().getClass().getSimpleName();
         assertEquals(StateLoggedIn.class.getSimpleName(), state);
     }
@@ -110,6 +112,7 @@ public class FTPServerIntegrationTest {
         ftpServer = new FTPServer(mockServerSocket);
         assertTrue(serverOutputReader.readLine().equals("220 Welcome to Jay's FTP Server!"));
         assertTrue(serverOutputReader.readLine().equals("331 User name okay, need password."));
+        assertTrue(serverOutputReader.readLine().equals("221 Service closing control connection."));
         String state = ftpServer.getClientSessionController(0).getClientSession().getState().getClass().getSimpleName();
         assertEquals(StateNeedPassword.class.getSimpleName(), state);
     }
@@ -123,6 +126,7 @@ public class FTPServerIntegrationTest {
         assertTrue(serverOutputReader.readLine().equals("220 Welcome to Jay's FTP Server!"));
         assertTrue(serverOutputReader.readLine().equals("331 User name okay, need password."));
         assertTrue(serverOutputReader.readLine().equals("530 Not logged in."));
+        assertTrue(serverOutputReader.readLine().equals("221 Service closing control connection."));
         String state = ftpServer.getClientSessionController(0).getClientSession().getState().getClass().getSimpleName();
         assertEquals(StateNotLoggedIn.class.getSimpleName(), state);
     }
@@ -138,6 +142,7 @@ public class FTPServerIntegrationTest {
         assertTrue(serverOutputReader.readLine().equals("331 User name okay, need password."));
         assertTrue(serverOutputReader.readLine().equals("530 Not logged in."));
         assertTrue(serverOutputReader.readLine().equals("503 Bad sequence of commands."));
+        assertTrue(serverOutputReader.readLine().equals("221 Service closing control connection."));
         String state = ftpServer.getClientSessionController(0).getClientSession().getState().getClass().getSimpleName();
         assertEquals(StateNotLoggedIn.class.getSimpleName(), state);
     }
@@ -157,6 +162,7 @@ public class FTPServerIntegrationTest {
         assertTrue(serverOutputReader.readLine().equals("503 Bad sequence of commands."));
         assertTrue(serverOutputReader.readLine().equals("331 User name okay, need password."));
         assertTrue(serverOutputReader.readLine().equals("230 User1 logged in, proceed."));
+        assertTrue(serverOutputReader.readLine().equals("221 Service closing control connection."));
         String state = ftpServer.getClientSessionController(0).getClientSession().getState().getClass().getSimpleName();
         assertEquals(StateLoggedIn.class.getSimpleName(), state);
     }
