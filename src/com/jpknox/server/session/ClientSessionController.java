@@ -1,7 +1,5 @@
 package com.jpknox.server.session;
 
-import com.jpknox.server.FileManager;
-
 import java.io.*;
 import java.net.Socket;
 

@@ -1,4 +1,4 @@
-package com.jpknox.server;
+package com.jpknox.server.utility;
 
 /**
  * Created by JoaoPaulo on 25-Sep-17.

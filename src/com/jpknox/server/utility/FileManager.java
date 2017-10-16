@@ -1,4 +1,4 @@
-package com.jpknox.server;
+package com.jpknox.server.utility;
 
 import java.io.File;
 
@@ -11,6 +11,8 @@ public class FileManager {
     private File rootNode = new File("resources");
     private File displayNode = new File(rootNode.toString());
 
+    private FileManager() {};
+
     public static FileManager getInstance() {
         if (instance == null) {
             return (instance = new FileManager());
@@ -22,8 +24,5 @@ public class FileManager {
     public String getCurrentDirectory() {
         return rootNode.toString().replaceAll(displayNode.toString(), "/");
     }
-
-
-
-
+    
 }

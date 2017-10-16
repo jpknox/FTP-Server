@@ -1,7 +1,7 @@
 package com.jpknox.server.state;
 
-import com.jpknox.server.FTPServerConfig;
-import com.jpknox.server.FileManager;
+import com.jpknox.server.utility.FTPServerConfig;
+import com.jpknox.server.utility.FileManager;
 import com.jpknox.server.authentication.LoginService;
 import com.jpknox.server.session.ClientSession;
 
