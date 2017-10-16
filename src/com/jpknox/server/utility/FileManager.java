@@ -24,5 +24,5 @@ public class FileManager {
     public String getCurrentDirectory() {
         return rootNode.toString().replaceAll(displayNode.toString(), "/");
     }
-    
+
 }
