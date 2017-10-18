@@ -1,5 +1,9 @@
 package com.jpknox.server.session;
 
+import com.jpknox.server.command.FTPCommand;
+import com.jpknox.server.command.FTPCommandAction;
+import com.jpknox.server.utility.CommandDecoder;
+
 import java.io.*;
 import java.net.Socket;
 
@@ -10,14 +14,16 @@ import static com.jpknox.server.utility.Logger.log;
  */
 public class ClientSessionController {
 
+    private final ClientSession clientSession = new ClientSession();
+    private final CommandDecoder commandDecoder = new CommandDecoder();
+    private final Socket clientConnection;
+    private FTPCommand ftpCommand;
+    private FTPCommandAction ftpCommandAction;
     private BufferedReader input;
     private PrintWriter output;
-    private ClientSession clientSession;
-    private Socket clientConnection;
     private String actionResponse = "";
 
     public ClientSessionController(Socket clientConnection) {
-        this.clientSession = new ClientSession();
         this.clientConnection = clientConnection;
     }
 
@@ -33,8 +39,8 @@ public class ClientSessionController {
             log("Sent welcome message.");
 
             String dataFromClient;
-//            String dataToClient = null;
             String tempData;
+        inputLoop:
             while (true) {
                 log("Entered primary input loop");
 
@@ -51,38 +57,29 @@ public class ClientSessionController {
                     }
                 }
                 log(clientSession.getClientName() + ": " + dataFromClient);
-//				dataToClient = "Echo: " + dataFromClient;
-//				output.write(dataToClient + "\r\n");
-//				output.flush();
 
-                if (dataFromClient.length() > 5 && dataFromClient.substring(0, 5).toUpperCase().equals("USER ")) {
-					log("Username: " + dataFromClient.substring(5, dataFromClient.length()));
-                    actionResponse = clientSession.getState().user(clientSession, dataFromClient.substring(5, dataFromClient.length())); //Extract username
-                }
-                if (dataFromClient.length() > 5 && dataFromClient.substring(0, 5).toUpperCase().equals("PASS ")) {
-					log("Username: " + dataFromClient.substring(5, dataFromClient.length()));
-                    actionResponse = clientSession.getState().pass(clientSession, dataFromClient.substring(5, dataFromClient.length())); //Extract username
-                }
-                if (dataFromClient.equals("quit")) {
-                    actionResponse = clientSession.getState().quit(clientSession);
-                    log(clientSession.getClientName() + " disconnected.");
-                    sendToClient(actionResponse);
-                    break;
-                }
-                if (dataFromClient.length() > 3) {
-                    if (dataFromClient.toUpperCase().substring(0, 4).equals("AUTH")) {
-                        actionResponse = clientSession.getState().auth(clientSession);
-                    }
-                    if (dataFromClient.toUpperCase().substring(0, 4).equals("SYST")) {
-                        actionResponse = clientSession.getState().syst(clientSession);
-                    }
-                    if (dataFromClient.toUpperCase().substring(0, 4).equals("FEAT")) {
-                        actionResponse = clientSession.getState().feat(clientSession);
-                    }
-                } else {
-                    if (dataFromClient.toUpperCase().substring(0, 3).equals("PWD")) {
-                        actionResponse = clientSession.getState().pwd(clientSession);
-                    }
+
+                ftpCommand = commandDecoder.decode(dataFromClient);
+                ftpCommandAction = ftpCommand.getAction();
+                switch (ftpCommandAction) {
+                    case USER:  log("Username: " + dataFromClient.substring(5, dataFromClient.length()));
+                                actionResponse = clientSession.getState().user(clientSession, dataFromClient.substring(5, dataFromClient.length())); //Extract username
+                                break;
+                    case PASS:  log("Password: " + dataFromClient.substring(5, dataFromClient.length()));
+                                actionResponse = clientSession.getState().pass(clientSession, dataFromClient.substring(5, dataFromClient.length())); //Extract username
+                                break;
+                    case QUIT:  log(clientSession.getClientName() + " disconnected.");
+                                actionResponse = clientSession.getState().quit(clientSession);
+                                sendToClient(actionResponse);
+                                break inputLoop;
+                    case AUTH:  actionResponse = clientSession.getState().auth(clientSession);
+                                break;
+                    case SYST:  actionResponse = clientSession.getState().syst(clientSession);
+                                break;
+                    case FEAT:  actionResponse = clientSession.getState().feat(clientSession);
+                                break;
+                    case PWD:   actionResponse = clientSession.getState().pwd(clientSession);
+                                break;
                 }
 
                 if (actionResponse.equals(null) || actionResponse.length() == 0) actionResponse = "202 Command not implemented, superfluous at this site.";
