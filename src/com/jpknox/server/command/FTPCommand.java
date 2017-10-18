@@ -21,4 +21,14 @@ public class FTPCommand {
     public String[] getParams() {
         return params;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(action.toString());
+        for (String string : params) {
+            stringBuilder.append(" " + string);
+        }
+        return stringBuilder.toString();
+    }
 }
