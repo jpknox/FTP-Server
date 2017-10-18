@@ -25,7 +25,7 @@ public class CommandDecoderTest {
 
     @Test
     public void testDefaultParams() {
-        String[] defaultParams = new String[] {"-1", "-1", "-1"};
+        String[] defaultParams = new String[] {"", "", ""};
         assertArrayEquals(defaultParams, commandDecoder.defaultParams());
     }
 

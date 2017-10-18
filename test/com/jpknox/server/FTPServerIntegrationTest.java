@@ -19,7 +19,7 @@ import static org.mockito.Mockito.when;
 /**
  * Created by JoaoPaulo on 08-Oct-17.
  */
-public class IntegrationTest {
+public class FTPServerIntegrationTest {
 
     public static final String NEWLINE = System.getProperty("line.separator");
 
@@ -165,6 +165,18 @@ public class IntegrationTest {
         assertTrue(serverOutputReader.readLine().equals("221 Service closing control connection."));
         String state = ftpServer.getClientSessionController(0).getClientSession().getState().getClass().getSimpleName();
         assertEquals(StateLoggedIn.class.getSimpleName(), state);
+    }
+
+    @Test
+    public void testStateNotLoggedInAfterEmptyUserParam() throws IOException {
+        sendLine("USER");
+        sendLine("quit");
+        ftpServer = new FTPServer(mockServerSocket);
+        assertTrue(serverOutputReader.readLine().equals("220 Welcome to Jay's FTP Server!"));
+        assertTrue(serverOutputReader.readLine().equals("501 Syntax error in parameters or arguments."));
+        assertTrue(serverOutputReader.readLine().equals("221 Service closing control connection."));
+        String state = ftpServer.getClientSessionController(0).getClientSession().getState().getClass().getSimpleName();
+        assertEquals(StateNotLoggedIn.class.getSimpleName(), state);
     }
 
     //TODO: TDD for scenario of missing parameters e.g. "PASS " instead of "PASS password"

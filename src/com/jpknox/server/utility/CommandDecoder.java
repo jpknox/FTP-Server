@@ -49,7 +49,7 @@ public class CommandDecoder {
     }
 
     public String[] defaultParams() {
-        String[] defaultParams = new String[] {"-1", "-1", "-1"};
+        String[] defaultParams = new String[] {"", "", ""};
         return defaultParams;
     }
 }

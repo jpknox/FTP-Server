@@ -22,6 +22,9 @@ public class LoginService {
     }
 
     public String login(ClientSession context, String username) {
+        if (username.length() == 0 || username.equals(null))
+            return "501 Syntax error in parameters or arguments.";
+
         if (loginAuthentication.usernameExists(username)) {
             if(!loginAuthentication.hasPassword(username)) {
                 context.setState(new StateLoggedIn());

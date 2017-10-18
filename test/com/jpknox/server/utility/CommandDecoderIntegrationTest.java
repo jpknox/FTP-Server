@@ -237,9 +237,9 @@ public class CommandDecoderIntegrationTest {
         telnetCommand = "NOOP" + NEWLINE;
         decodedCommand = commandDecoder.decode(telnetCommand);
         assertEquals(FTPCommandAction.NOOP, decodedCommand.getAction());
-        assertEquals("-1", decodedCommand.getParams()[0]);
-        assertEquals("-1", decodedCommand.getParams()[1]);
-        assertEquals("-1", decodedCommand.getParams()[2]);
+        assertEquals("", decodedCommand.getParams()[0]);
+        assertEquals("", decodedCommand.getParams()[1]);
+        assertEquals("", decodedCommand.getParams()[2]);
     }
 
     @Test
@@ -247,9 +247,9 @@ public class CommandDecoderIntegrationTest {
         telnetCommand = NEWLINE;
         decodedCommand = commandDecoder.decode(telnetCommand);
         assertEquals(FTPCommandAction.ERROR, decodedCommand.getAction());
-        assertEquals("-1", decodedCommand.getParams()[0]);
-        assertEquals("-1", decodedCommand.getParams()[1]);
-        assertEquals("-1", decodedCommand.getParams()[2]);
+        assertEquals("", decodedCommand.getParams()[0]);
+        assertEquals("", decodedCommand.getParams()[1]);
+        assertEquals("", decodedCommand.getParams()[2]);
     }
 
     @Test
@@ -257,9 +257,9 @@ public class CommandDecoderIntegrationTest {
         telnetCommand = "U" + NEWLINE;
         decodedCommand = commandDecoder.decode(telnetCommand);
         assertEquals(FTPCommandAction.ERROR, decodedCommand.getAction());
-        assertEquals("-1", decodedCommand.getParams()[0]);
-        assertEquals("-1", decodedCommand.getParams()[1]);
-        assertEquals("-1", decodedCommand.getParams()[2]);
+        assertEquals("", decodedCommand.getParams()[0]);
+        assertEquals("", decodedCommand.getParams()[1]);
+        assertEquals("", decodedCommand.getParams()[2]);
     }
 
     @Test
@@ -267,9 +267,9 @@ public class CommandDecoderIntegrationTest {
         telnetCommand = "USERRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR" + NEWLINE;
         decodedCommand = commandDecoder.decode(telnetCommand);
         assertEquals(FTPCommandAction.ERROR, decodedCommand.getAction());
-        assertEquals("-1", decodedCommand.getParams()[0]);
-        assertEquals("-1", decodedCommand.getParams()[1]);
-        assertEquals("-1", decodedCommand.getParams()[2]);
+        assertEquals("", decodedCommand.getParams()[0]);
+        assertEquals("", decodedCommand.getParams()[1]);
+        assertEquals("", decodedCommand.getParams()[2]);
     }
 
 

@@ -62,8 +62,8 @@ public class ClientSessionController {
                 ftpCommand = commandDecoder.decode(dataFromClient);
                 ftpCommandAction = ftpCommand.getAction();
                 switch (ftpCommandAction) {
-                    case USER:  log("Username: " + dataFromClient.substring(5, dataFromClient.length()));
-                                actionResponse = clientSession.getState().user(clientSession, dataFromClient.substring(5, dataFromClient.length())); //Extract username
+                    case USER:  log("Username: " + ftpCommand.getParams()[0]);
+                                actionResponse = clientSession.getState().user(clientSession, ftpCommand.getParams()[0]); //Extract username
                                 break;
                     case PASS:  log("Password: " + dataFromClient.substring(5, dataFromClient.length()));
                                 actionResponse = clientSession.getState().pass(clientSession, dataFromClient.substring(5, dataFromClient.length())); //Extract username
