@@ -19,6 +19,7 @@ public class CommandDecoder {
 
     // Extracts the command from a string
     public FTPCommand decode(String telnetCommand) {
+        telnetCommand = telnetCommand.replace(System.getProperty("line.separator"), "");
         String[] tokens = telnetCommand.split(" ");
 
         //Extract the action
@@ -26,8 +27,8 @@ public class CommandDecoder {
         try {
             commandAction = FTPCommandAction.valueOf(tokens[ACTION].toUpperCase());
         } catch (IllegalArgumentException | NullPointerException exception) {
-            log("Error when creating an instance of the command ENUM.");
-            return new FTPCommand(FTPCommandAction.ERROR, null);
+            log("Error when creating an instance of the command ENUM with '" + tokens[ACTION] + "'");
+            return new FTPCommand(FTPCommandAction.ERROR, defaultParams());
         }
 
         //Extract the params
@@ -41,10 +42,14 @@ public class CommandDecoder {
             }
         } else {
             // Safer to populate with non-null data if no params are given to the decoder
-            commandParams = new String[3];
-            Arrays.fill(commandParams, "-1");
+            commandParams = defaultParams();
         }
 
         return new FTPCommand(commandAction, commandParams);
+    }
+
+    public String[] defaultParams() {
+        String[] defaultParams = new String[] {"-1", "-1", "-1"};
+        return defaultParams;
     }
 }
