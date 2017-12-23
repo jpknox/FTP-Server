@@ -37,7 +37,7 @@ public class CommandDecoder {
         if (hasParams) {
             int numOfParams = tokens.length-1;
             commandParams = new String[numOfParams];
-            for (int i = 1; i < tokens.length; i++) {
+            for (int i = 1; i <= numOfParams; i++) {
                 commandParams[i-1] = tokens[i];
             }
         } else {
