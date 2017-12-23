@@ -25,6 +25,7 @@ public abstract class AbstractSessionState implements SessionState {
 
     @Override
     public String pass(ClientSession session, String password) {
+        log("Client with name '" + session.getClientName() + "' attempted to enter password '" + password + "' out of sequence.");
         return "503 Bad sequence of commands.";
     }
 

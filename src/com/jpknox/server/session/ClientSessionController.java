@@ -29,26 +29,27 @@ public class ClientSessionController {
 
     public void start() {
         try {
-            log("Setting up I/O.");
+            //log("Setting up I/O.");
             this.input = new BufferedReader(new InputStreamReader(this.clientConnection.getInputStream()));
             this.output = new PrintWriter(new OutputStreamWriter(this.clientConnection.getOutputStream()));
-            log("I/O set up successfully.");
+            //log("I/O set up successfully.");
 
             output.write("220 Welcome to Jay's FTP Server!\r\n");
             output.flush();
-            log("Sent welcome message.");
+            //log("Sent welcome message.");
 
             String dataFromClient;
             String tempData;
+
+            log("Entering primary input loop");
         inputLoop:
             while (true) {
-                log("Entered primary input loop");
 
                 //Loop over never ending null chars sent by FTP clients
                 while (true) {
-                    log("Entered the keep-alive input loop.");
+                    //log("Entered the keep-alive input loop.");
                     dataFromClient = input.readLine();
-                    log("Received input from client.");
+                    //log("Received input from client.");
                     if (!dataFromClient.equals(null)) {
                         break;
                     } else {
@@ -62,11 +63,9 @@ public class ClientSessionController {
                 ftpCommand = commandDecoder.decode(dataFromClient);
                 ftpCommandAction = ftpCommand.getAction();
                 switch (ftpCommandAction) {
-                    case USER:  log("Username: " + ftpCommand.getParams()[0]);
-                                actionResponse = clientSession.getState().user(clientSession, ftpCommand.getParams()[0]); //Extract username
+                    case USER:  actionResponse = clientSession.getState().user(clientSession, ftpCommand.getParams()[0]); //Extract username
                                 break;
-                    case PASS:  log("Password: " + dataFromClient.substring(5, dataFromClient.length()));
-                                actionResponse = clientSession.getState().pass(clientSession, ftpCommand.getParams()[0]); //Extract password
+                    case PASS:  actionResponse = clientSession.getState().pass(clientSession, ftpCommand.getParams()[0]); //Extract password
                                 break;
                     case QUIT:  log(clientSession.getClientName() + " disconnected.");
                                 actionResponse = clientSession.getState().quit(clientSession);

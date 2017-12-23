@@ -3,6 +3,8 @@ package com.jpknox.server.session;
 import com.jpknox.server.state.SessionState;
 import com.jpknox.server.state.StateNotLoggedIn;
 
+import static com.jpknox.server.utility.Logger.log;
+
 /**
  * Created by JoaoPaulo on 14-Oct-17.
  */
@@ -20,6 +22,7 @@ public class ClientSession {
     }
 
     public int setState(SessionState nextState) {
+        log("Switching state to " + nextState.getClass().getSimpleName());
         this.context = nextState;
         return 0;
     }
