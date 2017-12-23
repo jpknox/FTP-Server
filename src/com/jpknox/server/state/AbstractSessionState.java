@@ -93,6 +93,9 @@ public abstract class AbstractSessionState implements SessionState {
         return "257 " + fileManager.getCurrentDirectory();
     }
 
+    @Override
+    public String pasv(ClientSession session) { return "530 Not logged in."; }
+
     public void setFileManager(FileManager fileManager) {
         this.fileManager = fileManager;
     }

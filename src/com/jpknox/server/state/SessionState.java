@@ -21,5 +21,6 @@ public interface SessionState {
     String syst(ClientSession session);                             //System settings
     String feat(ClientSession session);                             //Features
     String pwd (ClientSession session);                             //Working directory
+    String pasv(ClientSession session);                             //Specifies the passive data transfer method
 
 }

@@ -23,6 +23,7 @@ public enum FTPCommandAction {
     SYST("SYST"),
     FEAT("FEAT"),
     PWD("PWD"),
+    PASV("PASV"),
     ERROR("ERROR");
 
     private String name;
