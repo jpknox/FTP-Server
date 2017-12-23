@@ -14,12 +14,13 @@ public class DataTransferController {
     private int dataPort = -1;
     private boolean transferring = false;
 
+    //TODO: Make this private and amend the tests
     public int generatePassiveDataPort() {
         dataPort = java.util.concurrent.ThreadLocalRandom.current().nextInt(LOWER_PORT_BOUNDARY, UPPER_PORT_BOUNDARY+1);
         return dataPort;
     }
 
-    public int[] convertDataPort() {
+    public int[] getEncodedDataPort() {
         // p1 = PPrime/256
         //  PPrime = (port - p2)
         if (dataPort == -1) return null;

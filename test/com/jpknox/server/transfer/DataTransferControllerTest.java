@@ -73,33 +73,33 @@ public class DataTransferControllerTest {
     }
 
     @Test
-    public void testConvertDataPort51000() throws IllegalPortException {
+    public void testgetEncodedDataPort51000() throws IllegalPortException {
         dataTransferController.setDataPort(51000);
-        int[] port = dataTransferController.convertDataPort();
+        int[] port = dataTransferController.getEncodedDataPort();
         assertEquals(port[0], 199);
         assertEquals(port[1], 56);
     }
 
     @Test
-    public void testConvertDataPort50000() throws IllegalPortException {
+    public void testgetEncodedDataPort50000() throws IllegalPortException {
         dataTransferController.setDataPort(50000);
-        int[] port = dataTransferController.convertDataPort();
+        int[] port = dataTransferController.getEncodedDataPort();
         assertEquals(port[0], 195);
         assertEquals(port[1], 80);
     }
 
     @Test
-    public void testConvertDataPort65535() throws IllegalPortException {
+    public void testgetEncodedDataPort65535() throws IllegalPortException {
         dataTransferController.setDataPort(65535);
-        int[] port = dataTransferController.convertDataPort();
+        int[] port = dataTransferController.getEncodedDataPort();
         assertEquals(port[0], 255);
         assertEquals(port[1], 255);
     }
 
     @Test
-    public void testConvertDataPort57768() throws IllegalPortException {
+    public void testgetEncodedDataPort57768() throws IllegalPortException {
         dataTransferController.setDataPort(57768);
-        int[] port = dataTransferController.convertDataPort();
+        int[] port = dataTransferController.getEncodedDataPort();
         assertEquals(port[0], 225);
         assertEquals(port[1], 168);
     }
