@@ -1,29 +1,31 @@
 package com.jpknox.server.state;
 
-import com.jpknox.server.utility.FTPServerConfig;
-import com.jpknox.server.utility.FileManager;
-import com.jpknox.server.authentication.LoginAuthentication;
 import com.jpknox.server.authentication.LoginService;
 import com.jpknox.server.session.ClientSession;
+import com.jpknox.server.utility.FTPServerConfig;
+import com.jpknox.server.utility.FileManager;
 
 import static com.jpknox.server.utility.Logger.log;
 
 /**
- * Created by joaok on 03/10/2017.
+ * Created by joaok on 23/12/2017.
  */
-public class StateNeedPassword extends AbstractSessionState {
+public abstract class AbstractSessionState implements SessionState {
 
-    private final LoginAuthentication loginAuthentication = new LoginAuthentication();
+    protected FTPServerConfig config = new FTPServerConfig();
 
-    private String username;        //User is in limbo, needs a password
+    protected FileManager fileManager = FileManager.getInstance();
 
-    public StateNeedPassword(String username) {
-        this.username = username;
+    protected LoginService loginService = new LoginService();
+
+    @Override
+    public String user(ClientSession session, String username) {
+        return loginService.login(session, username);
     }
 
     @Override
     public String pass(ClientSession session, String password) {
-        return loginService.login(session, this.username, password);
+        return "503 Bad sequence of commands.";
     }
 
     @Override
@@ -88,5 +90,13 @@ public class StateNeedPassword extends AbstractSessionState {
     public String pwd(ClientSession session) {
         log(session.getClientName() + ": 257 " + fileManager.getCurrentDirectory());
         return "257 " + fileManager.getCurrentDirectory();
+    }
+
+    public void setFileManager(FileManager fileManager) {
+        this.fileManager = fileManager;
+    }
+
+    public void setLoginService(LoginService loginService) {
+        this.loginService = loginService;
     }
 }

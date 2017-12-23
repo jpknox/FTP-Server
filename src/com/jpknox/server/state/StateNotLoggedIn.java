@@ -10,23 +10,7 @@ import static com.jpknox.server.utility.Logger.log;
 /**
  * Created by joaok on 24/09/2017.
  */
-public class StateNotLoggedIn implements SessionState {
-
-    private FTPServerConfig config = new FTPServerConfig();
-
-    private FileManager fileManager = FileManager.getInstance();
-
-    private LoginService loginService = new LoginService();
-
-    @Override
-    public String user(ClientSession session, String username) {
-        return loginService.login(session, username);
-    }
-
-    @Override
-    public String pass(ClientSession session, String password) {
-        return "503 Bad sequence of commands.";
-    }
+public class StateNotLoggedIn extends AbstractSessionState {
 
     @Override
     public String quit(ClientSession session) {
@@ -90,13 +74,5 @@ public class StateNotLoggedIn implements SessionState {
     public String pwd(ClientSession session) {
         log(session.getClientName() + ": 257 " + fileManager.getCurrentDirectory());
         return "257 " + fileManager.getCurrentDirectory();
-    }
-
-    public void setFileManager(FileManager fileManager) {
-        this.fileManager = fileManager;
-    }
-
-    public void setLoginService(LoginService loginService) {
-        this.loginService = loginService;
     }
 }
