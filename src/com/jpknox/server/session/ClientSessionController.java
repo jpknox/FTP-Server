@@ -66,7 +66,7 @@ public class ClientSessionController {
                                 actionResponse = clientSession.getState().user(clientSession, ftpCommand.getParams()[0]); //Extract username
                                 break;
                     case PASS:  log("Password: " + dataFromClient.substring(5, dataFromClient.length()));
-                                actionResponse = clientSession.getState().pass(clientSession, dataFromClient.substring(5, dataFromClient.length())); //Extract username
+                                actionResponse = clientSession.getState().pass(clientSession, ftpCommand.getParams()[0]); //Extract password
                                 break;
                     case QUIT:  log(clientSession.getClientName() + " disconnected.");
                                 actionResponse = clientSession.getState().quit(clientSession);
