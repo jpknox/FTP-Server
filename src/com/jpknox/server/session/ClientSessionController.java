@@ -46,10 +46,10 @@ public class ClientSessionController {
 
                 //Loop over never ending null chars sent by FTP clients
                 while (true) {
-                    log("Entered the keep-connection-alive loop.");
-                    dataFromClient = (tempData = input.readLine()) == null ? "Null char" : tempData;
+                    log("Entered the keep-alive input loop.");
+                    dataFromClient = input.readLine();
                     log("Received input from client.");
-                    if (!dataFromClient.equals("Null char")) {
+                    if (!dataFromClient.equals(null)) {
                         break;
                     } else {
                         log("Sleeping for 100 millis");
