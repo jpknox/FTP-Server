@@ -3,6 +3,10 @@ package com.jpknox.server.transfer;
 
 import com.jpknox.server.transfer.exception.IllegalPortException;
 
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
+
 /**
  * Created by joaok on 23/12/2017.
  */
@@ -12,7 +16,20 @@ public class DataTransferController {
     public static final int UPPER_PORT_BOUNDARY = 65535;
 
     private int dataPort = -1;
+
+    private ServerSocket dataConnection;
+
     private boolean transferring = false;
+
+    public int[] listen() {
+        generatePassiveDataPort();
+        try {
+            dataConnection = new ServerSocket(dataPort);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return getEncodedDataPort();
+    }
 
     //TODO: Make this private and amend the tests
     public int generatePassiveDataPort() {

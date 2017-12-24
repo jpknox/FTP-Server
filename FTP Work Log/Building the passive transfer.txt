@@ -1,0 +1,46 @@
+Test that a users's username is used by all loggers after it has been entered.
+Refactor the logger which states that a user has entered a username.
+	Perhaps delegate this to the login authentication process. Log something after the user has logged in.
+Build logic to verify if a command has the correct number of arguements
+	501 Syntax error in parameters or arguments.
+Refactor each state so that the ClientSesion is injected during instantiation.
+	
+	
+Implement LIST command
+	Sends a list from the server to the passive DTP (Data Transfer Process)
+	
+	
+	
+	
+Passive - Server listens on IP and port specified by PORT (or the default IP and port)
+	Server opens a port (N > 1023)
+Active - Client listens on IP and port specified by PORT (or the default IP and port)
+
+Command
+	PASV - Server opens up on a data port. Response is the data port (format?).
+Passive steps
+	Client contacts server (on server's port 21).	(Done)
+	Client issues PASV command.					(In Progress)
+		Server picks a port (50,000 <= P <= 65,535)			
+	Server responds to PASV command with P which it begins listneing to for the data connection.	(Not done)
+	Client connects to the servers data port.											(Not done)
+	The server detects the connection and responds by sending the requested data down it.	(Not done)
+	
+Server process port (aka L) = 21
+Passive server data port P > 1023
+Passive client ports. Cmd is N > 1023, Data is N+1
+Unprivileged port range is 1024 - 65,535
+Full port range 1 to 65,535
+FileZilla recommends P >= 50,000
+p1 = (P - p2)/256
+
+PASV response codes
+	227 Entering Passive Mode (h1,h2,h3,h4,p1,p2).
+	501 Syntax error in parameters or arguments.
+
+p1 = (P - p2)/256
+
+256p1 = P - p2
+
+p2 + 256p1 = P
+	

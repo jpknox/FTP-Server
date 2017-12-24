@@ -12,6 +12,7 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import static junit.framework.TestCase.assertFalse;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
@@ -190,6 +191,33 @@ public class FTPServerIntegrationTest {
         assertTrue(serverOutputReader.readLine().equals("331 User name okay, need password."));
         assertTrue(serverOutputReader.readLine().equals("230 User1 logged in, proceed."));
         assertEquals("227 Entering Passive Mode (127,0,0,1,", serverOutputReader.readLine().substring(0, 37));
+        assertTrue(serverOutputReader.readLine().equals("221 Service closing control connection."));
+        String state = ftpServer.getClientSessionController(0).getClientSession().getState().getClass().getSimpleName();
+        assertEquals(StateLoggedIn.class.getSimpleName(), state);
+    }
+
+    @Test
+    public void testMultiplePasvCommandReturnsMultiplePorts() throws IOException {
+        sendLine("USER user1");
+        sendLine("PASS pass1");
+        sendLine("PASV");
+        sendLine("PASV");
+        sendLine("PASV");
+        sendLine("quit");
+        ftpServer = new FTPServer(mockServerSocket);
+        assertTrue(serverOutputReader.readLine().equals("220 Welcome to Jay's FTP Server!"));
+        assertTrue(serverOutputReader.readLine().equals("331 User name okay, need password."));
+        assertTrue(serverOutputReader.readLine().equals("230 User1 logged in, proceed."));
+
+        String[] pasvResponse = {serverOutputReader.readLine(),
+                                 serverOutputReader.readLine(),
+                                 serverOutputReader.readLine()};
+        for (int i = 0; i < 3; i++) {
+            for (int n = 1; n < 3; n++ ) {
+                if (i == n) continue;
+                assertFalse(pasvResponse[i].equals(pasvResponse[n]));
+            }
+        }
         assertTrue(serverOutputReader.readLine().equals("221 Service closing control connection."));
         String state = ftpServer.getClientSessionController(0).getClientSession().getState().getClass().getSimpleName();
         assertEquals(StateLoggedIn.class.getSimpleName(), state);
