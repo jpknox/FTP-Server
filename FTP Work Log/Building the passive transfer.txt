@@ -1,9 +1,8 @@
-Test that a users's username is used by all loggers after it has been entered.
-Refactor the logger which states that a user has entered a username.
-	Perhaps delegate this to the login authentication process. Log something after the user has logged in.
 Build logic to verify if a command has the correct number of arguements
 	501 Syntax error in parameters or arguments.
 Refactor each state so that the ClientSesion is injected during instantiation.
+Refactor pre-login responses to inform the user they must login before they can use the system.
+	e.g. "530 Please login with USER and PASS."
 	
 	
 Implement LIST command

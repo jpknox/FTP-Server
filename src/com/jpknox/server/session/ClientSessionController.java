@@ -81,9 +81,8 @@ public class ClientSessionController {
                                 break;
                     case PWD:   actionResponse = clientSession.getState().pwd(clientSession);
                                 break;
+                    case ERROR: actionResponse = "202 Command not implemented, superfluous at this site.";
                 }
-
-                if (actionResponse.equals(null) || actionResponse.length() == 0) actionResponse = "202 Command not implemented, superfluous at this site.";
                 sendToClient(actionResponse);
                 actionResponse = "";
 

@@ -223,6 +223,26 @@ public class FTPServerIntegrationTest {
         assertEquals(StateLoggedIn.class.getSimpleName(), state);
     }
 
+    @Test
+    public void testMessageContainingOnlySpaces() throws IOException {
+        sendLine(" ");
+        sendLine("USER user1");
+        sendLine(" ");
+        sendLine("PASS pass1");
+        sendLine(" ");
+        sendLine("quit");
+        ftpServer = new FTPServer(mockServerSocket);
+        assertTrue(serverOutputReader.readLine().equals("220 Welcome to Jay's FTP Server!"));
+        assertTrue(serverOutputReader.readLine().equals("202 Command not implemented, superfluous at this site."));
+        assertTrue(serverOutputReader.readLine().equals("331 User name okay, need password."));
+        assertTrue(serverOutputReader.readLine().equals("202 Command not implemented, superfluous at this site."));
+        assertTrue(serverOutputReader.readLine().equals("230 User1 logged in, proceed."));
+        assertTrue(serverOutputReader.readLine().equals("202 Command not implemented, superfluous at this site."));
+        assertTrue(serverOutputReader.readLine().equals("221 Service closing control connection."));
+        String state = ftpServer.getClientSessionController(0).getClientSession().getState().getClass().getSimpleName();
+        assertEquals(StateLoggedIn.class.getSimpleName(), state);
+    }
+
     //TODO: TDD for scenario of missing parameters e.g. "PASS " instead of "PASS password"
     //TODO: TDD for illegal/missing/too short command/message given to server
             // Command out of sequence

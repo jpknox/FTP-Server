@@ -26,8 +26,10 @@ public class CommandDecoder {
         FTPCommandAction commandAction;
         try {
             commandAction = FTPCommandAction.valueOf(tokens[ACTION].toUpperCase());
-        } catch (IllegalArgumentException | NullPointerException exception) {
-            log("Error when creating an instance of the command ENUM with '" + tokens[ACTION] + "'");
+        } catch (IllegalArgumentException | NullPointerException | ArrayIndexOutOfBoundsException exception) {
+            String message = tokens.length == 0 ? "The client has entered a command consisting entirely of spaces" :
+                                "Error when creating an instance of the command ENUM with '" + tokens[ACTION] + "'";
+            log(message);
             return new FTPCommand(FTPCommandAction.ERROR, defaultParams());
         }
 
