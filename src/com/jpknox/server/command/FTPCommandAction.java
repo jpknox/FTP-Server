@@ -24,7 +24,8 @@ public enum FTPCommandAction {
     FEAT("FEAT"),
     PWD("PWD"),
     PASV("PASV"),
-    ERROR("ERROR");
+    ERROR_0("GENERIC_ERROR"),
+    ERROR_1("EMPTY ARGUMENT");
 
     private String name;
 

@@ -1,8 +1,8 @@
 package com.jpknox.server.utility;
 
+import com.jpknox.server.command.CommandDecoder;
 import com.jpknox.server.command.FTPCommand;
 import com.jpknox.server.command.FTPCommandAction;
-import com.sun.org.apache.bcel.internal.generic.NEW;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -243,10 +243,30 @@ public class CommandDecoderIntegrationTest {
     }
 
     @Test
-    public void testEmptyCommand() {
-        telnetCommand = NEWLINE;
+    public void testUnimplementedCommand() {
+        telnetCommand = "ABCD";
         decodedCommand = commandDecoder.decode(telnetCommand);
-        assertEquals(FTPCommandAction.ERROR, decodedCommand.getAction());
+        assertEquals(FTPCommandAction.ERROR_0, decodedCommand.getAction());
+        assertEquals("", decodedCommand.getParams()[0]);
+        assertEquals("", decodedCommand.getParams()[1]);
+        assertEquals("", decodedCommand.getParams()[2]);
+    }
+
+    @Test
+    public void testEmptyCommand() {
+        telnetCommand = "";
+        decodedCommand = commandDecoder.decode(telnetCommand);
+        assertEquals(FTPCommandAction.ERROR_1, decodedCommand.getAction());
+        assertEquals("", decodedCommand.getParams()[0]);
+        assertEquals("", decodedCommand.getParams()[1]);
+        assertEquals("", decodedCommand.getParams()[2]);
+    }
+
+    @Test
+    public void testCommandConsistingOfSpaces() {
+        telnetCommand = "           ";
+        decodedCommand = commandDecoder.decode(telnetCommand);
+        assertEquals(FTPCommandAction.ERROR_1, decodedCommand.getAction());
         assertEquals("", decodedCommand.getParams()[0]);
         assertEquals("", decodedCommand.getParams()[1]);
         assertEquals("", decodedCommand.getParams()[2]);
@@ -256,7 +276,7 @@ public class CommandDecoderIntegrationTest {
     public void testShortCommand() {
         telnetCommand = "U" + NEWLINE;
         decodedCommand = commandDecoder.decode(telnetCommand);
-        assertEquals(FTPCommandAction.ERROR, decodedCommand.getAction());
+        assertEquals(FTPCommandAction.ERROR_0, decodedCommand.getAction());
         assertEquals("", decodedCommand.getParams()[0]);
         assertEquals("", decodedCommand.getParams()[1]);
         assertEquals("", decodedCommand.getParams()[2]);
@@ -266,7 +286,7 @@ public class CommandDecoderIntegrationTest {
     public void testLongCommand() {
         telnetCommand = "USERRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR" + NEWLINE;
         decodedCommand = commandDecoder.decode(telnetCommand);
-        assertEquals(FTPCommandAction.ERROR, decodedCommand.getAction());
+        assertEquals(FTPCommandAction.ERROR_0, decodedCommand.getAction());
         assertEquals("", decodedCommand.getParams()[0]);
         assertEquals("", decodedCommand.getParams()[1]);
         assertEquals("", decodedCommand.getParams()[2]);

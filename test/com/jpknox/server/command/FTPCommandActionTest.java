@@ -103,8 +103,8 @@ public class FTPCommandActionTest {
 
     @Test
     public void testError() {
-        commandAction = FTPCommandAction.valueOf("ERROR");
-        assertEquals(FTPCommandAction.ERROR, commandAction);
+        commandAction = FTPCommandAction.valueOf("ERROR_0");
+        assertEquals(FTPCommandAction.ERROR_0, commandAction);
     }
 
 }

@@ -1,5 +1,6 @@
 package com.jpknox.server.utility;
 
+import com.jpknox.server.command.CommandDecoder;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

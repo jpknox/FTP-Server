@@ -2,7 +2,7 @@ package com.jpknox.server.session;
 
 import com.jpknox.server.command.FTPCommand;
 import com.jpknox.server.command.FTPCommandAction;
-import com.jpknox.server.utility.CommandDecoder;
+import com.jpknox.server.command.CommandDecoder;
 
 import java.io.*;
 import java.net.Socket;
@@ -63,25 +63,27 @@ public class ClientSessionController {
                 ftpCommand = commandDecoder.decode(dataFromClient);
                 ftpCommandAction = ftpCommand.getAction();
                 switch (ftpCommandAction) {
-                    case USER:  actionResponse = clientSession.getState().user(clientSession, ftpCommand.getParams()[0]); //Extract username
-                                break;
-                    case PASS:  actionResponse = clientSession.getState().pass(clientSession, ftpCommand.getParams()[0]); //Extract password
-                                break;
-                    case PASV:  actionResponse = clientSession.getState().pasv(clientSession);
-                                break;
-                    case QUIT:  log(clientSession.getClientName() + " disconnected.");
-                                actionResponse = clientSession.getState().quit(clientSession);
-                                sendToClient(actionResponse);
-                                break inputLoop;
-                    case AUTH:  actionResponse = clientSession.getState().auth(clientSession);
-                                break;
-                    case SYST:  actionResponse = clientSession.getState().syst(clientSession);
-                                break;
-                    case FEAT:  actionResponse = clientSession.getState().feat(clientSession);
-                                break;
-                    case PWD:   actionResponse = clientSession.getState().pwd(clientSession);
-                                break;
-                    case ERROR: actionResponse = "202 Command not implemented, superfluous at this site.";
+                    case USER:    actionResponse = clientSession.getState().user(clientSession, ftpCommand.getParams()[0]); //Extract username
+                                  break;
+                    case PASS:    actionResponse = clientSession.getState().pass(clientSession, ftpCommand.getParams()[0]); //Extract password
+                                  break;
+                    case PASV:    actionResponse = clientSession.getState().pasv(clientSession);
+                                  break;
+                    case QUIT:    log(clientSession.getClientName() + " disconnected.");
+                                  actionResponse = clientSession.getState().quit(clientSession);
+                                  sendToClient(actionResponse);
+                                  break inputLoop;
+                    case AUTH:    actionResponse = clientSession.getState().auth(clientSession);
+                                  break;
+                    case SYST:    actionResponse = clientSession.getState().syst(clientSession);
+                                  break;
+                    case FEAT:    actionResponse = clientSession.getState().feat(clientSession);
+                                  break;
+                    case PWD:     actionResponse = clientSession.getState().pwd(clientSession);
+                                  break;
+                    case ERROR_0: actionResponse = "202 Command not implemented, superfluous at this site.";
+                                  break;
+                    case ERROR_1: actionResponse = "501 Syntax error in parameters or arguments.";
                 }
                 sendToClient(actionResponse);
                 actionResponse = "";

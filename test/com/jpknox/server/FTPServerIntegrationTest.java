@@ -225,19 +225,19 @@ public class FTPServerIntegrationTest {
 
     @Test
     public void testMessageContainingOnlySpaces() throws IOException {
-        sendLine(" ");
+        sendLine("");
         sendLine("USER user1");
-        sendLine(" ");
+        sendLine("                                                ");
         sendLine("PASS pass1");
-        sendLine(" ");
+        sendLine("                              ");
         sendLine("quit");
         ftpServer = new FTPServer(mockServerSocket);
         assertTrue(serverOutputReader.readLine().equals("220 Welcome to Jay's FTP Server!"));
-        assertTrue(serverOutputReader.readLine().equals("202 Command not implemented, superfluous at this site."));
+        assertTrue(serverOutputReader.readLine().equals("501 Syntax error in parameters or arguments."));
         assertTrue(serverOutputReader.readLine().equals("331 User name okay, need password."));
-        assertTrue(serverOutputReader.readLine().equals("202 Command not implemented, superfluous at this site."));
+        assertTrue(serverOutputReader.readLine().equals("501 Syntax error in parameters or arguments."));
         assertTrue(serverOutputReader.readLine().equals("230 User1 logged in, proceed."));
-        assertTrue(serverOutputReader.readLine().equals("202 Command not implemented, superfluous at this site."));
+        assertTrue(serverOutputReader.readLine().equals("501 Syntax error in parameters or arguments."));
         assertTrue(serverOutputReader.readLine().equals("221 Service closing control connection."));
         String state = ftpServer.getClientSessionController(0).getClientSession().getState().getClass().getSimpleName();
         assertEquals(StateLoggedIn.class.getSimpleName(), state);

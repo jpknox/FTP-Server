@@ -1,9 +1,4 @@
-package com.jpknox.server.utility;
-
-import com.jpknox.server.command.FTPCommand;
-import com.jpknox.server.command.FTPCommandAction;
-
-import java.util.Arrays;
+package com.jpknox.server.command;
 
 import static com.jpknox.server.utility.Logger.log;
 
@@ -23,14 +18,17 @@ public class CommandDecoder {
         String[] tokens = telnetCommand.split(" ");
 
         //Extract the action
-        FTPCommandAction commandAction;
+        FTPCommandAction commandAction = null;
         try {
             commandAction = FTPCommandAction.valueOf(tokens[ACTION].toUpperCase());
         } catch (IllegalArgumentException | NullPointerException | ArrayIndexOutOfBoundsException exception) {
-            String message = tokens.length == 0 ? "The client has entered a command consisting entirely of spaces" :
-                                "Error when creating an instance of the command ENUM with '" + tokens[ACTION] + "'";
-            log(message);
-            return new FTPCommand(FTPCommandAction.ERROR, defaultParams());
+            if (tokens.length == 0 || tokens[0].equals("")) {
+                log("The client has entered a command consisting entirely of spaces");
+                return new FTPCommand(FTPCommandAction.ERROR_1, defaultParams());
+            } else {
+                log("Error when creating an instance of the command ENUM with '" + tokens[ACTION] + "'");
+                return new FTPCommand(FTPCommandAction.ERROR_0, defaultParams());
+            }
         }
 
         //Extract the params
