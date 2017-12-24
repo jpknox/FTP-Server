@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import static com.jpknox.server.utility.Logger.log;
+
 /**
  * Created by joaok on 23/12/2017.
  */
@@ -33,7 +35,13 @@ public class DataTransferController {
 
     //TODO: Make this private and amend the tests
     public int generatePassiveDataPort() {
-        dataPort = java.util.concurrent.ThreadLocalRandom.current().nextInt(LOWER_PORT_BOUNDARY, UPPER_PORT_BOUNDARY+1);
+        try {
+            setDataPort(java.util.concurrent.ThreadLocalRandom.current().nextInt(LOWER_PORT_BOUNDARY, UPPER_PORT_BOUNDARY+1));
+        } catch (IllegalPortException e) {
+            log("An IllegalPortException was thrown when generating a new passive data port.");
+            e.printStackTrace();
+            return -1;
+        }
         return dataPort;
     }
 
