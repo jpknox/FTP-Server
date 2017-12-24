@@ -197,7 +197,7 @@ public class FTPServerIntegrationTest {
     }
 
     @Test
-    public void testMultiplePasvCommandReturnsMultiplePorts() throws IOException {
+    public void testMultiplePasvCommandsEachReturnNewPorts() throws IOException {
         sendLine("USER user1");
         sendLine("PASS pass1");
         sendLine("PASV");
