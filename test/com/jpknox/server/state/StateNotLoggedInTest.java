@@ -112,7 +112,7 @@ public class StateNotLoggedInTest {
     @Test
     public void testSyst() {
         String message = stateNotLoggedIn.syst();
-        assertEquals("215 " + FTPServerConfig.OPERATING_SYSTEM + ": " + FTPServerConfig.SERVER_NAME, message);
+        assertEquals("215 Jay's FTP Server V1.0: Windows 10", message);
     }
 
     @Test
@@ -125,7 +125,7 @@ public class StateNotLoggedInTest {
     public void testPwd() {
         String message = stateNotLoggedIn.pwd();
         assertEquals("257 /", message);
-        verify(fileManager, times(2)).getCurrentDirectory();
+        verify(fileManager, times(1)).getCurrentDirectory();
     }
 
 }

@@ -8,8 +8,6 @@ import com.jpknox.server.session.ClientSession;
  */
 public class StateNeedPassword extends AbstractSessionState {
 
-    private final LoginAuthentication loginAuthentication = new LoginAuthentication();
-
     private String username;        //User is in limbo, needs a password
 
     public StateNeedPassword(ClientSession session, String username) {

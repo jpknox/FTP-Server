@@ -1,5 +1,7 @@
 package com.jpknox.server.authentication;
 
+import com.jpknox.server.response.FTPResponseFactory;
+import com.jpknox.server.response.ResponseFactory;
 import com.jpknox.server.session.ClientSession;
 import com.jpknox.server.state.StateLoggedIn;
 import com.jpknox.server.state.StateNeedPassword;
@@ -12,7 +14,9 @@ import static com.jpknox.server.utility.Logger.log;
  */
 public class LoginService {
 
-    LoginAuthentication loginAuthentication = new LoginAuthentication();
+    private LoginAuthentication loginAuthentication = new LoginAuthentication();
+
+    private ResponseFactory responseFactory = new FTPResponseFactory();
 
     public LoginService() {
     }
@@ -21,6 +25,13 @@ public class LoginService {
         this.loginAuthentication = loginAuthentication;
     }
 
+    /**
+     * Orchestrates the client's login attempt by forwarding their {@code username}
+     * towards the authenticator.
+     * @param session
+     * @param username
+     * @return
+     */
     public String login(ClientSession session, String username) {
         if (username.length() == 0 || username.equals(null))
             return "501 Syntax error in parameters or arguments.";
@@ -30,26 +41,34 @@ public class LoginService {
             if(!loginAuthentication.hasPassword(username)) {
                 session.setState(new StateLoggedIn(session));
                 log("Username \"" + username + "\" logged in.");
-                return "230 " + firstCharUpper(username) + " logged in, proceed.";
+                return responseFactory.createResponse(230, username);
             } else {
                 session.setState(new StateNeedPassword(session, username));
-                return "331 User name okay, need password.";
+                return responseFactory.createResponse(331);
             }
         } else {
             session.setState(new StateNotLoggedIn(session));
-            return "530 Not logged in.";
+            return responseFactory.createResponse(530);
         }
     }
 
+    /**
+     * Orchestrates the client's login attempt by forwarding their {@code username}
+     * and {&code password} to the authenticator.
+     * @param session
+     * @param username
+     * @param password
+     * @return
+     */
     public String login(ClientSession session, String username, String password) {
         if (loginAuthentication.authenticate(username, password)) {
             session.setState(new StateLoggedIn(session));
             log(username + " logged in successfully.");
-            return "230 "+ firstCharUpper(username) + " logged in, proceed.";
+            return responseFactory.createResponse(230, username);
         } else {
             log(username + " has entered their password incorrectly.");
             session.setState(new StateNotLoggedIn(session));
-            return "530 Not logged in.";
+            return responseFactory.createResponse(530);
         }
     }
 
