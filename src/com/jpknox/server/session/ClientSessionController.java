@@ -63,23 +63,23 @@ public class ClientSessionController {
                 ftpCommand = commandDecoder.decode(dataFromClient);
                 ftpCommandAction = ftpCommand.getAction();
                 switch (ftpCommandAction) {
-                    case USER:    actionResponse = clientSession.getState().user(clientSession, ftpCommand.getParams()[0]); //Extract username
+                    case USER:    actionResponse = clientSession.getState().user(ftpCommand.getParams()[0]); //Extract username
                                   break;
-                    case PASS:    actionResponse = clientSession.getState().pass(clientSession, ftpCommand.getParams()[0]); //Extract password
+                    case PASS:    actionResponse = clientSession.getState().pass(ftpCommand.getParams()[0]); //Extract password
                                   break;
-                    case PASV:    actionResponse = clientSession.getState().pasv(clientSession);
+                    case PASV:    actionResponse = clientSession.getState().pasv();
                                   break;
                     case QUIT:    log(clientSession.getClientName() + " disconnected.");
-                                  actionResponse = clientSession.getState().quit(clientSession);
+                                  actionResponse = clientSession.getState().quit();
                                   sendToClient(actionResponse);
                                   break inputLoop;
-                    case AUTH:    actionResponse = clientSession.getState().auth(clientSession);
+                    case AUTH:    actionResponse = clientSession.getState().auth();
                                   break;
-                    case SYST:    actionResponse = clientSession.getState().syst(clientSession);
+                    case SYST:    actionResponse = clientSession.getState().syst();
                                   break;
-                    case FEAT:    actionResponse = clientSession.getState().feat(clientSession);
+                    case FEAT:    actionResponse = clientSession.getState().feat();
                                   break;
-                    case PWD:     actionResponse = clientSession.getState().pwd(clientSession);
+                    case PWD:     actionResponse = clientSession.getState().pwd();
                                   break;
                     case ERROR_0: actionResponse = "202 Command not implemented, superfluous at this site.";
                                   break;

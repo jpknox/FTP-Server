@@ -11,6 +11,8 @@ import static com.jpknox.server.utility.Logger.log;
  * Created by joaok on 23/12/2017.
  */
 public abstract class AbstractSessionState implements SessionState {
+    
+    protected ClientSession session;
 
     protected FTPServerConfig config = new FTPServerConfig();
 
@@ -18,83 +20,87 @@ public abstract class AbstractSessionState implements SessionState {
 
     protected LoginService loginService = new LoginService();
 
+    public AbstractSessionState(ClientSession s) {
+        this.session = s;
+    }
+
     @Override
-    public String user(ClientSession session, String username) {
+    public String user(String username) {
         return loginService.login(session, username);
     }
 
     @Override
-    public String pass(ClientSession session, String password) {
+    public String pass(String password) {
         log("Client with name '" + session.getClientName() + "' attempted to enter password '" + password + "' out of sequence.");
         return "503 Bad sequence of commands.";
     }
 
     @Override
-    public String quit(ClientSession session) {
+    public String quit() {
         return "221 Service closing control connection.";
     }
 
     @Override
-    public String port(ClientSession session, int portToUse) {
+    public String port(int portToUse) {
         return "530 Not logged in.";
     }
 
     @Override
-    public String type(ClientSession session, String format) {
+    public String type(String format) {
         return "530 Not logged in.";
     }
 
     @Override
-    public String mode(ClientSession session, String modeToUse) {
+    public String mode(String modeToUse) {
         return "530 Not logged in.";
     }
 
     @Override
-    public String stru(ClientSession session, String structureToUse) {
+    public String stru(String structureToUse) {
         return "530 Not logged in.";
     }
 
     @Override
-    public String retr(ClientSession session, String pathToFile) {
+    public String retr(String pathToFile) {
         return "530 Not logged in.";
     }
 
     @Override
-    public String stor(ClientSession session, String pathToFile) {
+    public String stor(String pathToFile) {
         return "530 Not logged in.";
     }
 
     @Override
-    public String noop(ClientSession session) {
+    public String noop() {
         return "200 Command okay.";
     }
 
     @Override
-    public String auth(ClientSession session) {
+    public String auth() {
         log(session.getClientName() + ": 502 command not implemented.");
         return "502 Command not implemented.";
     }
 
     @Override
-    public String syst(ClientSession session) {
+    public String syst() {
         log(session.getClientName() + ": 215 " + config.OPERATING_SYSTEM + ": " + config.SERVER_NAME);
         return "215 " + config.OPERATING_SYSTEM + ": " + config.SERVER_NAME;
     }
 
     @Override
-    public String feat(ClientSession session) {
+    public String feat() {
         log(session.getClientName() + ": 502 FEAT command not implemented.");
         return "502 Command not implemented.";
     }
 
     @Override
-    public String pwd(ClientSession session) {
+    public String pwd() {
         log(session.getClientName() + ": 257 " + fileManager.getCurrentDirectory());
         return "257 " + fileManager.getCurrentDirectory();
     }
 
     @Override
-    public String pasv(ClientSession session) { return "530 Not logged in."; }
+    public String pasv() { return "530 Not logged in."; }
 
     public void setFileManager(FileManager fileManager) {
         this.fileManager = fileManager;

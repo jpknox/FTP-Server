@@ -24,13 +24,13 @@ public class StateNotLoggedInTest {
 
     @Before
     public void setup() {
-        stateNotLoggedIn = new StateNotLoggedIn();
         loginService = Mockito.mock(LoginService.class);
         fileManager = Mockito.mock(FileManager.class);
         when(fileManager.getCurrentDirectory()).thenReturn("/");
+        clientSession = Mockito.mock(ClientSession.class);
+        stateNotLoggedIn = new StateNotLoggedIn(clientSession);
         stateNotLoggedIn.setLoginService(loginService);
         stateNotLoggedIn.setFileManager(fileManager);
-        clientSession = Mockito.mock(ClientSession.class);
     }
 
     @After
@@ -44,86 +44,86 @@ public class StateNotLoggedInTest {
     @Test
     public void testUser() {
         String username = "username";
-        stateNotLoggedIn.user(clientSession, username);
+        stateNotLoggedIn.user(username);
         verify(loginService).login(clientSession, username);
     }
 
     @Test
     public void testPass() {
         String password = "password";
-        String message = stateNotLoggedIn.pass(clientSession, password);
+        String message = stateNotLoggedIn.pass(password);
         assertEquals("503 Bad sequence of commands.", message);
     }
 
     @Test
     public void testQuit() {
-        String message = stateNotLoggedIn.quit(clientSession);
+        String message = stateNotLoggedIn.quit();
         assertEquals("221 Service closing control connection.", message);
     }
 
     @Test
     public void testPort() {
-        String message = stateNotLoggedIn.port(clientSession, 9001);
+        String message = stateNotLoggedIn.port(9001);
         assertEquals("530 Not logged in.", message);
     }
 
     @Test
     public void testType() {
-        String message = stateNotLoggedIn.type(clientSession, "NON PRINT");
+        String message = stateNotLoggedIn.type("NON PRINT");
         assertEquals("530 Not logged in.", message);
     }
 
     @Test
     public void testMode() {
-        String message = stateNotLoggedIn.mode(clientSession, "S");
+        String message = stateNotLoggedIn.mode("S");
         assertEquals("530 Not logged in.", message);
     }
 
     @Test
     public void testStru() {
-        String message = stateNotLoggedIn.stru(clientSession, "F");
+        String message = stateNotLoggedIn.stru("F");
         assertEquals("530 Not logged in.", message);
     }
 
     @Test
     public void testRetr() {
-        String message = stateNotLoggedIn.retr(clientSession, "/file.txt");
+        String message = stateNotLoggedIn.retr("/file.txt");
         assertEquals("530 Not logged in.", message);
     }
 
     @Test
     public void testStor() {
-        String message = stateNotLoggedIn.stor(clientSession, "/file.txt");
+        String message = stateNotLoggedIn.stor("/file.txt");
         assertEquals("530 Not logged in.", message);
     }
 
     @Test
     public void testNoop() {
-        String message = stateNotLoggedIn.noop(clientSession);
+        String message = stateNotLoggedIn.noop();
         assertEquals("200 Command okay.", message);
     }
 
     @Test
     public void testAuth() {
-        String message = stateNotLoggedIn.auth(clientSession);
+        String message = stateNotLoggedIn.auth();
         assertEquals("502 Command not implemented.", message);
     }
 
     @Test
     public void testSyst() {
-        String message = stateNotLoggedIn.syst(clientSession);
+        String message = stateNotLoggedIn.syst();
         assertEquals("215 " + FTPServerConfig.OPERATING_SYSTEM + ": " + FTPServerConfig.SERVER_NAME, message);
     }
 
     @Test
     public void testFeat() {
-        String message = stateNotLoggedIn.feat(clientSession);
+        String message = stateNotLoggedIn.feat();
         assertEquals("502 Command not implemented.", message);
     }
 
     @Test
     public void testPwd() {
-        String message = stateNotLoggedIn.pwd(clientSession);
+        String message = stateNotLoggedIn.pwd();
         assertEquals("257 /", message);
         verify(fileManager, times(2)).getCurrentDirectory();
     }

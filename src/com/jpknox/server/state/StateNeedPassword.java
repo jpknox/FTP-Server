@@ -12,12 +12,13 @@ public class StateNeedPassword extends AbstractSessionState {
 
     private String username;        //User is in limbo, needs a password
 
-    public StateNeedPassword(String username) {
+    public StateNeedPassword(ClientSession session, String username) {
+        super(session);
         this.username = username;
     }
 
     @Override
-    public String pass(ClientSession session, String password) {
+    public String pass(String password) {
         return loginService.login(session, this.username, password);
     }
 }

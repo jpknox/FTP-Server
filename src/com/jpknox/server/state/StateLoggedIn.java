@@ -7,8 +7,12 @@ import com.jpknox.server.session.ClientSession;
  */
 public class StateLoggedIn extends AbstractSessionState {
 
+    public StateLoggedIn(ClientSession session) {
+        super(session);
+    }
+
     @Override
-    public String pasv(ClientSession session) {
+    public String pasv() {
         //"TODO: Pick port and start listening to it"
         // (h1,h2,h3,h4,p1,p2)
         int[] encodedDataPort = session.getDataTransferController().listen();

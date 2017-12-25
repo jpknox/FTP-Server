@@ -16,7 +16,7 @@ public class ClientSession {
     private DataTransferController dataTransferController = new DataTransferController();
 
     public ClientSession() {
-        this.context = new StateNotLoggedIn();
+        this.context = new StateNotLoggedIn(this);
     }
 
     public SessionState getState() {

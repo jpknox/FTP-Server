@@ -1,6 +1,5 @@
 Build logic to verify if a command has the correct number of arguements
 	501 Syntax error in parameters or arguments.
-Refactor each state so that the ClientSesion is injected during instantiation.
 	
 	
 Implement LIST command

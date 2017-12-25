@@ -28,13 +28,13 @@ public class StateNeedPasswordTest {
     @Before
     public void setup() {
         username = "username";
-        stateNeedPassword = new StateNeedPassword(username);
         loginService = Mockito.mock(LoginService.class);
         fileManager = Mockito.mock(FileManager.class);
         when(fileManager.getCurrentDirectory()).thenReturn("/");
+        clientSession = Mockito.mock(ClientSession.class);
+        stateNeedPassword = new StateNeedPassword(clientSession, username);
         stateNeedPassword.setLoginService(loginService);
         stateNeedPassword.setFileManager(fileManager);
-        clientSession = Mockito.mock(ClientSession.class);
     }
 
     @After
@@ -48,86 +48,86 @@ public class StateNeedPasswordTest {
 
     @Test
     public void testUser() {
-        stateNeedPassword.user(clientSession, username);
+        stateNeedPassword.user(username);
         verify(loginService).login(clientSession, username);
     }
 
     @Test
     public void testPass() {
         String password = "password";
-        stateNeedPassword.pass(clientSession, password);
+        stateNeedPassword.pass(password);
         verify(loginService).login(clientSession, username, password);
     }
 
     @Test
     public void testQuit() {
-        String message = stateNeedPassword.quit(clientSession);
+        String message = stateNeedPassword.quit();
         assertEquals("221 Service closing control connection.", message);
     }
 
     @Test
     public void testPort() {
-        String message = stateNeedPassword.port(clientSession, 9001);
+        String message = stateNeedPassword.port(9001);
         assertEquals("530 Not logged in.", message);
     }
 
     @Test
     public void testType() {
-        String message = stateNeedPassword.type(clientSession, "NON PRINT");
+        String message = stateNeedPassword.type("NON PRINT");
         assertEquals("530 Not logged in.", message);
     }
 
     @Test
     public void testMode() {
-        String message = stateNeedPassword.mode(clientSession, "S");
+        String message = stateNeedPassword.mode("S");
         assertEquals("530 Not logged in.", message);
     }
 
     @Test
     public void testStru() {
-        String message = stateNeedPassword.stru(clientSession, "F");
+        String message = stateNeedPassword.stru("F");
         assertEquals("530 Not logged in.", message);
     }
 
     @Test
     public void testRetr() {
-        String message = stateNeedPassword.retr(clientSession, "/file.txt");
+        String message = stateNeedPassword.retr("/file.txt");
         assertEquals("530 Not logged in.", message);
     }
 
     @Test
     public void testStor() {
-        String message = stateNeedPassword.stor(clientSession, "/file.txt");
+        String message = stateNeedPassword.stor("/file.txt");
         assertEquals("530 Not logged in.", message);
     }
 
     @Test
     public void testNoop() {
-        String message = stateNeedPassword.noop(clientSession);
+        String message = stateNeedPassword.noop();
         assertEquals("200 Command okay.", message);
     }
 
     @Test
     public void testAuth() {
-        String message = stateNeedPassword.auth(clientSession);
+        String message = stateNeedPassword.auth();
         assertEquals("502 Command not implemented.", message);
     }
 
     @Test
     public void testSyst() {
-        String message = stateNeedPassword.syst(clientSession);
+        String message = stateNeedPassword.syst();
         assertEquals("215 " + FTPServerConfig.OPERATING_SYSTEM + ": " + FTPServerConfig.SERVER_NAME, message);
     }
 
     @Test
     public void testFeat() {
-        String message = stateNeedPassword.feat(clientSession);
+        String message = stateNeedPassword.feat();
         assertEquals("502 Command not implemented.", message);
     }
 
     @Test
     public void testPwd() {
-        String message = stateNeedPassword.pwd(clientSession);
+        String message = stateNeedPassword.pwd();
         assertEquals("257 /", message);
         verify(fileManager, times(2)).getCurrentDirectory();
     }
