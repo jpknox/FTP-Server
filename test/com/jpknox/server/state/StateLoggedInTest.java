@@ -1,8 +1,10 @@
 package com.jpknox.server.state;
 
+import com.jpknox.server.storage.DataStore;
 import com.jpknox.server.storage.FileManager;
 import com.jpknox.server.authentication.LoginService;
 import com.jpknox.server.session.ClientSession;
+import com.jpknox.server.transfer.DataTransferController;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,14 +23,15 @@ public class StateLoggedInTest {
     private LoginService loginService;
     private FileManager fileManager;
 
+
     @Before
     public void setup() {
-        loginService = Mockito.mock(LoginService.class);
-        fileManager = Mockito.mock(FileManager.class);
-        when(fileManager.getCurrentDirectory()).thenReturn("/");
         clientSession = Mockito.mock(ClientSession.class);
         stateLoggedIn = new StateLoggedIn(clientSession);
+        loginService = Mockito.mock(LoginService.class);
         stateLoggedIn.setLoginService(loginService);
+        fileManager = Mockito.mock(FileManager.class);
+        when(fileManager.getCurrentDirectory()).thenReturn("/");
         stateLoggedIn.setFileManager(fileManager);
     }
 

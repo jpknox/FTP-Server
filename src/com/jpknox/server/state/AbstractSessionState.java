@@ -12,7 +12,7 @@ import com.jpknox.server.storage.FileManager;
  */
 public abstract class AbstractSessionState implements SessionState {
 
-    private ResponseFactory responseFactory = new FTPResponseFactory();
+    protected ResponseFactory responseFactory = new FTPResponseFactory();
     
     protected ClientSession session;
 

@@ -27,7 +27,6 @@ public class StateLoggedIn extends AbstractSessionState {
     @Override
     public String pwd() {
         String currentDirectory = fileManager.getCurrentDirectory();
-        session.getDataTransferController().send(currentDirectory);
-        return "Sending data down the data connection.";
+        return responseFactory.createResponse(257, currentDirectory);
     }
 }
