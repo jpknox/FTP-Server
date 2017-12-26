@@ -34,7 +34,7 @@ public class LoginService {
      */
     public String login(ClientSession session, String username) {
         if (username.length() == 0 || username.equals(null))
-            return "501 Syntax error in parameters or arguments.";
+            return responseFactory.createResponse(501);
 
         if (loginAuthentication.usernameExists(username)) {
             session.setClientName(username);    //TODO: what if the client changes, and fails to login?

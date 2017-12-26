@@ -13,15 +13,19 @@ import java.util.Locale;
  */
 public class FTPResponseFactory implements ResponseFactory {
 
-    public static final String LOGIN_SUCCESS = "230 %s logged in, proceed.";
-    public static final String LOGIN_FAILURE = "530 Not logged in.";
-    public static final String NEED_PASSWORD = "331 User name okay, need password.";
     public static final String COMMAND_OKAY = "200 Command okay.";
-    public static final String WORKING_DIRECTORY = "257 %s";
-    public static final String CLOSING_CONTROL_CONNECTION = "221 Service closing control connection.";
-    public static final String COMMAND_NOT_IMPLEMENTED = "502 Command not implemented.";
+    public static final String SUPERFLUOUS_COMMAND = "202 Command not implemented, superfluous at this site.";
     public static final String SYSTEM_DETAILS = "215 %s: %s";
+    public static final String CLOSING_CONTROL_CONNECTION = "221 Service closing control connection.";
+    public static final String LOGIN_SUCCESS = "230 %s logged in, proceed.";
+    public static final String WORKING_DIRECTORY = "257 %s";
+    public static final String NEED_PASSWORD = "331 User name okay, need password.";
+    public static final String UNRECOGNIZED = "500 Syntax error, command unrecognized.";
+    public static final String SYNTAX_ERROR = "501 Syntax error in parameters or arguments.";
+    public static final String COMMAND_NOT_IMPLEMENTED = "502 Command not implemented.";
     public static final String BAD_SEQUENCE = "503 Bad sequence of commands.";
+    public static final String LOGIN_FAILURE = "530 Not logged in.";
+
 
     private String format;
     private String output;
@@ -30,12 +34,15 @@ public class FTPResponseFactory implements ResponseFactory {
 
     @Override
     public String createResponse(int code) {
-        if (code == 530) format = LOGIN_FAILURE;
-        if (code == 331) format = NEED_PASSWORD;
         if (code == 200) format = COMMAND_OKAY;
+        if (code == 202) format = SUPERFLUOUS_COMMAND;
         if (code == 221) format = CLOSING_CONTROL_CONNECTION;
+        if (code == 331) format = NEED_PASSWORD;
+        if (code == 500) format = UNRECOGNIZED;
+        if (code == 501) format = SYNTAX_ERROR;
         if (code == 502) format = COMMAND_NOT_IMPLEMENTED;
         if (code == 503) format = BAD_SEQUENCE;
+        if (code == 530) format = LOGIN_FAILURE;
         formatter.format(format);
         output = sb.toString();
         sb.setLength(0);

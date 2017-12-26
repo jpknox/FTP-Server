@@ -1,6 +1,5 @@
-package com.jpknox.server.utility;
+package com.jpknox.server.command;
 
-import com.jpknox.server.command.CommandDecoder;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -10,24 +9,24 @@ import static org.junit.Assert.assertArrayEquals;
 /**
  * Created by JoaoPaulo on 18-Oct-17.
  */
-public class CommandDecoderTest {
+public class FTPCommandDecoderTest {
 
-    private CommandDecoder commandDecoder;
+    private FTPCommandDecoder FTPCommandDecoder;
 
     @Before
     public void setup() {
-        commandDecoder = new CommandDecoder();
+        FTPCommandDecoder = new FTPCommandDecoder();
     }
 
     @After
     public void teardown() {
-        commandDecoder = null;
+        FTPCommandDecoder = null;
     }
 
     @Test
     public void testDefaultParams() {
         String[] defaultParams = new String[] {"", "", ""};
-        assertArrayEquals(defaultParams, commandDecoder.defaultParams());
+        assertArrayEquals(defaultParams, FTPCommandDecoder.defaultParams());
     }
 
 }

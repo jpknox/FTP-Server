@@ -8,7 +8,7 @@ import static com.jpknox.server.utility.Logger.log;
  * Commands are of the form 'ACTION PARAM1 PARAM2 PARAM3'
  *
  */
-public class CommandDecoder {
+public class FTPCommandDecoder {
 
     private static final int ACTION = 0;
 
@@ -47,6 +47,7 @@ public class CommandDecoder {
 
         return new FTPCommand(commandAction, commandParams);
     }
+
 
     public String[] defaultParams() {
         String[] defaultParams = new String[] {"", "", ""};

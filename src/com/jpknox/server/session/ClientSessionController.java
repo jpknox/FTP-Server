@@ -2,7 +2,8 @@ package com.jpknox.server.session;
 
 import com.jpknox.server.command.FTPCommand;
 import com.jpknox.server.command.FTPCommandAction;
-import com.jpknox.server.command.CommandDecoder;
+import com.jpknox.server.command.FTPCommandDecoder;
+import com.jpknox.server.response.FTPResponseFactory;
 
 import java.io.*;
 import java.net.Socket;
@@ -15,13 +16,14 @@ import static com.jpknox.server.utility.Logger.log;
 public class ClientSessionController {
 
     private final ClientSession clientSession = new ClientSession();
-    private final CommandDecoder commandDecoder = new CommandDecoder();
+    private final FTPCommandDecoder FTPCommandDecoder = new FTPCommandDecoder();
     private final Socket clientConnection;
     private FTPCommand ftpCommand;
     private FTPCommandAction ftpCommandAction;
     private BufferedReader input;
     private PrintWriter output;
     private String actionResponse = "";
+    private FTPResponseFactory responseFactory = new FTPResponseFactory();
 
     public ClientSessionController(Socket clientConnection) {
         this.clientConnection = clientConnection;
@@ -60,7 +62,7 @@ public class ClientSessionController {
                 log(clientSession.getClientName() + ": " + dataFromClient);
 
 
-                ftpCommand = commandDecoder.decode(dataFromClient);
+                ftpCommand = FTPCommandDecoder.decode(dataFromClient);
                 ftpCommandAction = ftpCommand.getAction();
                 switch (ftpCommandAction) {
                     case USER:    actionResponse = clientSession.getState().user(ftpCommand.getParams()[0]); //Extract username
@@ -81,9 +83,9 @@ public class ClientSessionController {
                                   break;
                     case PWD:     actionResponse = clientSession.getState().pwd();
                                   break;
-                    case ERROR_0: actionResponse = "202 Command not implemented, superfluous at this site.";
+                    case ERROR_0: actionResponse = responseFactory.createResponse(500);
                                   break;
-                    case ERROR_1: actionResponse = "501 Syntax error in parameters or arguments.";
+                    case ERROR_1: actionResponse = responseFactory.createResponse(501);
                 }
                 sendToClient(actionResponse);
                 actionResponse = "";

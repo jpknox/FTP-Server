@@ -224,7 +224,7 @@ public class FTPServerIntegrationTest {
     }
 
     @Test
-    public void testMessageContainingOnlySpaces() throws IOException {
+    public void testMessageContainingOnlySpacesDuringLogin() throws IOException {
         sendLine("");
         sendLine("USER user1");
         sendLine("                                                ");
@@ -243,9 +243,39 @@ public class FTPServerIntegrationTest {
         assertEquals(StateLoggedIn.class.getSimpleName(), state);
     }
 
+    @Test
+    public void testInvalidCommand() throws IOException {
+        sendLine("AB12");
+        sendLine("quit");
+        ftpServer = new FTPServer(mockServerSocket);
+        assertTrue(serverOutputReader.readLine().equals("220 Welcome to Jay's FTP Server!"));
+        assertTrue(serverOutputReader.readLine().equals("500 Syntax error, command unrecognized."));
+        assertTrue(serverOutputReader.readLine().equals("221 Service closing control connection."));
+    }
+
+    @Test
+    public void testLongInvalidCommand() throws IOException {
+        sendLine("GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG" +
+                    "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG" +
+                        "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG");
+        sendLine("quit");
+        ftpServer = new FTPServer(mockServerSocket);
+        assertTrue(serverOutputReader.readLine().equals("220 Welcome to Jay's FTP Server!"));
+        assertTrue(serverOutputReader.readLine().equals("500 Syntax error, command unrecognized."));
+        assertTrue(serverOutputReader.readLine().equals("221 Service closing control connection."));
+    }
+
+    @Test
+    public void testShortInvalidCommand() throws IOException {
+        sendLine("a");
+        sendLine("quit");
+        ftpServer = new FTPServer(mockServerSocket);
+        assertTrue(serverOutputReader.readLine().equals("220 Welcome to Jay's FTP Server!"));
+        assertTrue(serverOutputReader.readLine().equals("500 Syntax error, command unrecognized."));
+        assertTrue(serverOutputReader.readLine().equals("221 Service closing control connection."));
+    }
+
     //TODO: TDD for scenario of missing parameters e.g. "PASS " instead of "PASS password"
-    //TODO: TDD for illegal/missing/too short command/message given to server
-            // Command out of sequence
 
     private void sendLine(String txt) {
         try {
