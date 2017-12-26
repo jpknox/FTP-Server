@@ -4,6 +4,7 @@ import com.jpknox.server.command.FTPCommand;
 import com.jpknox.server.command.FTPCommandAction;
 import com.jpknox.server.command.FTPCommandDecoder;
 import com.jpknox.server.response.FTPResponseFactory;
+import com.jpknox.server.storage.FileManager;
 
 import java.io.*;
 import java.net.Socket;
@@ -16,14 +17,15 @@ import static com.jpknox.server.utility.Logger.log;
 public class ClientSessionController {
 
     private final ClientSession clientSession = new ClientSession();
-    private final FTPCommandDecoder FTPCommandDecoder = new FTPCommandDecoder();
     private final Socket clientConnection;
+    private final FTPCommandDecoder FTPCommandDecoder = new FTPCommandDecoder();
     private FTPCommand ftpCommand;
     private FTPCommandAction ftpCommandAction;
     private BufferedReader input;
     private PrintWriter output;
     private String actionResponse = "";
     private FTPResponseFactory responseFactory = new FTPResponseFactory();
+    private FileManager fileManager = new FileManager();
 
     public ClientSessionController(Socket clientConnection) {
         this.clientConnection = clientConnection;
@@ -82,6 +84,8 @@ public class ClientSessionController {
                     case FEAT:    actionResponse = clientSession.getState().feat();
                                   break;
                     case PWD:     actionResponse = clientSession.getState().pwd();
+                                  break;
+                    case NOOP:    actionResponse = clientSession.getState().noop();
                                   break;
                     case ERROR_0: actionResponse = responseFactory.createResponse(500);
                                   break;

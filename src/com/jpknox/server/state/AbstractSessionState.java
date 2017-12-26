@@ -5,7 +5,7 @@ import com.jpknox.server.response.FTPResponseFactory;
 import com.jpknox.server.response.ResponseFactory;
 import com.jpknox.server.session.ClientSession;
 import com.jpknox.server.utility.FTPServerConfig;
-import com.jpknox.server.utility.FileManager;
+import com.jpknox.server.storage.FileManager;
 
 /**
  * Created by joaok on 23/12/2017.
@@ -18,7 +18,7 @@ public abstract class AbstractSessionState implements SessionState {
 
     protected FTPServerConfig config = new FTPServerConfig();
 
-    protected FileManager fileManager = FileManager.getInstance();
+    protected FileManager fileManager = new FileManager();
 
     protected LoginService loginService = new LoginService();
 

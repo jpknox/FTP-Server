@@ -14,6 +14,7 @@ public class LoginAuthentication {
         this.accounts = new ArrayList<Account>();
         this.accounts.add(new Account("user1", "pass1"));
         this.accounts.add(new Account("anonymous"));
+        this.accounts.add(new Account("anon"));
     }
 
     public LoginAuthentication(List<Account> initialUsers) {

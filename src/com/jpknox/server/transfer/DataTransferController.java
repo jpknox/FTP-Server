@@ -1,11 +1,12 @@
 package com.jpknox.server.transfer;
 
 
+import com.jpknox.server.transfer.connection.FTPDataTransfer;
 import com.jpknox.server.transfer.exception.IllegalPortException;
 
-import java.io.IOException;
-import java.net.ServerSocket;
-import java.net.Socket;
+import java.util.LinkedList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static com.jpknox.server.utility.Logger.log;
 
@@ -18,19 +19,22 @@ public class DataTransferController {
     public static final int UPPER_PORT_BOUNDARY = 65535;
 
     private int dataPort = -1;
-
-    private ServerSocket dataConnection;
+    private int dataConnectionCount = 0;
+    private FTPDataTransfer dataTransfer;
+    private ExecutorService executorService = Executors.newFixedThreadPool(1);
 
     private boolean transferring = false;
 
     public int[] listen() {
         generatePassiveDataPort();
-        try {
-            dataConnection = new ServerSocket(dataPort);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        dataTransfer = new FTPDataTransfer(getDataPort(), ("ABCDEFGHIJKLMNOPQRSTUVWXYZ" + "ABCDEFGHIJKLMNOPQRSTUVWXYZ\r\n".toLowerCase()).getBytes());
+        executorService.submit(dataTransfer);
+        log("Opening new port: " + getDataPort());
         return getEncodedDataPort();
+    }
+
+    public void send(String data) {
+        dataTransfer.send(data.getBytes());
     }
 
     //TODO: Make this private and amend the tests
@@ -70,5 +74,4 @@ public class DataTransferController {
             this.dataPort = port;
         }
     }
-
 }

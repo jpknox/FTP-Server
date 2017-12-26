@@ -23,4 +23,11 @@ public class StateLoggedIn extends AbstractSessionState {
                                              encodedDataPort[0] + "," +
                                              encodedDataPort[1] + ")";
     }
+
+    @Override
+    public String pwd() {
+        String currentDirectory = fileManager.getCurrentDirectory();
+        session.getDataTransferController().send(currentDirectory);
+        return "Sending data down the data connection.";
+    }
 }

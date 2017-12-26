@@ -12,7 +12,7 @@ public interface SessionState {
     String quit();                             //Disconnect
     String port(int portToUse);              //Data connection port
     String type(String format);              //Representation type (Default: ASCII non-print)
-    String mode(String modeToUse);           //Data transfer mode (Default: Stream)
+    String mode(String modeToUse);           //Data send mode (Default: Stream)
     String stru(String structureToUse);      //File structure representation (Default: File)
     String retr(String pathToFile);          //Download file
     String stor(String pathToFile);          //Upload file
@@ -21,6 +21,6 @@ public interface SessionState {
     String syst();                             //System settings
     String feat();                             //Features
     String pwd ();                             //Working directory
-    String pasv();                             //Specifies the passive data transfer method
+    String pasv();                             //Specifies the passive data send method
 
 }
