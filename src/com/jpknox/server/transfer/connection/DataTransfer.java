@@ -7,9 +7,13 @@ public interface DataTransfer {
 
     void listen();
 
-    void send(byte[] data);
-
     void disconnect();
+
+    boolean isListening();
+
+    boolean isConnected();
+
+    void assign(byte[] bytes);
 
 //    Created, Listening (Blocked), Connected, Transferring, Disconnected, Deleted.
 

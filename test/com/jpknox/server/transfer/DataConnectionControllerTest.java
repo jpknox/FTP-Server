@@ -1,6 +1,6 @@
 package com.jpknox.server.transfer;
 
-import com.jpknox.server.response.ControlConnectionCommunicator;
+import com.jpknox.server.session.ClientSession;
 import com.jpknox.server.transfer.exception.IllegalPortException;
 import org.junit.After;
 import org.junit.Before;
@@ -14,37 +14,37 @@ import static org.junit.Assert.assertTrue;
 /**
  * Created by joaok on 23/12/2017.
  */
-public class DataTransferControllerTest {
+public class DataConnectionControllerTest {
 
-    private DataTransferController dataTransferController;
+    private DataConnectionController dataConnectionController;
 
     @Before
     public void setup() {
-        ControlConnectionCommunicator communicator = Mockito.mock(ControlConnectionCommunicator.class);
-        dataTransferController = new DataTransferController(communicator);
+        ClientSession clientSession = Mockito.mock(ClientSession.class);
+        dataConnectionController = new DataConnectionController(clientSession);
     }
 
     @After
     public void teardown() {
-        dataTransferController = null;
+        dataConnectionController = null;
     }
 
     @Test
     public void testGeneratePassivePortOnce() {
-        int max = dataTransferController.UPPER_PORT_BOUNDARY;
-        int min = dataTransferController.LOWER_PORT_BOUNDARY;
-        int port = dataTransferController.generatePassiveDataPort();
+        int max = dataConnectionController.UPPER_PORT_BOUNDARY;
+        int min = dataConnectionController.LOWER_PORT_BOUNDARY;
+        int port = dataConnectionController.generatePassiveDataPort();
         assertTrue(min <= port);
         assertTrue(port <= max);
     }
 
     @Test
     public void testGeneratePassivePortThrice() {
-        int max = dataTransferController.UPPER_PORT_BOUNDARY;
-        int min = dataTransferController.LOWER_PORT_BOUNDARY;
-        int port0 = dataTransferController.generatePassiveDataPort();
-        int port1 = dataTransferController.generatePassiveDataPort();
-        int port2 = dataTransferController.generatePassiveDataPort();
+        int max = dataConnectionController.UPPER_PORT_BOUNDARY;
+        int min = dataConnectionController.LOWER_PORT_BOUNDARY;
+        int port0 = dataConnectionController.generatePassiveDataPort();
+        int port1 = dataConnectionController.generatePassiveDataPort();
+        int port2 = dataConnectionController.generatePassiveDataPort();
 
         //Assert none of the ports are identical
         int[] ports = {port0, port1, port2};
@@ -60,49 +60,49 @@ public class DataTransferControllerTest {
 
     @Test(expected = IllegalPortException.class)
     public void testSetPortTooLow() throws IllegalPortException {
-        dataTransferController.setDataPort(dataTransferController.LOWER_PORT_BOUNDARY-1);
+        dataConnectionController.setDataPort(dataConnectionController.LOWER_PORT_BOUNDARY-1);
     }
 
     @Test(expected = IllegalPortException.class)
     public void testSetPortTooHigh() throws IllegalPortException {
-        dataTransferController.setDataPort(dataTransferController.UPPER_PORT_BOUNDARY+1);
+        dataConnectionController.setDataPort(dataConnectionController.UPPER_PORT_BOUNDARY+1);
     }
 
     @Test
     public void testSetPortValid() throws IllegalPortException {
-        int port = dataTransferController.LOWER_PORT_BOUNDARY+1;
-        dataTransferController.setDataPort(port);
-        assertEquals(port, dataTransferController.getDataPort());
+        int port = dataConnectionController.LOWER_PORT_BOUNDARY+1;
+        dataConnectionController.setDataPort(port);
+        assertEquals(port, dataConnectionController.getDataPort());
     }
 
     @Test
     public void testgetEncodedDataPort51000() throws IllegalPortException {
-        dataTransferController.setDataPort(51000);
-        int[] port = dataTransferController.getEncodedDataPort();
+        dataConnectionController.setDataPort(51000);
+        int[] port = dataConnectionController.getEncodedDataPort();
         assertEquals(port[0], 199);
         assertEquals(port[1], 56);
     }
 
     @Test
     public void testgetEncodedDataPort50000() throws IllegalPortException {
-        dataTransferController.setDataPort(50000);
-        int[] port = dataTransferController.getEncodedDataPort();
+        dataConnectionController.setDataPort(50000);
+        int[] port = dataConnectionController.getEncodedDataPort();
         assertEquals(port[0], 195);
         assertEquals(port[1], 80);
     }
 
     @Test
     public void testgetEncodedDataPort65535() throws IllegalPortException {
-        dataTransferController.setDataPort(65535);
-        int[] port = dataTransferController.getEncodedDataPort();
+        dataConnectionController.setDataPort(65535);
+        int[] port = dataConnectionController.getEncodedDataPort();
         assertEquals(port[0], 255);
         assertEquals(port[1], 255);
     }
 
     @Test
     public void testgetEncodedDataPort57768() throws IllegalPortException {
-        dataTransferController.setDataPort(57768);
-        int[] port = dataTransferController.getEncodedDataPort();
+        dataConnectionController.setDataPort(57768);
+        int[] port = dataConnectionController.getEncodedDataPort();
         assertEquals(port[0], 225);
         assertEquals(port[1], 168);
     }

@@ -8,16 +8,20 @@ import java.io.InputStream;
  */
 public interface DataStore {
 
-    File get(String URL);
+    File get(String Url);
 
-    File store(String URL, InputStream inputStream);
+    File store(String Url, InputStream inputStream);
 
-    void delete(String URL);
+    void delete(String Url);
 
-    boolean exists(String URL);
+    boolean exists(String Url);
 
     String getCurrentDirectory();
 
-    String getNameList(String URL);
+    boolean changeWorkingDirectory(String Url);
+
+    void mkDir(String Url);
+
+    String getNameList(String Url);
 
 }

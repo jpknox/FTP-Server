@@ -230,6 +230,22 @@ public class FTPCommandDecoderIntegrationTest {
     }
 
     @Test
+    public void testCwdWithSpaceInDirectoryNameSurroundedByDoubleQuotes() {
+        telnetCommand = "CWD \"Folder 1\"" + NEWLINE;
+        decodedCommand = FTPCommandDecoder.decode(telnetCommand);
+        assertEquals(FTPCommandAction.CWD, decodedCommand.getAction());
+        assertEquals("\"Folder 1\"", decodedCommand.getParams()[0]);
+    }
+
+    @Test
+    public void testCwdWithSpaceInDirectoryNameSurroundedBySingleQuotes() {
+        telnetCommand = "CWD \'Folder 1\'" + NEWLINE;
+        decodedCommand = FTPCommandDecoder.decode(telnetCommand);
+        assertEquals(FTPCommandAction.CWD, decodedCommand.getAction());
+        assertEquals("\'Folder 1\'", decodedCommand.getParams()[0]);
+    }
+
+    @Test
     public void testWhenCommandHasNoParametersItGetsDefaultParameters() {
         telnetCommand = "NOOP" + NEWLINE;
         decodedCommand = FTPCommandDecoder.decode(telnetCommand);

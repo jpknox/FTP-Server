@@ -5,7 +5,6 @@ import com.jpknox.server.response.FTPResponseFactory;
 import com.jpknox.server.response.ResponseFactory;
 import com.jpknox.server.session.ClientSession;
 import com.jpknox.server.utility.FTPServerConfig;
-import com.jpknox.server.storage.FileManager;
 
 /**
  * Created by joaok on 23/12/2017.
@@ -18,8 +17,6 @@ public abstract class AbstractSessionState implements SessionState {
 
     protected FTPServerConfig config = new FTPServerConfig();
 
-    protected FileManager fileManager = new FileManager();
-
     protected LoginService loginService = new LoginService();
 
     public AbstractSessionState(ClientSession s) {
@@ -27,83 +24,89 @@ public abstract class AbstractSessionState implements SessionState {
     }
 
     @Override
-    public String user(String username) {
-        return loginService.login(session, username);
+    public void user(String username) {
+        loginService.login(session, username);
     }
 
     @Override
-    public String pass(String password) {
-        return responseFactory.createResponse(503);
+    public void pass(String password) {
+        session.getViewCommunicator().write(responseFactory.createResponse(503));
     }
 
     @Override
-    public String quit() {
-        return responseFactory.createResponse(221);
+    public void quit() {
+        session.getViewCommunicator().write(responseFactory.createResponse(221));
     }
 
     @Override
-    public String port(int portToUse) {
-        return responseFactory.createResponse(530);
+    public void port(int portToUse) {
+        session.getViewCommunicator().write(responseFactory.createResponse(530));
     }
 
     @Override
-    public String type(String format) {
-        return responseFactory.createResponse(530);
+    public void type(String format) {
+        session.getViewCommunicator().write(responseFactory.createResponse(530));
     }
     
     @Override
-    public String mode(String modeToUse) {
-        return responseFactory.createResponse(530);
+    public void mode(String modeToUse) {
+        session.getViewCommunicator().write(responseFactory.createResponse(530));
     }
 
     @Override
-    public String stru(String structureToUse) {
-        return responseFactory.createResponse(530);
+    public void stru(String structureToUse) {
+        session.getViewCommunicator().write(responseFactory.createResponse(530));
     }
 
     @Override
-    public String retr(String pathToFile) {
-        return responseFactory.createResponse(530);
+    public void retr(String pathToFile) {
+        session.getViewCommunicator().write(responseFactory.createResponse(530));
     }
 
     @Override
-    public String stor(String pathToFile) {
-        return responseFactory.createResponse(530);
+    public void stor(String pathToFile) {
+        session.getViewCommunicator().write(responseFactory.createResponse(530));
     }
 
     @Override
-    public String noop() {
-        return responseFactory.createResponse(200);
+    public void noop() {
+        session.getViewCommunicator().write(responseFactory.createResponse(200));
     }
 
     @Override
-    public String auth() {
-        return responseFactory.createResponse(502);
+    public void auth() {
+        session.getViewCommunicator().write(responseFactory.createResponse(502));
     }
 
     @Override
-    public String syst() {
-        return responseFactory.createResponse(215, FTPServerConfig.SERVER_NAME, FTPServerConfig.OPERATING_SYSTEM);
+    public void syst() {
+        session.getViewCommunicator().write(
+                responseFactory.createResponse(215, FTPServerConfig.SERVER_NAME, FTPServerConfig.OPERATING_SYSTEM));
     }
 
     @Override
-    public String feat() {
-        return responseFactory.createResponse(502);
+    public void feat() {
+        session.getViewCommunicator().write(responseFactory.createResponse(502));
     }
 
     @Override
-    public String pwd() {
-        return responseFactory.createResponse(257, fileManager.getCurrentDirectory());
+    public void pwd() {
+        session.getViewCommunicator().write(responseFactory.createResponse(257, session.getFileSystem().getCurrentDirectory()));
     }
 
     @Override
-    public String pasv() { return responseFactory.createResponse(530); }
+    public void pasv() {
+        session.getViewCommunicator().write(responseFactory.createResponse(530)); 
+    }
 
     @Override
-    public String nlst() { return responseFactory.createResponse(530); }
+    public void nlst() {
+        session.getViewCommunicator().write(responseFactory.createResponse(530)); 
+    }
 
-    public void setFileManager(FileManager fileManager) {
-        this.fileManager = fileManager;
+    @Override
+    public void cwd(String Url) {
+        session.getViewCommunicator().write(responseFactory.createResponse(530));
     }
 
     public void setLoginService(LoginService loginService) {

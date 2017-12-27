@@ -1,6 +1,5 @@
 package com.jpknox.server.state;
 
-import com.jpknox.server.authentication.LoginAuthentication;
 import com.jpknox.server.session.ClientSession;
 
 /**
@@ -16,7 +15,7 @@ public class StateNeedPassword extends AbstractSessionState {
     }
 
     @Override
-    public String pass(String password) {
-        return loginService.login(session, this.username, password);
+    public void pass(String password) {
+        loginService.login(session, this.username, password);
     }
 }

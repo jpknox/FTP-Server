@@ -1,28 +1,40 @@
 package com.jpknox.server.storage;
 
+import com.jpknox.server.response.FTPResponseFactory;
+import com.jpknox.server.session.ClientSession;
+
 import java.io.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Created by joaok on 26/12/2017.
  */
 public class FTPLocalFileDataStore implements DataStore {
 
+    private final ClientSession session;
+    private final FTPResponseFactory ftpResponseFactory = new FTPResponseFactory();
     private File rootDir = new File("RealFtpStorage");
     private File currentDir;
 
-    public FTPLocalFileDataStore() {
+    public FTPLocalFileDataStore(ClientSession session) {
+        this.session = session;
         if (!rootDir.isDirectory()) rootDir.mkdir();
         currentDir = new File(rootDir.toString());
     }
 
     @Override
-    public File get(String URL) {
+    public File get(String Url) {
         return null;
     }
 
+    //TODO: Integration test
     @Override
-    public File store(String URL, InputStream inputStream) {
-        File file = new File(rootDir.getPath() + File.separatorChar + URL);
+    public File store(String Url, InputStream inputStream) {
+        File file = new File(rootDir.getPath() + File.separatorChar + Url);
         System.out.println(file.toString());
         try {
             file.createNewFile();
@@ -39,23 +51,66 @@ public class FTPLocalFileDataStore implements DataStore {
     }
 
     @Override
-    public void delete(String URL) {
+    public void delete(String Url) {
 
     }
 
     @Override
-    public boolean exists(String URL) {
+    public boolean exists(String Url) {
         return false;
     }
 
     @Override
     public String getCurrentDirectory() {
-        return rootDir.toString().replaceAll(currentDir.toString(), "/");
+        return currentDir.toString().replaceAll(rootDir.toString(), "");
+    }
+
+
+    //TODO: Pass this class a reference to the session so it can contact the client with appropriate messages.
+    //TODO: Url begins with a \ || / then it's absolute.
+    //TODO: Url begins with an alphanumeric char then it's relative to current dir.
+    @Override
+    public boolean changeWorkingDirectory(String Url) {
+        if (Url.equals(null) || Url.length() == 0) return false;
+        File newDir;
+
+        List<String> toRemove = Arrays.asList("\"", "\'");
+        String sanitaryUrl = Pattern.compile("").splitAsStream(Url)
+                .filter(s -> !toRemove.contains(s))
+                .collect(Collectors.joining());
+        if (Stream.of("\\", "/", System.getProperty("file.separator")).anyMatch(Url.substring(0, 2)::equals)) {
+            //From absolute root
+            newDir = new File(rootDir.getName() + sanitaryUrl);
+        } else {
+            //Relative to current dir
+            newDir = new File(currentDir.getName() + System.getProperty("file.separator") + sanitaryUrl);
+        }
+        if (newDir.isDirectory()) {
+            currentDir = newDir;
+            session.getViewCommunicator().write(ftpResponseFactory.createResponse(250));
+            return true;
+        } else {
+            newDir.delete();
+            session.getViewCommunicator().write(ftpResponseFactory.createResponse(550));
+            return false;
+        }
+    }
+
+    //TODO: Integration test
+    @Override
+    public void mkDir(String Url) {
+
     }
 
     @Override
-    public String getNameList(String URL) {
-        return null;
+    public String getNameList(String Url) {
+        String nameList = "";
+        if (Url == null || Url.equals("\\") || Url.equals("/")) {
+            for (File f : rootDir.listFiles()) {
+                nameList = (nameList + f.getName() + System.getProperty("line.separator"));
+            }
+        }
+        return nameList;
     }
 
 

@@ -1,5 +1,11 @@
 package com.jpknox.server.command;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import static com.jpknox.server.utility.Logger.log;
 
 /**
@@ -15,30 +21,38 @@ public class FTPCommandDecoder {
     // Extracts the command from a string
     public FTPCommand decode(String telnetCommand) {
         telnetCommand = telnetCommand.replace(System.getProperty("line.separator"), "");
-        String[] tokens = telnetCommand.split(" ");
+
+
+        //Remove spaces unless they're within double quotes
+        List<String> list = new ArrayList<String>();
+        Matcher m = Pattern.compile("([^\"|\']\\S*|\".+?\"|\'.+?\')\\s*").matcher(telnetCommand);
+        while (m.find()) {
+            list.add(m.group(1));
+        }
+
 
         //Extract the action
         FTPCommandAction commandAction = null;
         try {
-            commandAction = FTPCommandAction.valueOf(tokens[ACTION].toUpperCase());
-        } catch (IllegalArgumentException | NullPointerException | ArrayIndexOutOfBoundsException exception) {
-            if (tokens.length == 0 || tokens[0].equals("")) {
+            commandAction = FTPCommandAction.valueOf(list.get(ACTION).toUpperCase());
+        } catch (IllegalArgumentException | NullPointerException | IndexOutOfBoundsException exception) {
+            if (list.size() == 0 || list.get(0).trim().equals("")) {
                 log("The client has entered a command consisting entirely of spaces");
                 return new FTPCommand(FTPCommandAction.ERROR_1, defaultParams());
             } else {
-                log("Error when creating an instance of the command ENUM with '" + tokens[ACTION] + "'");
+                log("Error when creating an instance of the command ENUM with '" + list.get(ACTION) + "'");
                 return new FTPCommand(FTPCommandAction.ERROR_0, defaultParams());
             }
         }
 
         //Extract the params
-        boolean hasParams = tokens.length > 1;
+        boolean hasParams = list.size() > 1;
         String[] commandParams;
         if (hasParams) {
-            int numOfParams = tokens.length-1;
+            int numOfParams = list.size()-1;
             commandParams = new String[numOfParams];
             for (int i = 1; i <= numOfParams; i++) {
-                commandParams[i-1] = tokens[i];
+                commandParams[i-1] = list.get(i);
             }
         } else {
             // Safer to populate with non-null data if no params are given to the decoder

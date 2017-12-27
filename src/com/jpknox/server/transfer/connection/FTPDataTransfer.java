@@ -1,6 +1,10 @@
 package com.jpknox.server.transfer.connection;
 
-import java.io.*;
+import com.jpknox.server.response.FTPResponseFactory;
+
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -12,20 +16,19 @@ import static com.jpknox.server.utility.Logger.log;
  */
 public class FTPDataTransfer implements DataTransfer, Runnable {
 
-    private int port;
-    private byte[] data;
+    private byte[] data = new byte[]{};
+    private final FTPResponseFactory ftpResponseFactory = new FTPResponseFactory();
     private ServerSocket connectionListenerSocket;
     private Socket dataConnectionSocket;
     private BufferedOutputStream out;
     private BufferedReader in;
+    private boolean listening = false;
 
     //Read the file into memory - buffering it in chunks.
     //Write buffered file into the output buffer. Let it automatically flush when it's full.
     //Once the whole file has been written in the output buffer, perform a final explicit flush().
 
-    public FTPDataTransfer(int port, byte[] data) {
-        this.port = port;
-        this.data = data;
+    public FTPDataTransfer(int port) {
         try {
             connectionListenerSocket = new ServerSocket(port);
         } catch (IOException e) {
@@ -36,25 +39,32 @@ public class FTPDataTransfer implements DataTransfer, Runnable {
     @Override
     public void run() {
         listen();
-//        send(data);
-//        disconnect();
+        while (data.length == 0) {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        send(data);
+        disconnect();
     }
 
     @Override
     public void listen() {
         try {
+            listening = true;
             dataConnectionSocket = connectionListenerSocket.accept();
+            listening = false;
             out = new BufferedOutputStream(dataConnectionSocket.getOutputStream());
             log("Data connection has been established.");
-            out.write("Hello, welcome to the data connection.\r\n".getBytes());
             out.flush();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    @Override
-    public void send(byte[] data) {
+    private void send(byte[] data) {
         String newline = System.getProperty("line.separator");
         try {
             out.write(data);
@@ -64,21 +74,6 @@ public class FTPDataTransfer implements DataTransfer, Runnable {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    public void transfer() {
-        int i = 0;
-        while (i < 100) {
-            try {
-                out.write((byte)i);
-                Thread.sleep(500);
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-        send(data);
     }
 
     @Override
@@ -95,5 +90,20 @@ public class FTPDataTransfer implements DataTransfer, Runnable {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public boolean isListening() {
+        return listening;
+    }
+
+    @Override
+    public boolean isConnected() {
+        return !dataConnectionSocket.isClosed();
+    }
+
+    @Override
+    public void assign(byte[] bytes) {
+        this.data = bytes;
     }
 }

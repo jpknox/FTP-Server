@@ -1,8 +1,11 @@
 package com.jpknox.server.session;
 
+import com.jpknox.server.response.ClientViewCommunicator;
 import com.jpknox.server.state.SessionState;
 import com.jpknox.server.state.StateNotLoggedIn;
-import com.jpknox.server.transfer.DataTransferController;
+import com.jpknox.server.storage.DataStore;
+import com.jpknox.server.storage.FTPLocalFileDataStore;
+import com.jpknox.server.transfer.DataConnectionController;
 
 import static com.jpknox.server.utility.Logger.log;
 
@@ -11,13 +14,16 @@ import static com.jpknox.server.utility.Logger.log;
  */
 public class ClientSession {
 
+    private final DataConnectionController dataConnectionController = new DataConnectionController(this);
+    private final DataStore fileSystem = new FTPLocalFileDataStore(this);
+    private final ClientViewCommunicator viewCommunicator;
+
     private SessionState context;
     private String clientName = "client";
-    private DataTransferController dataTransferController;
 
-    public ClientSession(DataTransferController dataTransferController) {
+    public ClientSession(ClientViewCommunicator viewCommunicator) {
+        this.viewCommunicator = viewCommunicator;
         this.context = new StateNotLoggedIn(this);
-        this.dataTransferController = dataTransferController;
     }
 
     public SessionState getState() {
@@ -38,5 +44,13 @@ public class ClientSession {
         this.clientName = clientName;
     }
 
-    public DataTransferController getDataTransferController() { return dataTransferController; }
+    public DataConnectionController getDataConnectionController() { return dataConnectionController; }
+
+    public DataStore getFileSystem() {
+        return fileSystem;
+    }
+
+    public ClientViewCommunicator getViewCommunicator() {
+        return viewCommunicator;
+    }
 }

@@ -1,7 +1,8 @@
 package com.jpknox.server.transfer;
 
 
-import com.jpknox.server.response.ControlConnectionCommunicator;
+import com.jpknox.server.response.FTPResponseFactory;
+import com.jpknox.server.session.ClientSession;
 import com.jpknox.server.transfer.connection.FTPDataTransfer;
 import com.jpknox.server.transfer.exception.IllegalPortException;
 
@@ -13,40 +14,51 @@ import static com.jpknox.server.utility.Logger.log;
 /**
  * Created by joaok on 23/12/2017.
  */
-public class DataTransferController {
+public class DataConnectionController {
 
     public static final int LOWER_PORT_BOUNDARY = 50000;
     public static final int UPPER_PORT_BOUNDARY = 65535;
 
-    private final ControlConnectionCommunicator controlConnectionCommunicator;
+    private final ClientSession session;
+    private final FTPResponseFactory responseFactory = new FTPResponseFactory();
+    private final FtpDataTransferFactory ftpDataTransferFactory = new FtpDataTransferFactory();
     private int dataPort = -1;
-    private int dataConnectionCount = 0;
     private FTPDataTransfer dataTransfer;
     private ExecutorService executorService = Executors.newFixedThreadPool(1);
 
     private boolean transferring = false;
 
-    public DataTransferController(ControlConnectionCommunicator controlConnectionCommunicator) {
-        this.controlConnectionCommunicator = controlConnectionCommunicator;
+    public DataConnectionController(ClientSession session) {
+        this.session = session;
     }
 
-    public int[] listen() {
+    public int[] createDataConnection() {
         if (dataTransfer != null) {
             dataTransfer.disconnect();
             dataTransfer = null;
         }
+        //TODO: Build response here and return as a string. To keep with convention.
         generatePassiveDataPort();
-        dataTransfer = new FTPDataTransfer(getDataPort(), ("ABCDEFGHIJKLMNOPQRSTUVWXYZ" + "ABCDEFGHIJKLMNOPQRSTUVWXYZ\r\n".toLowerCase()).getBytes());
+        dataTransfer = new FTPDataTransfer(getDataPort());
         executorService.submit(dataTransfer);
         log("Opening new port: " + getDataPort());
         return getEncodedDataPort();
     }
 
     public void send(String data) {
-        dataTransfer.send(data.getBytes());
+        if (dataTransfer != null) {
+            if (dataTransfer.isConnected()) {
+                session.getViewCommunicator().write(responseFactory.createResponse(150));
+                dataTransfer.assign(data.getBytes());
+                session.getViewCommunicator().write(responseFactory.createResponse(226));
+            } else if (dataTransfer.isListening()){
+                dataTransfer.assign(data.getBytes());
+            }
+        } else {
+            session.getViewCommunicator().write(responseFactory.createResponse(425));
+        }
     }
 
-    //TODO: Make this private and amend the tests
     public int generatePassiveDataPort() {
         try {
             setDataPort(java.util.concurrent.ThreadLocalRandom.current().nextInt(LOWER_PORT_BOUNDARY, UPPER_PORT_BOUNDARY+1));
@@ -57,6 +69,7 @@ public class DataTransferController {
         }
         return dataPort;
     }
+
 
     public int[] getEncodedDataPort() {
         // p1 = PPrime/256

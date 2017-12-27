@@ -7,7 +7,7 @@ import java.io.PrintWriter;
 /**
  * Created by joaok on 26/12/2017.
  */
-public class ControlConnectionCommunicator {
+public class ClientViewCommunicator {
 
     private PrintWriter output;
     private BufferedReader input;

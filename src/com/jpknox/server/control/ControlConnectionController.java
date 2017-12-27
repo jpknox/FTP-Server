@@ -1,13 +1,11 @@
-package com.jpknox.server;
+package com.jpknox.server.control;
 
 import com.jpknox.server.command.FTPCommand;
 import com.jpknox.server.command.FTPCommandAction;
 import com.jpknox.server.command.FTPCommandDecoder;
-import com.jpknox.server.response.ControlConnectionCommunicator;
+import com.jpknox.server.response.ClientViewCommunicator;
 import com.jpknox.server.response.FTPResponseFactory;
 import com.jpknox.server.session.ClientSession;
-import com.jpknox.server.storage.FileManager;
-import com.jpknox.server.transfer.DataTransferController;
 
 import java.io.*;
 import java.net.Socket;
@@ -20,15 +18,12 @@ import static com.jpknox.server.utility.Logger.log;
 public class ControlConnectionController {
 
     private final Socket clientConnection;
-    private final FileManager fileManager = new FileManager();
     private final FTPResponseFactory responseFactory = new FTPResponseFactory();
-    private final ControlConnectionCommunicator communicator = new ControlConnectionCommunicator();
+    private final ClientViewCommunicator viewCommunicator = new ClientViewCommunicator();
     private final FTPCommandDecoder FTPCommandDecoder = new FTPCommandDecoder();
-    private final DataTransferController dataTransferController = new DataTransferController(communicator);
-    private final ClientSession clientSession = new ClientSession(dataTransferController);
+    private final ClientSession session = new ClientSession(viewCommunicator);
     private FTPCommand ftpCommand;
     private FTPCommandAction ftpCommandAction;
-    private String response = "";
 
     public ControlConnectionController(Socket clientConnection) {
         this.clientConnection = clientConnection;
@@ -37,11 +32,11 @@ public class ControlConnectionController {
     public void start() {
         try {
             //log("Setting up I/O.");
-            communicator.setOutput(new PrintWriter(new OutputStreamWriter(this.clientConnection.getOutputStream())));
-            communicator.setInput(new BufferedReader(new InputStreamReader(this.clientConnection.getInputStream())));
+            viewCommunicator.setOutput(new PrintWriter(new OutputStreamWriter(this.clientConnection.getOutputStream())));
+            viewCommunicator.setInput(new BufferedReader(new InputStreamReader(this.clientConnection.getInputStream())));
             //log("I/O set up successfully.");
 
-            communicator.write("220 Welcome to Jay's FTP Server!\r\n");
+            viewCommunicator.write("220 Welcome to Jay's FTP Server!");
             //log("Sent welcome message.");
 
             String dataFromClient;
@@ -54,7 +49,7 @@ public class ControlConnectionController {
                 //Loop over never ending null chars sent by FTP clients
                 while (true) {
                     //log("Entered the keep-alive input loop.");
-                    dataFromClient = communicator.readLine();
+                    dataFromClient = viewCommunicator.readLine();
                     //log("Received input from client.");
                     if (!dataFromClient.equals(null)) {
                         break;
@@ -63,40 +58,39 @@ public class ControlConnectionController {
                         Thread.sleep(100);
                     }
                 }
-                log(clientSession.getClientName() + ": " + dataFromClient);
+                log(session.getClientName() + ": " + dataFromClient);
 
 
                 ftpCommand = FTPCommandDecoder.decode(dataFromClient);
                 ftpCommandAction = ftpCommand.getAction();
                 switch (ftpCommandAction) {
-                    case USER:    response = clientSession.getState().user(ftpCommand.getParams()[0]); //Extract username
+                    case USER:    session.getState().user(ftpCommand.getParams()[0]); //Extract username
                                   break;
-                    case PASS:    response = clientSession.getState().pass(ftpCommand.getParams()[0]); //Extract password
+                    case PASS:    session.getState().pass(ftpCommand.getParams()[0]); //Extract password
                                   break;
-                    case PASV:    response = clientSession.getState().pasv();
+                    case PASV:    session.getState().pasv();
                                   break;
-                    case QUIT:    log(clientSession.getClientName() + " disconnected.");
-                                  response = clientSession.getState().quit();
-                                  communicator.write(response);
+                    case QUIT:    session.getState().quit();
+                                  log(session.getClientName() + " disconnected.");
                                   break inputLoop;
-                    case NLST:    response = clientSession.getState().nlst();
+                    case NLST:    session.getState().nlst();
                                   break;
-                    case AUTH:    response = clientSession.getState().auth();
+                    case AUTH:    session.getState().auth();
                                   break;
-                    case SYST:    response = clientSession.getState().syst();
+                    case SYST:    session.getState().syst();
                                   break;
-                    case FEAT:    response = clientSession.getState().feat();
+                    case FEAT:    session.getState().feat();
                                   break;
-                    case PWD:     response = clientSession.getState().pwd();
+                    case PWD:     session.getState().pwd();
                                   break;
-                    case NOOP:    response = clientSession.getState().noop();
+                    case CWD:     session.getState().cwd(ftpCommand.getParams()[0]);
                                   break;
-                    case ERROR_0: response = responseFactory.createResponse(500);
+                    case NOOP:    session.getState().noop();
                                   break;
-                    case ERROR_1: response = responseFactory.createResponse(501);
+                    case ERROR_0: session.getViewCommunicator().write(responseFactory.createResponse(500));
+                                  break;
+                    case ERROR_1: session.getViewCommunicator().write(responseFactory.createResponse(501));
                 }
-                communicator.write(response);
-                response = "";
 
             }
 
@@ -105,7 +99,8 @@ public class ControlConnectionController {
         }
     }
 
-    public ClientSession getClientSession() {
-        return this.clientSession;
+    //Used by the integration tests
+    public ClientSession getSession() {
+        return this.session;
     }
 }

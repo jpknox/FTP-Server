@@ -32,23 +32,25 @@ public class LoginService {
      * @param username
      * @return
      */
-    public String login(ClientSession session, String username) {
-        if (username.length() == 0 || username.equals(null))
-            return responseFactory.createResponse(501);
+    public void login(ClientSession session, String username) {
+        if (username.length() == 0 || username.equals(null)) {
+            session.getViewCommunicator().write(responseFactory.createResponse(501));
+            return;
+        }
 
         if (loginAuthentication.usernameExists(username)) {
             session.setClientName(username);    //TODO: what if the client changes, and fails to login?
             if(!loginAuthentication.hasPassword(username)) {
                 session.setState(new StateLoggedIn(session));
                 log("Username \"" + username + "\" logged in.");
-                return responseFactory.createResponse(230, username);
+                session.getViewCommunicator().write(responseFactory.createResponse(230, username));
             } else {
                 session.setState(new StateNeedPassword(session, username));
-                return responseFactory.createResponse(331);
+                session.getViewCommunicator().write(responseFactory.createResponse(331));
             }
         } else {
             session.setState(new StateNotLoggedIn(session));
-            return responseFactory.createResponse(530);
+            session.getViewCommunicator().write(responseFactory.createResponse(530));
         }
     }
 
@@ -60,15 +62,15 @@ public class LoginService {
      * @param password
      * @return
      */
-    public String login(ClientSession session, String username, String password) {
+    public void login(ClientSession session, String username, String password) {
         if (loginAuthentication.authenticate(username, password)) {
             session.setState(new StateLoggedIn(session));
             log(username + " logged in successfully.");
-            return responseFactory.createResponse(230, username);
+            session.getViewCommunicator().write(responseFactory.createResponse(230, username));
         } else {
             log(username + " has entered their password incorrectly.");
             session.setState(new StateNotLoggedIn(session));
-            return responseFactory.createResponse(530);
+            session.getViewCommunicator().write(responseFactory.createResponse(530));
         }
     }
 
