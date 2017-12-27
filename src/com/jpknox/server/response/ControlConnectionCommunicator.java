@@ -1,0 +1,37 @@
+package com.jpknox.server.response;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.PrintWriter;
+
+/**
+ * Created by joaok on 26/12/2017.
+ */
+public class ControlConnectionCommunicator {
+
+    private PrintWriter output;
+    private BufferedReader input;
+
+    public void write(String text) {
+        output.write(text + System.getProperty("line.separator"));
+        output.flush();
+    }
+
+    public String readLine() {
+        String line = "";
+        try {
+            line = input.readLine();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return line;
+    }
+
+    public void setOutput(PrintWriter output) {
+        this.output = output;
+    }
+
+    public void setInput(BufferedReader input) {
+        this.input = input;
+    }
+}

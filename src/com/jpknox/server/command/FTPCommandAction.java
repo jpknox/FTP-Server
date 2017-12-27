@@ -24,6 +24,7 @@ public enum FTPCommandAction {
     FEAT("FEAT"),
     PWD("PWD"),
     PASV("PASV"),
+    NLST("NLST"),
     ERROR_0("GENERIC_ERROR"),
     ERROR_1("SYNTAX ERROR");
 

@@ -84,11 +84,13 @@ public class FTPDataTransfer implements DataTransfer, Runnable {
     @Override
     public void disconnect() {
         try {
-            out.write("Closing connection\r\n".getBytes());
-            out.flush();
-            connectionListenerSocket.close();
-            dataConnectionSocket.close();
-            out.close();
+            if (dataConnectionSocket != null && dataConnectionSocket.isBound()) {
+                out.write("Closing connection\r\n".getBytes());
+                out.flush();
+                out.close();
+                connectionListenerSocket.close();
+                dataConnectionSocket.close();
+            }
             log("Closed data connection.");
         } catch (IOException e) {
             e.printStackTrace();

@@ -1,7 +1,5 @@
 package com.jpknox.server;
 
-import com.jpknox.server.session.ClientSessionController;
-
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -14,7 +12,7 @@ import static com.jpknox.server.utility.Logger.log;
 public class FTPServer {
     private ServerSocket serverSocket;
     private Socket clientConnection;
-    private ClientSessionController[] clientSessionControllers = new ClientSessionController[10];
+    private ControlConnectionController[] controlConnectionControllers = new ControlConnectionController[10];
     private int controllerIndex = 0;
 
     public FTPServer(ServerSocket serverSocket) {
@@ -23,9 +21,9 @@ public class FTPServer {
             this.serverSocket = serverSocket;
             log("waiting for client.");
             this.clientConnection = this.serverSocket.accept();
-            ClientSessionController clientSessionController = new ClientSessionController(this.clientConnection);
-            clientSessionController.start();
-            clientSessionControllers[controllerIndex++] = clientSessionController;
+            ControlConnectionController controlConnectionController = new ControlConnectionController(this.clientConnection);
+            controlConnectionController.start();
+            controlConnectionControllers[controllerIndex++] = controlConnectionController;
             log("client connection established.");
         } catch (IOException e) {
             e.printStackTrace();
@@ -34,7 +32,7 @@ public class FTPServer {
         System.out.println("server shutting down.");
     }
 
-    public ClientSessionController getClientSessionController(int id) {
-        return clientSessionControllers[id];
+    public ControlConnectionController getClientSessionController(int id) {
+        return controlConnectionControllers[id];
     }
 }

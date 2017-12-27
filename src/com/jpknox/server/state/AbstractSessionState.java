@@ -99,6 +99,9 @@ public abstract class AbstractSessionState implements SessionState {
     @Override
     public String pasv() { return responseFactory.createResponse(530); }
 
+    @Override
+    public String nlst() { return responseFactory.createResponse(530); }
+
     public void setFileManager(FileManager fileManager) {
         this.fileManager = fileManager;
     }

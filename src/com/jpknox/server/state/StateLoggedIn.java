@@ -24,6 +24,10 @@ public class StateLoggedIn extends AbstractSessionState {
                                              encodedDataPort[1] + ")";
     }
 
+    public String nlst() {
+        return "";
+    }
+
     @Override
     public String pwd() {
         String currentDirectory = fileManager.getCurrentDirectory();

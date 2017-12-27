@@ -1,9 +1,11 @@
 package com.jpknox.server.transfer;
 
+import com.jpknox.server.response.ControlConnectionCommunicator;
 import com.jpknox.server.transfer.exception.IllegalPortException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 import static junit.framework.TestCase.assertFalse;
 import static org.junit.Assert.assertEquals;
@@ -18,7 +20,8 @@ public class DataTransferControllerTest {
 
     @Before
     public void setup() {
-        dataTransferController = new DataTransferController();
+        ControlConnectionCommunicator communicator = Mockito.mock(ControlConnectionCommunicator.class);
+        dataTransferController = new DataTransferController(communicator);
     }
 
     @After

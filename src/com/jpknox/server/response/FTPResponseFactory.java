@@ -1,7 +1,5 @@
 package com.jpknox.server.response;
 
-import com.jpknox.server.utility.FTPServerConfig;
-
 import java.util.Formatter;
 import java.util.Locale;
 
@@ -24,7 +22,7 @@ public class FTPResponseFactory implements ResponseFactory {
     public static final String SYNTAX_ERROR = "501 Syntax error in parameters or arguments.";
     public static final String COMMAND_NOT_IMPLEMENTED = "502 Command not implemented.";
     public static final String BAD_SEQUENCE = "503 Bad sequence of commands.";
-    public static final String LOGIN_FAILURE = "530 Not logged in.";
+    public static final String MUST_LOG_IN = "530 Not logged in.";
 
 
     private String format;
@@ -42,7 +40,7 @@ public class FTPResponseFactory implements ResponseFactory {
         if (code == 501) format = SYNTAX_ERROR;
         if (code == 502) format = COMMAND_NOT_IMPLEMENTED;
         if (code == 503) format = BAD_SEQUENCE;
-        if (code == 530) format = LOGIN_FAILURE;
+        if (code == 530) format = MUST_LOG_IN;
         formatter.format(format);
         output = sb.toString();
         sb.setLength(0);

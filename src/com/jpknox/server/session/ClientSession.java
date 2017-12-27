@@ -13,10 +13,11 @@ public class ClientSession {
 
     private SessionState context;
     private String clientName = "client";
-    private DataTransferController dataTransferController = new DataTransferController();
+    private DataTransferController dataTransferController;
 
-    public ClientSession() {
+    public ClientSession(DataTransferController dataTransferController) {
         this.context = new StateNotLoggedIn(this);
+        this.dataTransferController = dataTransferController;
     }
 
     public SessionState getState() {
