@@ -39,7 +39,7 @@ public class FTPLocalFileDataStoreTest {
     @Test
     public void testGetCurrentDirectory() {
         String currentDirectory = ftpLocalFileDataStore.getCurrentDirectory();
-        assertEquals("/", currentDirectory);
+        assertEquals(System.getProperty("file.separator"), currentDirectory);
     }
 
     @Test

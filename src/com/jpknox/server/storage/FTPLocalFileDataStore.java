@@ -62,28 +62,31 @@ public class FTPLocalFileDataStore implements DataStore {
 
     @Override
     public String getCurrentDirectory() {
-        return currentDir.toString().replaceAll(rootDir.toString(), "");
+        return currentDir.toString().replaceAll(rootDir.toString(), "") + "\\";
     }
 
-
+    //TODO: ".." must go back up by one, "/" must go back to root.
     //TODO: Pass this class a reference to the session so it can contact the client with appropriate messages.
     //TODO: Url begins with a \ || / then it's absolute.
     //TODO: Url begins with an alphanumeric char then it's relative to current dir.
     @Override
     public boolean changeWorkingDirectory(String Url) {
         if (Url.equals(null) || Url.length() == 0) return false;
-        File newDir;
+        File newDir = null;
 
         List<String> toRemove = Arrays.asList("\"", "\'");
         String sanitaryUrl = Pattern.compile("").splitAsStream(Url)
                 .filter(s -> !toRemove.contains(s))
                 .collect(Collectors.joining());
         if (Stream.of("\\", "/", System.getProperty("file.separator")).anyMatch(Url.substring(0, 2)::equals)) {
-            //From absolute root
-            newDir = new File(rootDir.getName() + sanitaryUrl);
+            //Navigate from absolute root
+            newDir = new File(rootDir.toString() + sanitaryUrl);
+        } else if (Url.substring(0, 2).equals("..")) {
+            //Go up one directory
+            newDir = new File(currentDir.getParent());
         } else {
-            //Relative to current dir
-            newDir = new File(currentDir.getName() + System.getProperty("file.separator") + sanitaryUrl);
+            //Navigate relative to current dir
+            newDir = new File(currentDir.toString() + System.getProperty("file.separator") + sanitaryUrl);
         }
         if (newDir.isDirectory()) {
             currentDir = newDir;
@@ -95,6 +98,9 @@ public class FTPLocalFileDataStore implements DataStore {
             return false;
         }
     }
+
+    //"RealFtpStorage/Folder 1/Subfolder 1"
+
 
     //TODO: Integration test
     @Override
