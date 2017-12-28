@@ -81,6 +81,13 @@ public class FTPLocalFileDataStore implements DataStore {
                 .filter(s -> !quotesToRemove.contains(s))
                 .collect(Collectors.joining());
 
+        if (Stream.of("\\", "/", System.getProperty("file.separator")).anyMatch(noQuotesUrl::equals)) {
+            //Go to root
+            currentDir = rootDir;
+            session.getViewCommunicator().write(ftpResponseFactory.createResponse(250));
+            return;
+        }
+
         //TODO: Keep the first \ or /
         //TODO: Split the list of directory commands into one
         //TODO: Keep Java's file.separator
@@ -91,10 +98,7 @@ public class FTPLocalFileDataStore implements DataStore {
         while (list.size() > 0) {
             String currentUrl = list.remove(list.size()-1);
 
-            if (Stream.of("\\", "/", System.getProperty("file.separator")).anyMatch(currentUrl::equals)) {
-                //Go to root
-                newDir = rootDir;
-            } else if (currentUrl.equals(".")) {
+            if (currentUrl.equals(".")) {
                 //Stay in same directory
                 newDir = currentDir;
             } else if (Stream.of("\\", "/", System.getProperty("file.separator")).anyMatch(currentUrl.substring(0, 2)::equals)) {
