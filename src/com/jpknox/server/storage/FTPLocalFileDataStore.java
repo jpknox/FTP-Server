@@ -113,11 +113,10 @@ public class FTPLocalFileDataStore implements DataStore {
             }
             if (newDir.isDirectory()) {
                 currentDir = newDir;
-                //            return true;
             } else {
                 newDir.delete();
                 session.getViewCommunicator().write(ftpResponseFactory.createResponse(550));
-                //            return false;
+                return;
             }
         }
         session.getViewCommunicator().write(ftpResponseFactory.createResponse(250));
