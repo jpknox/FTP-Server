@@ -101,10 +101,11 @@ public class FTPLocalFileDataStore implements DataStore {
             if (currentUrl.equals(".")) {
                 //Stay in same directory
                 newDir = currentDir;
-            } else if (Stream.of("\\", "/", System.getProperty("file.separator")).anyMatch(currentUrl.substring(0, 2)::equals)) {
+            } else if (Stream.of("\\", "/", System.getProperty("file.separator")).anyMatch(currentUrl.substring(0, 1)::equals)) {
                 //Navigate from absolute root
                 newDir = new File(rootDir.toString() + currentUrl);
-            } else if (currentUrl.substring(0, 2).equals("..")) {
+            } else if (currentUrl.length() > 1
+                        && currentUrl.substring(0, 2).equals("..")) {
                 //Go back up the directory tree
                 newDir = currentDir.equals(rootDir) ? currentDir : new File(currentDir.getParent());
             } else {
