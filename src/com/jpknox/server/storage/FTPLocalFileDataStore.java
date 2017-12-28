@@ -78,7 +78,10 @@ public class FTPLocalFileDataStore implements DataStore {
         String noQuotesUrl = Pattern.compile("").splitAsStream(Url)
                 .filter(s -> !quotesToRemove.contains(s))
                 .collect(Collectors.joining());
-        if (Url.equals(".")) {
+        if (Stream.of("\\", "/", System.getProperty("file.separator")).anyMatch(Url::equals)) {
+            //Go to root
+            newDir = rootDir;
+        } else if (Url.equals(".")) {
             //Stay in same directory
             newDir = currentDir;
         } else if (Stream.of("\\", "/", System.getProperty("file.separator")).anyMatch(Url.substring(0, 2)::equals)) {
