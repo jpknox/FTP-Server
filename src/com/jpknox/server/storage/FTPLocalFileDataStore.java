@@ -74,19 +74,22 @@ public class FTPLocalFileDataStore implements DataStore {
         if (Url.equals(null) || Url.length() == 0) return false;
         File newDir = null;
 
-        List<String> toRemove = Arrays.asList("\"", "\'");
-        String sanitaryUrl = Pattern.compile("").splitAsStream(Url)
-                .filter(s -> !toRemove.contains(s))
+        List<String> quotesToRemove = Arrays.asList("\"", "\'");    //Remove quotes " and '
+        String noQuotesUrl = Pattern.compile("").splitAsStream(Url)
+                .filter(s -> !quotesToRemove.contains(s))
                 .collect(Collectors.joining());
-        if (Stream.of("\\", "/", System.getProperty("file.separator")).anyMatch(Url.substring(0, 2)::equals)) {
+        if (Url.equals(".")) {
+            //Stay in same directory
+            newDir = currentDir;
+        } else if (Stream.of("\\", "/", System.getProperty("file.separator")).anyMatch(Url.substring(0, 2)::equals)) {
             //Navigate from absolute root
-            newDir = new File(rootDir.toString() + sanitaryUrl);
+            newDir = new File(rootDir.toString() + noQuotesUrl);
         } else if (Url.substring(0, 2).equals("..")) {
-            //Go up one directory
+            //Go back up the directory tree
             newDir = new File(currentDir.getParent());
         } else {
             //Navigate relative to current dir
-            newDir = new File(currentDir.toString() + System.getProperty("file.separator") + sanitaryUrl);
+            newDir = new File(currentDir.toString() + System.getProperty("file.separator") + noQuotesUrl);
         }
         if (newDir.isDirectory()) {
             currentDir = newDir;
