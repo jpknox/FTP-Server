@@ -18,7 +18,7 @@ public interface DataStore {
 
     String getCurrentDirectory();
 
-    boolean changeWorkingDirectory(String Url);
+    void changeWorkingDirectory(String Url);
 
     void mkDir(String Url);
 

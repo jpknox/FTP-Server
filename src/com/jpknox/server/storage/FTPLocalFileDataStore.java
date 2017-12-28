@@ -4,8 +4,7 @@ import com.jpknox.server.response.FTPResponseFactory;
 import com.jpknox.server.session.ClientSession;
 
 import java.io.*;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -70,39 +69,54 @@ public class FTPLocalFileDataStore implements DataStore {
     //TODO: Url begins with a \ || / then it's absolute.
     //TODO: Url begins with an alphanumeric char then it's relative to current dir.
     @Override
-    public boolean changeWorkingDirectory(String Url) {
-        if (Url.equals(null) || Url.length() == 0) return false;
+    public void changeWorkingDirectory(String Url) {
+        if (Url.equals(null) || Url.length() == 0) {
+            session.getViewCommunicator().write(ftpResponseFactory.createResponse(501));
+            return;
+        }
         File newDir = null;
 
         List<String> quotesToRemove = Arrays.asList("\"", "\'");    //Remove quotes " and '
         String noQuotesUrl = Pattern.compile("").splitAsStream(Url)
                 .filter(s -> !quotesToRemove.contains(s))
                 .collect(Collectors.joining());
-        if (Stream.of("\\", "/", System.getProperty("file.separator")).anyMatch(Url::equals)) {
-            //Go to root
-            newDir = rootDir;
-        } else if (Url.equals(".")) {
-            //Stay in same directory
-            newDir = currentDir;
-        } else if (Stream.of("\\", "/", System.getProperty("file.separator")).anyMatch(Url.substring(0, 2)::equals)) {
-            //Navigate from absolute root
-            newDir = new File(rootDir.toString() + noQuotesUrl);
-        } else if (Url.substring(0, 2).equals("..")) {
-            //Go back up the directory tree
-            newDir = new File(currentDir.getParent());
-        } else {
-            //Navigate relative to current dir
-            newDir = new File(currentDir.toString() + System.getProperty("file.separator") + noQuotesUrl);
+
+        //TODO: Keep the first \ or /
+        //TODO: Split the list of directory commands into one
+        //TODO: Keep Java's file.separator
+        List<String> list = new ArrayList<String>(
+                Arrays.asList(noQuotesUrl.split("\\\\|/|" + System.getProperty("line.separator"))));
+        Collections.reverse(list);
+
+        while (list.size() > 0) {
+            String currentUrl = list.remove(list.size()-1);
+
+            if (Stream.of("\\", "/", System.getProperty("file.separator")).anyMatch(currentUrl::equals)) {
+                //Go to root
+                newDir = rootDir;
+            } else if (currentUrl.equals(".")) {
+                //Stay in same directory
+                newDir = currentDir;
+            } else if (Stream.of("\\", "/", System.getProperty("file.separator")).anyMatch(currentUrl.substring(0, 2)::equals)) {
+                //Navigate from absolute root
+                newDir = new File(rootDir.toString() + currentUrl);
+            } else if (currentUrl.substring(0, 2).equals("..")) {
+                //Go back up the directory tree
+                newDir = currentDir.equals(rootDir) ? currentDir : new File(currentDir.getParent());
+            } else {
+                //Navigate relative to current dir
+                newDir = new File(currentDir.toString() + System.getProperty("file.separator") + currentUrl);
+            }
+            if (newDir.isDirectory()) {
+                currentDir = newDir;
+                //            return true;
+            } else {
+                newDir.delete();
+                session.getViewCommunicator().write(ftpResponseFactory.createResponse(550));
+                //            return false;
+            }
         }
-        if (newDir.isDirectory()) {
-            currentDir = newDir;
-            session.getViewCommunicator().write(ftpResponseFactory.createResponse(250));
-            return true;
-        } else {
-            newDir.delete();
-            session.getViewCommunicator().write(ftpResponseFactory.createResponse(550));
-            return false;
-        }
+        session.getViewCommunicator().write(ftpResponseFactory.createResponse(250));
     }
 
     //"RealFtpStorage/Folder 1/Subfolder 1"
