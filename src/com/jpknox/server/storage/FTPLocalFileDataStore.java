@@ -72,6 +72,7 @@ public class FTPLocalFileDataStore implements DataStore {
             session.getViewCommunicator().write(ftpResponseFactory.createResponse(501));
             return;
         }
+        File rollbackDir = currentDir;
         File newDir = null;
 
         List<String> quotesToRemove = Arrays.asList("\"", "\'");    //Remove quotes " and '
@@ -79,22 +80,17 @@ public class FTPLocalFileDataStore implements DataStore {
                 .filter(s -> !quotesToRemove.contains(s))
                 .collect(Collectors.joining());
 
-        if (Stream.of("\\", "/", System.getProperty("file.separator")).anyMatch(noQuotesUrl::equals)) {
+        if (Stream.of("\\", "/", System.getProperty("file.separator")).anyMatch(noQuotesUrl.substring(0, 1)::equals)) {
             //Go to root
             currentDir = rootDir;
-            session.getViewCommunicator().write(ftpResponseFactory.createResponse(250));
-            return;
         }
 
-        //TODO: Keep the first \ or /
-        //TODO: Split the list of directory commands into one
-        //TODO: Keep Java's file.separator
-        List<String> list = new ArrayList<String>(
+        LinkedList list = new LinkedList<String>(
                 Arrays.asList(noQuotesUrl.split("\\\\|/|" + System.getProperty("line.separator"))));
-        Collections.reverse(list);
+        while (list.remove(""));
 
         while (list.size() > 0) {
-            String currentUrl = list.remove(list.size()-1);
+            String currentUrl = list.removeFirst().toString();
 
             if (currentUrl.equals(".")) {
                 //Stay in same directory
@@ -112,14 +108,18 @@ public class FTPLocalFileDataStore implements DataStore {
                     //Reflect real folder's casing
                     newDir = new File(currentDir.toString() + System.getProperty("file.separator")
                             + (new File(currentDir.toString() + System.getProperty("file.separator")
-                            + currentUrl).getCanonicalFile().getName()));
+                                + currentUrl).getCanonicalFile().getName()));
                 } catch (IOException e) {
                     e.printStackTrace();
+                    currentDir = rollbackDir;
+                    session.getViewCommunicator().write(ftpResponseFactory.createResponse(550));
+                    return;
                 }
             }
             if (newDir.isDirectory()) {
                 currentDir = newDir;
             } else {
+                currentDir = rollbackDir;
                 newDir.delete();
                 session.getViewCommunicator().write(ftpResponseFactory.createResponse(550));
                 return;
