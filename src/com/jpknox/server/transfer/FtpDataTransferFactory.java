@@ -1,11 +1,5 @@
 package com.jpknox.server.transfer;
 
-import com.jpknox.server.command.FTPCommandAction;
-import com.jpknox.server.response.ClientViewCommunicator;
-import com.jpknox.server.storage.FileManager;
-import com.jpknox.server.transfer.connection.DataTransfer;
-import com.jpknox.server.transfer.connection.FTPDataTransfer;
-
 /**
  * Created by joaok on 27/12/2017.
  */

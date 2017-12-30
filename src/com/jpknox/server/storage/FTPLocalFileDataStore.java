@@ -64,10 +64,8 @@ public class FTPLocalFileDataStore implements DataStore {
         return currentDir.toString().replaceAll(rootDir.toString(), "") + "\\";
     }
 
-    //TODO: ".." must go back up by one, "/" must go back to root.
-    //TODO: Pass this class a reference to the session so it can contact the client with appropriate messages.
+    //TODO: Ensure the actual casing of the folder names is displayed correctly
     //TODO: Url begins with a \ || / then it's absolute.
-    //TODO: Url begins with an alphanumeric char then it's relative to current dir.
     @Override
     public void changeWorkingDirectory(String Url) {
         if (Url.equals(null) || Url.length() == 0) {
@@ -109,8 +107,15 @@ public class FTPLocalFileDataStore implements DataStore {
                 //Go back up the directory tree
                 newDir = currentDir.equals(rootDir) ? currentDir : new File(currentDir.getParent());
             } else {
-                //Navigate relative to current dir
-                newDir = new File(currentDir.toString() + System.getProperty("file.separator") + currentUrl);
+                //Navigate to a folder relative to current dir
+                try {
+                    //Reflect real folder's casing
+                    newDir = new File(currentDir.toString() + System.getProperty("file.separator")
+                            + (new File(currentDir.toString() + System.getProperty("file.separator")
+                            + currentUrl).getCanonicalFile().getName()));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
             if (newDir.isDirectory()) {
                 currentDir = newDir;

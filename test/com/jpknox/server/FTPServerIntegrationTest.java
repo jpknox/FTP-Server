@@ -589,6 +589,42 @@ public class FTPServerIntegrationTest {
         assertEquals(StateLoggedIn.class.getSimpleName(), state);
     }
 
+    @Test
+    public void testChangeWorkingDirectoryCasingReflectsActualFolder() throws IOException {
+        sendLine("USER user1");
+        sendLine("PASS pass1");
+        sendLine("CWD \"folder 1\"");
+        sendLine("PWD");
+        sendLine("quit");
+        ftpServer = new FTPServer(mockServerSocket);
+        assertEquals("220 Welcome to Jay's FTP Server!", serverOutputReader.readLine());
+        assertEquals("331 User name okay, need password.", serverOutputReader.readLine());
+        assertEquals("230 User1 logged in, proceed.", serverOutputReader.readLine());
+        assertEquals("250 Requested file action okay, completed.", serverOutputReader.readLine());
+        assertEquals("257 \\Folder 1\\", serverOutputReader.readLine());
+        assertEquals("221 Service closing control connection.", serverOutputReader.readLine());
+        String state = ftpServer.getClientSessionController(0).getSession().getState().getClass().getSimpleName();
+        assertEquals(StateLoggedIn.class.getSimpleName(), state);
+    }
+
+    @Test
+    public void testChangeWorkingDirectoryNoSpaces() throws IOException {
+        sendLine("USER user1");
+        sendLine("PASS pass1");
+        sendLine("CWD NoSpaces");
+        sendLine("PWD");
+        sendLine("quit");
+        ftpServer = new FTPServer(mockServerSocket);
+        assertEquals("220 Welcome to Jay's FTP Server!", serverOutputReader.readLine());
+        assertEquals("331 User name okay, need password.", serverOutputReader.readLine());
+        assertEquals("230 User1 logged in, proceed.", serverOutputReader.readLine());
+        assertEquals("250 Requested file action okay, completed.", serverOutputReader.readLine());
+        assertEquals("257 \\NoSpaces\\", serverOutputReader.readLine());
+        assertEquals("221 Service closing control connection.", serverOutputReader.readLine());
+        String state = ftpServer.getClientSessionController(0).getSession().getState().getClass().getSimpleName();
+        assertEquals(StateLoggedIn.class.getSimpleName(), state);
+    }
+
     //TODO: TDD for scenario of missing parameters e.g. "PASS " instead of "PASS password"
 
     private void sendLine(String txt) {
