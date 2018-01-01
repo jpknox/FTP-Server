@@ -39,7 +39,7 @@ public class FTPServerIntegrationTest {
         mockSocket = Mockito.mock(Socket.class);
         when(mockServerSocket.accept()).thenReturn(mockSocket);
 
-        //To send data to the server
+        //To receive data to the server
         serverInputWriter = new PipedOutputStream();
         serverInputStream = new PipedInputStream(serverInputWriter);
         when(mockSocket.getInputStream()).thenReturn(serverInputStream);

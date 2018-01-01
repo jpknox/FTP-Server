@@ -59,12 +59,12 @@ public abstract class AbstractSessionState implements SessionState {
     }
 
     @Override
-    public void retr(String pathToFile) {
+    public void retr(String Url) {
         session.getViewCommunicator().write(responseFactory.createResponse(530));
     }
 
     @Override
-    public void stor(String pathToFile) {
+    public void stor(String Url) {
         session.getViewCommunicator().write(responseFactory.createResponse(530));
     }
 
@@ -102,6 +102,11 @@ public abstract class AbstractSessionState implements SessionState {
     @Override
     public void nlst() {
         session.getViewCommunicator().write(responseFactory.createResponse(530)); 
+    }
+
+    @Override
+    public void list() {
+        session.getViewCommunicator().write(responseFactory.createResponse(530));
     }
 
     @Override

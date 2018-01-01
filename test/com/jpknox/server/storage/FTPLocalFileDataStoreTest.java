@@ -42,15 +42,15 @@ public class FTPLocalFileDataStoreTest {
         assertEquals(System.getProperty("file.separator"), currentDirectory);
     }
 
-    @Test
-    public void testStoreSuccess() {
-        ByteArrayInputStream stream = new ByteArrayInputStream("I am data".getBytes());
-        File file = ftpLocalFileDataStore.store("NewFile.txt", stream);
-        assertEquals(0, stream.available());
-        assertNotNull(file);
-        assertEquals(9, file.length());
-        assertTrue(file.delete());
-    }
+//    @Test
+//    public void testStoreSuccess() {
+//        ByteArrayInputStream stream = new ByteArrayInputStream("I am data".getBytes());
+//        File file = ftpLocalFileDataStore.store("NewFile.txt", stream);
+//        assertEquals(0, stream.available());
+//        assertNotNull(file);
+//        assertEquals(9, file.length());
+//        assertTrue(file.delete());
+//    }
 
 //    @Test
 //    public void testGetNameList() {

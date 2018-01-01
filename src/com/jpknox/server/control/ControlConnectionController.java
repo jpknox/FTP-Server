@@ -75,6 +75,8 @@ public class ControlConnectionController {
                                   break inputLoop;
                     case NLST:    session.getState().nlst();
                                   break;
+                    case STOR:    session.getState().stor(ftpCommand.getParams()[0]);
+                                  break;
                     case AUTH:    session.getState().auth();
                                   break;
                     case SYST:    session.getState().syst();
@@ -86,6 +88,10 @@ public class ControlConnectionController {
                     case CWD:     session.getState().cwd(ftpCommand.getParams()[0]);
                                   break;
                     case NOOP:    session.getState().noop();
+                                  break;
+                    case TYPE:    session.getViewCommunicator().write(responseFactory.createResponse(202));
+                                  break;
+                    case LIST:    session.getState().list();
                                   break;
                     case ERROR_0: session.getViewCommunicator().write(responseFactory.createResponse(500));
                                   break;

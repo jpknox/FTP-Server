@@ -25,9 +25,10 @@ public enum FTPCommandAction {
     PWD("PWD"),
     CWD("CWD"),
     PASV("PASV"),
+    ERROR_1("SYNTAX ERROR"),
     NLST("NLST"),
-    ERROR_0("GENERIC_ERROR"),
-    ERROR_1("SYNTAX ERROR");
+    LIST("LIST"),
+    ERROR_0("GENERIC_ERROR");
 
     private String name;
 

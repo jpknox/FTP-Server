@@ -2,6 +2,8 @@ package com.jpknox.server.storage;
 
 import com.jpknox.server.response.FTPResponseFactory;
 import com.jpknox.server.session.ClientSession;
+import com.jpknox.server.storage.internaltransfer.*;
+import com.jpknox.server.storage.internaltransfer.FileWriter;
 
 import java.io.*;
 import java.util.*;
@@ -18,6 +20,7 @@ public class FTPLocalFileDataStore implements DataStore {
     private final FTPResponseFactory ftpResponseFactory = new FTPResponseFactory();
     private File rootDir = new File("RealFtpStorage");
     private File currentDir;
+    private final FileQueue fileQueue = new FileQueue();
 
     public FTPLocalFileDataStore(ClientSession session) {
         this.session = session;
@@ -31,22 +34,36 @@ public class FTPLocalFileDataStore implements DataStore {
     }
 
     //TODO: Integration test
+//    @Override
+//    public File store(String Url, InputStream inputStream) {
+//        if (exists(Url)) return null;
+//        File file = new File(rootDir.getPath() + File.separatorChar + Url);
+//        System.out.println(file.toString());
+//        try {
+//            file.createNewFile();
+//            FileOutputStream fos = new FileOutputStream(file);
+//            BufferedInputStream bis = new BufferedInputStream(inputStream);
+//            byte[] buffer = new byte[8192];
+//            for (int len; (len = bis.read(buffer)) != -1; fos.write(buffer, 0, len));
+//            fos.close();
+//            bis.close();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        return file;
+//    }
+
     @Override
-    public File store(String Url, InputStream inputStream) {
-        File file = new File(rootDir.getPath() + File.separatorChar + Url);
-        System.out.println(file.toString());
-        try {
-            file.createNewFile();
-            FileOutputStream fos = new FileOutputStream(file);
-            BufferedInputStream bis = new BufferedInputStream(inputStream);
-            byte[] buffer = new byte[8192];
-            for (int len; (len = bis.read(buffer)) != -1; fos.write(buffer, 0, len));
-            fos.close();
-            bis.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+    public FileQueue store(String Url) {
+        if (exists(Url)) {
+            System.out.println("Cannot store " + Url);
+            return null;
         }
-        return file;
+        System.out.println("Attempting to store " + Url);
+        FileWriter permanentFileWriter = new FileWriter(fileQueue, Url, rootDir);
+        Thread fileWriter = new Thread(permanentFileWriter);
+        fileWriter.start();
+        return fileQueue;
     }
 
     @Override
@@ -56,7 +73,7 @@ public class FTPLocalFileDataStore implements DataStore {
 
     @Override
     public boolean exists(String Url) {
-        return false;
+        return new File(Url).exists();
     }
 
     @Override
@@ -146,6 +163,11 @@ public class FTPLocalFileDataStore implements DataStore {
             }
         }
         return nameList;
+    }
+
+    @Override
+    public String getFileList(String Url) {
+        return "-rw-r--r--    1 0        0        1073741824000 Feb 19  2016 1000GB.zip";
     }
 
 

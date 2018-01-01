@@ -1,7 +1,8 @@
 package com.jpknox.server.storage;
 
+import com.jpknox.server.storage.internaltransfer.FileQueue;
+
 import java.io.File;
-import java.io.InputStream;
 
 /**
  * Created by joaok on 26/12/2017.
@@ -10,7 +11,9 @@ public interface DataStore {
 
     File get(String Url);
 
-    File store(String Url, InputStream inputStream);
+    //File store(String Url, InputStream inputStream);
+
+    FileQueue store(String Url);
 
     void delete(String Url);
 
@@ -23,5 +26,7 @@ public interface DataStore {
     void mkDir(String Url);
 
     String getNameList(String Url);
+
+    String getFileList(String Url);
 
 }
