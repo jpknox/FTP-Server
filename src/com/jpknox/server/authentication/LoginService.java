@@ -1,80 +1,60 @@
 package com.jpknox.server.authentication;
 
-import com.jpknox.server.response.FTPResponseFactory;
-import com.jpknox.server.response.ResponseFactory;
-import com.jpknox.server.session.ClientSession;
-import com.jpknox.server.state.StateLoggedIn;
-import com.jpknox.server.state.StateNeedPassword;
-import com.jpknox.server.state.StateNotLoggedIn;
-
-import static com.jpknox.server.utility.Logger.log;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Created by joaok on 03/10/2017.
+ * Created by joaok on 24/09/2017.
  */
 public class LoginService {
 
-    private LoginAuthentication loginAuthentication = new LoginAuthentication();
-
-    private ResponseFactory responseFactory = new FTPResponseFactory();
+    List<Account> accounts;
 
     public LoginService() {
+        this.accounts = new ArrayList<Account>();
+        this.accounts.add(new Account("user1", "pass1"));
+        this.accounts.add(new Account("anonymous"));
+        this.accounts.add(new Account("anon"));
     }
 
-    public LoginService(LoginAuthentication loginAuthentication) {
-        this.loginAuthentication = loginAuthentication;
+    public LoginService(List<Account> initialUsers) {
+        accounts = initialUsers;
     }
 
-    /**
-     * Orchestrates the client's login attempt by forwarding their {@code username}
-     * towards the authenticator.
-     * @param session
-     * @param username
-     * @return
-     */
-    public void login(ClientSession session, String username) {
-        if (username.length() == 0 || username.equals(null)) {
-            session.getViewCommunicator().write(responseFactory.createResponse(501));
-            return;
+    public boolean usernameExists(String username) {
+        for (Account accnt : accounts) {
+            if (accnt.getUsername().equals(username)) return true;
         }
+        return false;
+    }
 
-        if (loginAuthentication.usernameExists(username)) {
-            session.setClientName(username);    //TODO: what if the client changes, and fails to login?
-            if(!loginAuthentication.hasPassword(username)) {
-                session.setState(new StateLoggedIn(session));
-                log("Username \"" + username + "\" logged in.");
-                session.getViewCommunicator().write(responseFactory.createResponse(230, username));
-            } else {
-                session.setState(new StateNeedPassword(session, username));
-                session.getViewCommunicator().write(responseFactory.createResponse(331));
+    public boolean needsPassword(String username) {
+        if (username.length() == 0 || username.equals(null)) return false;
+        for (Account accnt : accounts) {
+            if (accnt.getUsername().equals(username)) return accnt.hasPassword();
+        }
+        return false;
+    }
+
+    public boolean authenticate(String username, String password) {
+        if (illegalCredentials(username, password)) return false;
+        for (Account acct : accounts) {
+            if (acct.getUsername().equals(username) && acct.getPassword().equals(password)) {
+                return true;
             }
-        } else {
-            session.setState(new StateNotLoggedIn(session));
-            session.getViewCommunicator().write(responseFactory.createResponse(530));
         }
+        return false;
     }
 
-    /**
-     * Orchestrates the client's login attempt by forwarding their {@code username}
-     * and {&code password} to the authenticator.
-     * @param session
-     * @param username
-     * @param password
-     * @return
-     */
-    public void login(ClientSession session, String username, String password) {
-        if (loginAuthentication.authenticate(username, password)) {
-            session.setState(new StateLoggedIn(session));
-            log(username + " logged in successfully.");
-            session.getViewCommunicator().write(responseFactory.createResponse(230, username));
-        } else {
-            log(username + " has entered their password incorrectly.");
-            session.setState(new StateNotLoggedIn(session));
-            session.getViewCommunicator().write(responseFactory.createResponse(530));
-        }
+    public boolean illegalCredentials(String username, String password) {
+        return illegalUsername(username) || illegalPassword(password);
     }
 
-    public String firstCharUpper(String username) {
-        return username.substring(0, 1).toUpperCase() + username.substring(1);
+    public boolean illegalUsername(String username) {
+        return username.length() == 0 || username.equals(null);
+    }
+
+    public boolean illegalPassword(String password) {
+        return password.length() == 0 || password.equals(null);
     }
 }

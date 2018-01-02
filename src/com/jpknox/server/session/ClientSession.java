@@ -14,12 +14,13 @@ import static com.jpknox.server.utility.Logger.log;
  */
 public class ClientSession {
 
+    private static final String DEFAULT_USERNAME = "client";
     private final DataConnectionController dataConnectionController = new DataConnectionController(this);
     private final DataStore fileSystem = new FTPLocalFileDataStore(this);
     private final ClientViewCommunicator viewCommunicator;
 
     private SessionState context;
-    private String clientName = "client";
+    private String username = DEFAULT_USERNAME;
 
     public ClientSession(ClientViewCommunicator viewCommunicator) {
         this.viewCommunicator = viewCommunicator;
@@ -30,18 +31,21 @@ public class ClientSession {
         return this.context;
     }
 
-    public int setState(SessionState nextState) {
+    public void setState(SessionState nextState) {
         log("Switching state to " + nextState.getClass().getSimpleName());
         this.context = nextState;
-        return 0;
     }
 
-    public String getClientName() {
-        return clientName;
+    public String getUsername() {
+        return username;
     }
 
-    public void setClientName(String clientName) {
-        this.clientName = clientName;
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void resetUsername() {
+        this.username = DEFAULT_USERNAME;
     }
 
     public DataConnectionController getDataConnectionController() { return dataConnectionController; }

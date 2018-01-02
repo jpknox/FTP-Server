@@ -6,6 +6,8 @@ import com.jpknox.server.response.ResponseFactory;
 import com.jpknox.server.session.ClientSession;
 import com.jpknox.server.utility.FTPServerConfig;
 
+import static com.jpknox.server.utility.Logger.log;
+
 /**
  * Created by joaok on 23/12/2017.
  */
@@ -25,7 +27,24 @@ public abstract class AbstractSessionState implements SessionState {
 
     @Override
     public void user(String username) {
-        loginService.login(session, username);
+        if (loginService.illegalUsername(username)) {
+            session.getViewCommunicator().write(responseFactory.createResponse(501));
+            return;
+        }
+        if (loginService.usernameExists(username)) {
+            session.setUsername(username);
+            if(!loginService.needsPassword(username)) {
+                log("Username \"" + username + "\" logged in.");
+                session.setState(new StateLoggedIn(session));
+                session.getViewCommunicator().write(responseFactory.createResponse(230, username));
+            } else {
+                session.setState(new StateNeedPassword(session));
+                session.getViewCommunicator().write(responseFactory.createResponse(331));
+            }
+        } else {
+            session.setState(new StateNotLoggedIn(session));
+            session.getViewCommunicator().write(responseFactory.createResponse(530));
+        }
     }
 
     @Override

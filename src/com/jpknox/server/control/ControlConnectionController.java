@@ -58,7 +58,7 @@ public class ControlConnectionController {
                         Thread.sleep(100);
                     }
                 }
-                log(session.getClientName() + ": " + dataFromClient);
+                log(session.getUsername() + ": " + dataFromClient);
 
 
                 ftpCommand = FTPCommandDecoder.decode(dataFromClient);
@@ -71,7 +71,7 @@ public class ControlConnectionController {
                     case PASV:    session.getState().pasv();
                                   break;
                     case QUIT:    session.getState().quit();
-                                  log(session.getClientName() + " disconnected.");
+                                  log(session.getUsername() + " disconnected.");
                                   break inputLoop;
                     case NLST:    session.getState().nlst();
                                   break;
