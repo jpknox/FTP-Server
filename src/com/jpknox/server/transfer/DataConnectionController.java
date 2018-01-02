@@ -37,10 +37,6 @@ public class DataConnectionController {
     }
 
     public void receive(FileQueue fileQueue, String filename) {
-        if (!isListening) {
-            responseFactory.createResponse(425);
-            return;
-        }
         DataReceiver inboundDataReceiver = new DataReceiver(
                 connectionQueue, fileQueue, filename, session.getViewCommunicator());
         Thread dataReceiver = new Thread(inboundDataReceiver);
@@ -49,10 +45,6 @@ public class DataConnectionController {
     }
 
     public void send(String data) {
-        if (!isListening) {
-            responseFactory.createResponse(425);
-            return;
-        }
         DataSender outboundDataSender = new DataSender(connectionQueue, data, session.getViewCommunicator());
         Thread dataSender = new Thread(outboundDataSender);
         dataSender.start();

@@ -1,5 +1,6 @@
 package com.jpknox.server.state;
 
+import com.jpknox.server.response.ClientViewCommunicator;
 import com.jpknox.server.session.ClientSession;
 import com.jpknox.server.storage.internaltransfer.FileQueue;
 
@@ -29,17 +30,29 @@ public class StateLoggedIn extends AbstractSessionState {
     }
 
     public void nlst() {
-        //session.getDataConnectionController().receive(session.getFileSystem().getNameList("/"));
+        if (!session.getDataConnectionController().isListening()) {
+            session.getViewCommunicator().write(responseFactory.createResponse(425));
+            return;
+        }
+        session.getDataConnectionController().send(session.getFileSystem().getNameList("/"));
     }
 
     @Override
     public void list() {
+        if (!session.getDataConnectionController().isListening()) {
+            session.getViewCommunicator().write(responseFactory.createResponse(425));
+            return;
+        }
         String data = session.getFileSystem().getFileList("Dummy URL");
         session.getDataConnectionController().send(data);
     }
 
     @Override
     public void stor(String Url) {
+        if (!session.getDataConnectionController().isListening()) {
+            session.getViewCommunicator().write(responseFactory.createResponse(425));
+            return;
+        }
         System.out.println("State logged in has entered 'stor'");
         FileQueue fileQueue = session.getFileSystem().store(Url);
         session.getDataConnectionController().receive(fileQueue, Url);
