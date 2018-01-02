@@ -30,29 +30,20 @@ public class StateLoggedIn extends AbstractSessionState {
     }
 
     public void nlst() {
-        if (!session.getDataConnectionController().isListening()) {
-            session.getViewCommunicator().write(responseFactory.createResponse(425));
-            return;
-        }
+        if (!checkIfListening()) return;
         session.getDataConnectionController().send(session.getFileSystem().getNameList("/"));
     }
 
     @Override
     public void list() {
-        if (!session.getDataConnectionController().isListening()) {
-            session.getViewCommunicator().write(responseFactory.createResponse(425));
-            return;
-        }
+        if (!checkIfListening()) return;
         String data = session.getFileSystem().getFileList("Dummy URL");
         session.getDataConnectionController().send(data);
     }
 
     @Override
     public void stor(String Url) {
-        if (!session.getDataConnectionController().isListening()) {
-            session.getViewCommunicator().write(responseFactory.createResponse(425));
-            return;
-        }
+        if (!checkIfListening()) return;
         System.out.println("State logged in has entered 'stor'");
         FileQueue fileQueue = session.getFileSystem().store(Url);
         session.getDataConnectionController().receive(fileQueue, Url);
@@ -68,5 +59,13 @@ public class StateLoggedIn extends AbstractSessionState {
     @Override
     public void cwd(String Url) {
         session.getFileSystem().changeWorkingDirectory(Url);
+    }
+
+    private boolean checkIfListening() {
+        if (!session.getDataConnectionController().isListening()) {
+            session.getViewCommunicator().write(responseFactory.createResponse(425));
+            return false;
+        }
+        return true;
     }
 }

@@ -5,8 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="01bb38b3-e68b-49fb-9160-adee50d0e7f4" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/jpknox/server/state/StateLoggedIn.java" afterPath="$PROJECT_DIR$/src/com/jpknox/server/state/StateLoggedIn.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/jpknox/server/transfer/DataConnectionController.java" afterPath="$PROJECT_DIR$/src/com/jpknox/server/transfer/DataConnectionController.java" />
     </list>
     <ignored path="StatePatternFTP.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -69,8 +69,8 @@
       <file leaf-file-name="StateLoggedIn.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/com/jpknox/server/state/StateLoggedIn.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="624">
-              <caret line="52" column="85" lean-forward="false" selection-start-line="52" selection-start-column="85" selection-end-line="52" selection-end-column="85" />
+            <state relative-caret-position="420">
+              <caret line="45" column="40" lean-forward="false" selection-start-line="45" selection-start-column="40" selection-end-line="45" selection-end-column="40" />
               <folding />
             </state>
           </provider>
@@ -919,6 +919,9 @@
     <history-entry file="All_Tests - 2018.01.02 at 19h 14m 17s.xml">
       <configuration name="All Tests" configurationId="JUnit" />
     </history-entry>
+    <history-entry file="All_Tests - 2018.01.02 at 19h 16m 57s.xml">
+      <configuration name="All Tests" configurationId="JUnit" />
+    </history-entry>
     <history-entry file="FTPServerIntegrationTest - 2018.01.02 at 18h 41m 25s.xml">
       <configuration name="FTPServerIntegrationTest" configurationId="JUnit" />
     </history-entry>
@@ -927,9 +930,6 @@
     </history-entry>
     <history-entry file="FTPServerIntegrationTest_testRequestNameListBeforeSpecifyingTransmissionMode - 2018.01.02 at 19h 14m 13s.xml">
       <configuration name="FTPServerIntegrationTest.testRequestNameListBeforeSpecifyingTransmissionMode" configurationId="JUnit" />
-    </history-entry>
-    <history-entry file="LoginServiceTest - 2018.01.02 at 18h 36m 57s.xml">
-      <configuration name="LoginServiceTest" configurationId="JUnit" />
     </history-entry>
     <history-entry file="LoginServiceTest - 2018.01.02 at 18h 41m 13s.xml">
       <configuration name="LoginServiceTest" configurationId="JUnit" />
@@ -961,7 +961,7 @@
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.31861198" sideWeight="0.40263543" order="8" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.31840795" sideWeight="0.59736454" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.31840795" sideWeight="0.59736454" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Properties" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32935324" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -1002,12 +1002,6 @@
           <line>126</line>
           <properties />
           <option name="timeStamp" value="34" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/com/jpknox/server/state/StateLoggedIn.java</url>
-          <line>34</line>
-          <properties />
-          <option name="timeStamp" value="92" />
         </line-breakpoint>
       </breakpoints>
       <option name="time" value="93" />
@@ -1340,10 +1334,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/jpknox/server/control/ControlConnectionController.java">
+    <entry file="file://$PROJECT_DIR$/test/com/jpknox/server/FTPServerIntegrationTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="315">
-          <caret line="66" column="57" lean-forward="false" selection-start-line="66" selection-start-column="57" selection-end-line="66" selection-end-column="57" />
+        <state relative-caret-position="218">
+          <caret line="287" column="0" lean-forward="false" selection-start-line="287" selection-start-column="0" selection-end-line="287" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -1359,18 +1353,18 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/test/com/jpknox/server/FTPServerIntegrationTest.java">
+    <entry file="file://$PROJECT_DIR$/src/com/jpknox/server/control/ControlConnectionController.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="218">
-          <caret line="287" column="0" lean-forward="false" selection-start-line="287" selection-start-column="0" selection-end-line="287" selection-end-column="0" />
+        <state relative-caret-position="315">
+          <caret line="66" column="57" lean-forward="false" selection-start-line="66" selection-start-column="57" selection-end-line="66" selection-end-column="57" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/jpknox/server/state/StateLoggedIn.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="624">
-          <caret line="52" column="85" lean-forward="false" selection-start-line="52" selection-start-column="85" selection-end-line="52" selection-end-column="85" />
+        <state relative-caret-position="420">
+          <caret line="45" column="40" lean-forward="false" selection-start-line="45" selection-start-column="40" selection-end-line="45" selection-end-column="40" />
           <folding />
         </state>
       </provider>
