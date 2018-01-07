@@ -1,0 +1,139 @@
+package com.jpknox.server.storage;
+
+import com.jpknox.server.response.FTPResponseFactory;
+import com.jpknox.server.session.ClientSession;
+import com.jpknox.server.storage.internaltransfer.*;
+import com.jpknox.server.storage.internaltransfer.FileWriter;
+import com.jpknox.server.storage.refactor.file.DirectoryTransition;
+import com.jpknox.server.storage.refactor.file.DirectoryTransitioner;
+import com.jpknox.server.storage.refactor.file.transition.concrete.DownDirectoryTransition;
+import com.jpknox.server.storage.refactor.file.transition.concrete.RootDirectoryTransition;
+import com.jpknox.server.storage.refactor.file.transition.concrete.StationaryDirectoryTransition;
+import com.jpknox.server.storage.refactor.file.transition.concrete.UpDirectoryTransition;
+import com.jpknox.server.storage.refactor.file.transition.factory.DirectoryTransitionFactory;
+
+import java.io.*;
+import java.util.*;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+/**
+ * Created by joaok on 26/12/2017.
+ */
+public class FTPLocalFileDataStore implements DataStore {
+
+    private final ClientSession session;
+    private final FTPResponseFactory ftpResponseFactory = new FTPResponseFactory();
+    private File rootDir = new File("RealFtpStorage");
+    private File currentDir;
+    private final FileQueue fileQueue = new FileQueue();
+
+    public FTPLocalFileDataStore(ClientSession session) {
+        this.session = session;
+        if (!rootDir.isDirectory()) rootDir.mkdir();
+        currentDir = new File(rootDir.toString());
+    }
+
+    @Override
+    public File get(String Url) {
+        return null;
+    }
+
+    //TODO: Integration test
+//    @Override
+//    public File store(String Url, InputStream inputStream) {
+//        if (exists(Url)) return null;
+//        File file = new File(rootDir.getPath() + File.separatorChar + Url);
+//        System.out.println(file.toString());
+//        try {
+//            file.createNewFile();
+//            FileOutputStream fos = new FileOutputStream(file);
+//            BufferedInputStream bis = new BufferedInputStream(inputStream);
+//            byte[] buffer = new byte[8192];
+//            for (int len; (len = bis.read(buffer)) != -1; fos.write(buffer, 0, len));
+//            fos.close();
+//            bis.close();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        return file;
+//    }
+
+    @Override
+    public FileQueue store(String Url) {
+        if (exists(Url)) {
+            System.out.println("Cannot store " + Url);
+            return null;
+        }
+        System.out.println("Attempting to store " + Url);
+        FileWriter permanentFileWriter = new FileWriter(fileQueue, Url, rootDir);
+        Thread fileWriter = new Thread(permanentFileWriter);
+        fileWriter.start();
+        return fileQueue;
+    }
+
+    @Override
+    public void delete(String Url) {
+
+    }
+
+    @Override
+    public boolean exists(String Url) {
+        return new File(Url).exists();
+    }
+
+    @Override
+    public String getCurrentDirectory() {
+        return currentDir.toString().replaceAll(rootDir.toString(), "") + "\\";
+    }
+
+    //TODO: Ensure the actual casing of the folder names is displayed correctly
+    //TODO: Url begins with a \ || / then it's absolute.
+    @Override
+    public void changeWorkingDirectory(String Url) {
+        if (Url.equals(null) || Url.length() == 0) {
+            session.getViewCommunicator().write(ftpResponseFactory.createResponse(501));
+            return;
+        }
+
+        DirectoryTransition[] transitions = DirectoryTransitionFactory.createDirectoryTransitions(Url);
+
+        File rollbackDir = currentDir;
+        File newDir = DirectoryTransitioner.performTransitions(transitions, currentDir);
+
+        if (newDir == null) {
+            currentDir = rollbackDir;
+            session.getViewCommunicator().write(ftpResponseFactory.createResponse(550));
+            return;
+        }
+
+        currentDir = newDir;
+        session.getViewCommunicator().write(ftpResponseFactory.createResponse(250));
+    }
+
+
+    //TODO: Integration test
+    @Override
+    public void mkDir(String Url) {
+
+    }
+
+    @Override
+    public String getNameList(String Url) {
+        String nameList = "";
+        if (Url == null || Url.equals("\\") || Url.equals("/")) {
+            for (File f : rootDir.listFiles()) {
+                nameList = (nameList + f.getName() + System.getProperty("line.separator"));
+            }
+        }
+        return nameList;
+    }
+
+    @Override
+    public String getFileList(String Url) {
+        return "-rw-r--r--    1 0        0        1073741824000 Feb 19  2016 1000GB.zip";
+    }
+
+
+}

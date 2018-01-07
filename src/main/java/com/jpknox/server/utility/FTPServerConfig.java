@@ -1,10 +1,13 @@
 package com.jpknox.server.utility;
 
+import java.io.File;
+
 /**
  * Created by JoaoPaulo on 25-Sep-17.
  */
 public class FTPServerConfig {
 
+    public static final File root = new File("RealFtpStorage");
     public static final String SERVER_NAME = "Jay's FTP Server V1.0";
     public static final String OPERATING_SYSTEM = System.getProperty("os.name");
     public static final String IP_FIRST_OCTET = "127";
