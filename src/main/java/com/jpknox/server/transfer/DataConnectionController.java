@@ -1,10 +1,9 @@
 package com.jpknox.server.transfer;
 
 
-import com.jpknox.server.response.FTPResponseFactory;
 import com.jpknox.server.session.ClientSession;
 import com.jpknox.server.storage.internaltransfer.FileQueue;
-import com.jpknox.server.transfer.connection.*;
+import com.jpknox.server.transfer.connection.InboundConnectionListener;
 import com.jpknox.server.transfer.connection.establish.ConnectionQueue;
 import com.jpknox.server.transfer.connection.establish.DataPortGenerator;
 import com.jpknox.server.transfer.connection.transfer.DataReceiver;
@@ -18,7 +17,6 @@ import static com.jpknox.server.utility.Logger.log;
 public class DataConnectionController {
 
     private final ClientSession session;
-    private final FTPResponseFactory responseFactory = new FTPResponseFactory();
     private final ConnectionQueue connectionQueue = new ConnectionQueue();
     private boolean isListening = false;
 

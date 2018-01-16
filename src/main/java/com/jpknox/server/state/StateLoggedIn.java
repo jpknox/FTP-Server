@@ -1,11 +1,14 @@
 package com.jpknox.server.state;
 
 import com.jpknox.server.response.ClientViewCommunicator;
+import com.jpknox.server.response.FTPResponseFactory;
 import com.jpknox.server.session.ClientSession;
+import com.jpknox.server.storage.DataStore;
 import com.jpknox.server.storage.internaltransfer.FileQueue;
 
 import java.io.FileOutputStream;
 import java.io.OutputStream;
+import java.nio.file.FileSystem;
 
 /**
  * Created by joaok on 24/09/2017.
@@ -53,17 +56,22 @@ public class StateLoggedIn extends AbstractSessionState {
     @Override
     public void pwd() {
         String currentDirectory = session.getFileSystem().getCurrentDirectory();
-        session.getViewCommunicator().write(responseFactory.createResponse(257, currentDirectory));
+        session.getViewCommunicator().write(FTPResponseFactory.createResponse(257, currentDirectory));
     }
 
     @Override
     public void cwd(String Url) {
+        DataStore fileSystem = session.getFileSystem();
+        if (!fileSystem.validUrl(Url)) {
+            session.getViewCommunicator().write(FTPResponseFactory.createResponse(501));
+        }
+
         session.getFileSystem().changeWorkingDirectory(Url);
     }
 
     private boolean checkIfListening() {
         if (!session.getDataConnectionController().isListening()) {
-            session.getViewCommunicator().write(responseFactory.createResponse(425));
+            session.getViewCommunicator().write(FTPResponseFactory.createResponse(425));
             return false;
         }
         return true;

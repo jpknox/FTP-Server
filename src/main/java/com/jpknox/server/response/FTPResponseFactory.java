@@ -5,11 +5,12 @@ import java.util.Locale;
 
 /**
  * Created by joaok on 25/12/2017.
- * This class encapsulates the responsibility of creating and
- * formatting each response a client will receive when communicating
- * with the FTP protocol over the {@code control} connection.
+ * All responses from the factory will come in the form of a {@code String}
+ * both the content and format of the {@code String} will be delegated to
+ * the factory. The response is requested by providing a standard {@code code}
+ * parameter relating to each type of response.
  */
-public class FTPResponseFactory implements ResponseFactory {
+public class FTPResponseFactory {
 
     public static final String DIRECTORY_LIST = "150 Sending the directory listing.";
     public static final String COMMAND_OKAY = "200 Command okay.";
@@ -31,14 +32,12 @@ public class FTPResponseFactory implements ResponseFactory {
     public static final String FILE_ACTION_FAILURE = "550 Requested action not taken. File unavailable" +
                                                      " (e.g., file not found, no access).";
 
+    public static String createResponse(int code) {
+        String format = null;
+        String output;
+        final StringBuilder sb = new StringBuilder();
+        final Formatter formatter = new Formatter(sb, Locale.UK);
 
-    private String format;
-    private String output;
-    private final StringBuilder sb = new StringBuilder();
-    private final Formatter formatter = new Formatter(sb, Locale.UK);
-
-    @Override
-    public String createResponse(int code) {
         if (code == 150) format = DIRECTORY_LIST;
         if (code == 200) format = COMMAND_OKAY;
         if (code == 202) format = SUPERFLUOUS_COMMAND;
@@ -59,8 +58,12 @@ public class FTPResponseFactory implements ResponseFactory {
         return output;
     }
 
-    @Override
-    public String createResponse(int code, String... param) {
+    public static String createResponse(int code, String... param) {
+        String format = null;
+        String output;
+        final StringBuilder sb = new StringBuilder();
+        final Formatter formatter = new Formatter(sb, Locale.UK);
+
         if (code == 200) {
             if (param[0].equalsIgnoreCase("CWD")) {
                 format = COMMAND_OKAY_WITH_ARG;
@@ -85,7 +88,7 @@ public class FTPResponseFactory implements ResponseFactory {
         return output;
     }
 
-    private String firstCharToUpper(String param) {
+    private static String firstCharToUpper(String param) {
         return param.substring(0, 1).toUpperCase() + param.substring(1);
     }
 }

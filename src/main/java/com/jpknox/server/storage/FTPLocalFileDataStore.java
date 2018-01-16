@@ -24,7 +24,6 @@ import java.util.stream.Stream;
 public class FTPLocalFileDataStore implements DataStore {
 
     private final ClientSession session;
-    private final FTPResponseFactory ftpResponseFactory = new FTPResponseFactory();
     private File rootDir = new File("RealFtpStorage");
     private File currentDir;
     private final FileQueue fileQueue = new FileQueue();
@@ -88,14 +87,8 @@ public class FTPLocalFileDataStore implements DataStore {
         return currentDir.toString().replaceAll(rootDir.toString(), "") + "\\";
     }
 
-    //TODO: Ensure the actual casing of the folder names is displayed correctly
-    //TODO: Url begins with a \ || / then it's absolute.
     @Override
     public void changeWorkingDirectory(String Url) {
-        if (Url.equals(null) || Url.length() == 0) {
-            session.getViewCommunicator().write(ftpResponseFactory.createResponse(501));
-            return;
-        }
 
         DirectoryTransition[] transitions = DirectoryTransitionFactory.createDirectoryTransitions(Url);
 
@@ -104,16 +97,15 @@ public class FTPLocalFileDataStore implements DataStore {
 
         if (newDir == null) {
             currentDir = rollbackDir;
-            session.getViewCommunicator().write(ftpResponseFactory.createResponse(550));
+            session.getViewCommunicator().write(FTPResponseFactory.createResponse(550));
             return;
         }
 
         currentDir = newDir;
-        session.getViewCommunicator().write(ftpResponseFactory.createResponse(250));
+        session.getViewCommunicator().write(FTPResponseFactory.createResponse(250));
     }
 
 
-    //TODO: Integration test
     @Override
     public void mkDir(String Url) {
 
@@ -133,6 +125,11 @@ public class FTPLocalFileDataStore implements DataStore {
     @Override
     public String getFileList(String Url) {
         return "-rw-r--r--    1 0        0        1073741824000 Feb 19  2016 1000GB.zip";
+    }
+
+    @Override
+    public boolean validUrl(String Url) {
+        return !(Url.equals(null) || Url.length() == 0);
     }
 
 

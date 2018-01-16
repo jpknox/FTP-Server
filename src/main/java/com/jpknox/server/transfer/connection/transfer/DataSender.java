@@ -15,7 +15,6 @@ public class DataSender implements Runnable {
     private ConnectionQueue connectionQueue;
     private String data;
     private ClientViewCommunicator clientViewCommunicator;
-    private FTPResponseFactory ftpResponseFactory = new FTPResponseFactory();
 
     public DataSender(ConnectionQueue connectionQueue, String data, ClientViewCommunicator clientViewCommunicator) {
         this.connectionQueue = connectionQueue;
@@ -35,7 +34,7 @@ public class DataSender implements Runnable {
             bos.close();
             isr.close();
             connection.close();
-            clientViewCommunicator.write(ftpResponseFactory.createResponse(226));
+            clientViewCommunicator.write(FTPResponseFactory.createResponse(226));
         } catch (IOException e) {
             e.printStackTrace();
         }

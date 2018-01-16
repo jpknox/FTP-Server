@@ -17,7 +17,6 @@ public class DataReceiver implements Runnable{
     private FileQueue fileQueue;
     private String filename;
     private ClientViewCommunicator clientViewCommunicator;
-    private FTPResponseFactory ftpResponseFactory = new FTPResponseFactory();
 
     public DataReceiver(ConnectionQueue connectionQueue, FileQueue fileQueue
             , String filename, ClientViewCommunicator clientViewCommunicator) {
@@ -43,7 +42,7 @@ public class DataReceiver implements Runnable{
             bos.close();
             bis.close();
             connection.close();
-            clientViewCommunicator.write(ftpResponseFactory.createResponse(226));
+            clientViewCommunicator.write(FTPResponseFactory.createResponse(226));
             System.out.println("Finished recieving " + filename + ", size " + tempTransferFile.length());
             fileQueue.setFile(tempTransferFile);
         } catch (IOException e) {

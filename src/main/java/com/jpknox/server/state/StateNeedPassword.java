@@ -1,5 +1,6 @@
 package com.jpknox.server.state;
 
+import com.jpknox.server.response.FTPResponseFactory;
 import com.jpknox.server.session.ClientSession;
 
 import static com.jpknox.server.utility.Logger.log;
@@ -19,12 +20,12 @@ public class StateNeedPassword extends AbstractSessionState {
         if (loginService.authenticate(username, password)) {
             session.setState(new StateLoggedIn(session));
             log(username + " logged in successfully.");
-            session.getViewCommunicator().write(responseFactory.createResponse(230, username));
+            session.getViewCommunicator().write(FTPResponseFactory.createResponse(230, username));
         } else {
             log(username + " has entered their password incorrectly.");
             session.resetUsername();
             session.setState(new StateNotLoggedIn(session));
-            session.getViewCommunicator().write(responseFactory.createResponse(530));
+            session.getViewCommunicator().write(FTPResponseFactory.createResponse(530));
         }
     }
 }

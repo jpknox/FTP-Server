@@ -18,7 +18,6 @@ import static com.jpknox.server.utility.Logger.log;
 public class ControlConnectionController {
 
     private final Socket clientConnection;
-    private final FTPResponseFactory responseFactory = new FTPResponseFactory();
     private final ClientViewCommunicator viewCommunicator = new ClientViewCommunicator();
     private final FTPCommandDecoder FTPCommandDecoder = new FTPCommandDecoder();
     private final ClientSession session = new ClientSession(viewCommunicator);
@@ -89,13 +88,13 @@ public class ControlConnectionController {
                                   break;
                     case NOOP:    session.getState().noop();
                                   break;
-                    case TYPE:    session.getViewCommunicator().write(responseFactory.createResponse(202));
+                    case TYPE:    session.getViewCommunicator().write(FTPResponseFactory.createResponse(202));
                                   break;
                     case LIST:    session.getState().list();
                                   break;
-                    case ERROR_0: session.getViewCommunicator().write(responseFactory.createResponse(500));
+                    case ERROR_0: session.getViewCommunicator().write(FTPResponseFactory.createResponse(500));
                                   break;
-                    case ERROR_1: session.getViewCommunicator().write(responseFactory.createResponse(501));
+                    case ERROR_1: session.getViewCommunicator().write(FTPResponseFactory.createResponse(501));
                 }
 
             }

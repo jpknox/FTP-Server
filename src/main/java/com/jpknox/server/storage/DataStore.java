@@ -29,4 +29,6 @@ public interface DataStore {
 
     String getFileList(String Url);
 
+    boolean validUrl(String Url);
+
 }

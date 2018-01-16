@@ -22,30 +22,6 @@ import java.util.stream.Stream;
  */
 public class DirectoryTransitionFactory {
 
-    public static DirectoryTransition[] createDirectoryTransitions(String[] commands) {
-
-
-
-        DirectoryTransition[] directoryTransitions = new DirectoryTransition[commands.length];
-        int i = 0;
-        for (String command : commands) {
-            if (command.equals("..")) {
-                directoryTransitions[i++] = new UpDirectoryTransition();
-                continue;
-            } else if (command.equals("")) {
-                directoryTransitions[i++] = new RootDirectoryTransition();
-                continue;
-            } else if (command.equals(".")) {
-                directoryTransitions[i++] = new StationaryDirectoryTransition();
-                continue;
-            } else {
-                directoryTransitions[i++] = new DownDirectoryTransition(command);
-                continue;
-            }
-        }
-        return directoryTransitions;
-    }
-
     /**
      * Given the URL of a directory to navigate towards, this method will create
      * the necessary concrete (@code DirectoryTransition} instances to get to
