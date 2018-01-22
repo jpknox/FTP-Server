@@ -4,19 +4,11 @@ import com.jpknox.server.response.FTPResponseFactory;
 import com.jpknox.server.session.ClientSession;
 import com.jpknox.server.storage.internaltransfer.*;
 import com.jpknox.server.storage.internaltransfer.FileWriter;
-import com.jpknox.server.storage.refactor.file.DirectoryTransition;
-import com.jpknox.server.storage.refactor.file.DirectoryTransitioner;
-import com.jpknox.server.storage.refactor.file.transition.concrete.DownDirectoryTransition;
-import com.jpknox.server.storage.refactor.file.transition.concrete.RootDirectoryTransition;
-import com.jpknox.server.storage.refactor.file.transition.concrete.StationaryDirectoryTransition;
-import com.jpknox.server.storage.refactor.file.transition.concrete.UpDirectoryTransition;
-import com.jpknox.server.storage.refactor.file.transition.factory.DirectoryTransitionFactory;
+import com.jpknox.server.storage.file.DirectoryTransition;
+import com.jpknox.server.storage.file.DirectoryTransitioner;
+import com.jpknox.server.storage.file.transition.factory.DirectoryTransitionFactory;
 
 import java.io.*;
-import java.util.*;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * Created by joaok on 26/12/2017.

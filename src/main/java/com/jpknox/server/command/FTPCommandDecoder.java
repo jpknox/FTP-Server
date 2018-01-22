@@ -59,6 +59,18 @@ public class FTPCommandDecoder {
             commandParams = defaultParams();
         }
 
+        //Validate parameters
+        int populatedParams = 0;
+        for (String param: commandParams) {
+            if (!param.equals(null) && param.trim().length() > 0) {
+                populatedParams++;
+            }
+        }
+        if (populatedParams < commandAction.getNumberOfParams()) {
+            return new FTPCommand(FTPCommandAction.ERROR_1, defaultParams());
+        }
+
+
         return new FTPCommand(commandAction, commandParams);
     }
 

@@ -1,4 +1,4 @@
-package com.jpknox.server.storage.refactor.file;
+package com.jpknox.server.storage.file;
 
 import java.io.File;
 

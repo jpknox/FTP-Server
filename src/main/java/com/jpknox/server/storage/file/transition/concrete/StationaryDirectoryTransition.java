@@ -1,6 +1,6 @@
-package com.jpknox.server.storage.refactor.file.transition.concrete;
+package com.jpknox.server.storage.file.transition.concrete;
 
-import com.jpknox.server.storage.refactor.file.DirectoryTransition;
+import com.jpknox.server.storage.file.DirectoryTransition;
 
 import java.io.File;
 

@@ -1,11 +1,11 @@
-package com.jpknox.server.storage.refactor.file.transition.factory;
+package com.jpknox.server.storage.file.transition.factory;
 
 
-import com.jpknox.server.storage.refactor.file.DirectoryTransition;
-import com.jpknox.server.storage.refactor.file.transition.concrete.DownDirectoryTransition;
-import com.jpknox.server.storage.refactor.file.transition.concrete.RootDirectoryTransition;
-import com.jpknox.server.storage.refactor.file.transition.concrete.StationaryDirectoryTransition;
-import com.jpknox.server.storage.refactor.file.transition.concrete.UpDirectoryTransition;
+import com.jpknox.server.storage.file.transition.concrete.DownDirectoryTransition;
+import com.jpknox.server.storage.file.DirectoryTransition;
+import com.jpknox.server.storage.file.transition.concrete.RootDirectoryTransition;
+import com.jpknox.server.storage.file.transition.concrete.StationaryDirectoryTransition;
+import com.jpknox.server.storage.file.transition.concrete.UpDirectoryTransition;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
