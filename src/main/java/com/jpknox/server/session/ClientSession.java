@@ -2,59 +2,28 @@ package com.jpknox.server.session;
 
 import com.jpknox.server.response.ClientViewCommunicator;
 import com.jpknox.server.state.SessionState;
-import com.jpknox.server.state.StateNotLoggedIn;
 import com.jpknox.server.storage.DataStore;
-import com.jpknox.server.storage.FTPLocalFileDataStore;
 import com.jpknox.server.transfer.DataConnectionController;
 
-import static com.jpknox.server.utility.Logger.log;
-
 /**
- * Created by JoaoPaulo on 14-Oct-17.
+ * Created by joaok on 29/01/2018.
  */
-public class ClientSession {
+public interface  ClientSession {
+    SessionState getState();
 
-    private static final String DEFAULT_USERNAME = "client";
-    private final DataConnectionController dataConnectionController = new DataConnectionController(this);
-    private final DataStore fileSystem = new FTPLocalFileDataStore(this);
-    private final ClientViewCommunicator viewCommunicator;
+    void setState(SessionState nextState);
 
-    private SessionState context;
-    private String username = DEFAULT_USERNAME;
+    String getUsername();
 
-    public ClientSession(ClientViewCommunicator viewCommunicator) {
-        this.viewCommunicator = viewCommunicator;
-        this.context = new StateNotLoggedIn(this);
-    }
+    void setUsername(String username);
 
-    public SessionState getState() {
-        return this.context;
-    }
+    void resetUsername();
 
-    public void setState(SessionState nextState) {
-        log("Switching state to " + nextState.getClass().getSimpleName());
-        this.context = nextState;
-    }
+    DataConnectionController getDataConnectionController();
 
-    public String getUsername() {
-        return username;
-    }
+    DataStore getFileSystem();
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
+    ClientViewCommunicator getViewCommunicator();
 
-    public void resetUsername() {
-        this.username = DEFAULT_USERNAME;
-    }
-
-    public DataConnectionController getDataConnectionController() { return dataConnectionController; }
-
-    public DataStore getFileSystem() {
-        return fileSystem;
-    }
-
-    public ClientViewCommunicator getViewCommunicator() {
-        return viewCommunicator;
-    }
+    void sendResponse(String text);
 }

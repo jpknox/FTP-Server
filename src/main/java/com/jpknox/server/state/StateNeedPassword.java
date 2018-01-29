@@ -1,7 +1,7 @@
 package com.jpknox.server.state;
 
 import com.jpknox.server.response.FTPResponseFactory;
-import com.jpknox.server.session.ClientSession;
+import com.jpknox.server.session.FTPClientSession;
 
 import static com.jpknox.server.utility.Logger.log;
 
@@ -10,7 +10,7 @@ import static com.jpknox.server.utility.Logger.log;
  */
 public class StateNeedPassword extends AbstractSessionState {
 
-    public StateNeedPassword(ClientSession session) {
+    public StateNeedPassword(FTPClientSession session) {
         super(session);
     }
 

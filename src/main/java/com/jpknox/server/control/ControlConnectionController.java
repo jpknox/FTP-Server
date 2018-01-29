@@ -5,7 +5,7 @@ import com.jpknox.server.command.FTPCommandAction;
 import com.jpknox.server.command.FTPCommandDecoder;
 import com.jpknox.server.response.ClientViewCommunicator;
 import com.jpknox.server.response.FTPResponseFactory;
-import com.jpknox.server.session.ClientSession;
+import com.jpknox.server.session.FTPClientSession;
 
 import java.io.*;
 import java.net.Socket;
@@ -20,7 +20,7 @@ public class ControlConnectionController {
     private final Socket clientConnection;
     private final ClientViewCommunicator viewCommunicator = new ClientViewCommunicator();
     private final FTPCommandDecoder FTPCommandDecoder = new FTPCommandDecoder();
-    private final ClientSession session = new ClientSession(viewCommunicator);
+    private final FTPClientSession session = new FTPClientSession(viewCommunicator);
     private FTPCommand ftpCommand;
     private FTPCommandAction ftpCommandAction;
 
@@ -105,7 +105,7 @@ public class ControlConnectionController {
     }
 
     //Used by the integration tests
-    public ClientSession getSession() {
+    public FTPClientSession getSession() {
         return this.session;
     }
 }

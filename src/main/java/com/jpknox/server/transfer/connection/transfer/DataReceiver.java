@@ -29,24 +29,36 @@ public class DataReceiver implements Runnable{
     @Override
     public void run() {
         System.out.println("Receiving " + filename);
-        BufferedInputStream bis;
+        BufferedInputStream bis = null;
         BufferedOutputStream bos = null;
+        Socket connection = null;
         try {
-            Socket connection = connectionQueue.getConnection();
+            connection = connectionQueue.getConnection();
             bis = new BufferedInputStream(connection.getInputStream());
             File tempTransferFile = new File(System.getProperty("java.io.tmpdir")
                                                 + System.getProperty("file.separator")
                                                 + filename);
             bos = new BufferedOutputStream(new FileOutputStream(tempTransferFile));
             for (int i; (i = bis.read()) != -1; bos.write(i));
-            bos.close();
-            bis.close();
-            connection.close();
+
             clientViewCommunicator.write(FTPResponseFactory.createResponse(226));
             System.out.println("Finished recieving " + filename + ", size " + tempTransferFile.length());
             fileQueue.setFile(tempTransferFile);
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                if(bos != null) {
+                    bos.close();
+                }
+                if(bis != null) {
+                    bis.close();
+                }
+                if(connection != null) {
+                    connection.close();
+                }
+            }
+            catch(IOException ignored) {}
         }
     }
 }

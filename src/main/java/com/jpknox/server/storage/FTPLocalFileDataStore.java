@@ -2,6 +2,7 @@ package com.jpknox.server.storage;
 
 import com.jpknox.server.response.FTPResponseFactory;
 import com.jpknox.server.session.ClientSession;
+import com.jpknox.server.session.FTPClientSession;
 import com.jpknox.server.storage.internaltransfer.*;
 import com.jpknox.server.storage.internaltransfer.FileWriter;
 import com.jpknox.server.storage.file.DirectoryTransition;
@@ -89,12 +90,12 @@ public class FTPLocalFileDataStore implements DataStore {
 
         if (newDir == null) {
             currentDir = rollbackDir;
-            session.getViewCommunicator().write(FTPResponseFactory.createResponse(550));
+            session.sendResponse(FTPResponseFactory.createResponse(550));
             return;
         }
 
         currentDir = newDir;
-        session.getViewCommunicator().write(FTPResponseFactory.createResponse(250));
+        session.sendResponse(FTPResponseFactory.createResponse(250));
     }
 
 
@@ -116,7 +117,7 @@ public class FTPLocalFileDataStore implements DataStore {
 
     @Override
     public String getFileList(String Url) {
-        return "-rw-r--r--    1 0        0        1073741824000 Feb 19  2016 1000GB.zip";
+        return "-rw-ClientSession--ClientSession--    1 0        0        1073741824000 Feb 19  2016 1000GB.zip";
     }
 
     @Override

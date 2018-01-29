@@ -1,16 +1,10 @@
 package com.jpknox.server.storage;
 
-import com.jpknox.server.session.ClientSession;
+import com.jpknox.server.session.FTPClientSession;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
-
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
 
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
@@ -27,7 +21,7 @@ public class FTPLocalFileDataStoreTest {
 
     @Before
     public void setup() {
-        ClientSession session = Mockito.mock(ClientSession.class);
+        FTPClientSession session = Mockito.mock(FTPClientSession.class);
         ftpLocalFileDataStore = new FTPLocalFileDataStore(session);
     }
 

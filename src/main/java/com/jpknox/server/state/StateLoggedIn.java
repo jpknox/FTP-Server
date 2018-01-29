@@ -1,21 +1,16 @@
 package com.jpknox.server.state;
 
-import com.jpknox.server.response.ClientViewCommunicator;
 import com.jpknox.server.response.FTPResponseFactory;
-import com.jpknox.server.session.ClientSession;
+import com.jpknox.server.session.FTPClientSession;
 import com.jpknox.server.storage.DataStore;
 import com.jpknox.server.storage.internaltransfer.FileQueue;
-
-import java.io.FileOutputStream;
-import java.io.OutputStream;
-import java.nio.file.FileSystem;
 
 /**
  * Created by joaok on 24/09/2017.
  */
 public class StateLoggedIn extends AbstractSessionState {
 
-    public StateLoggedIn(ClientSession session) {
+    public StateLoggedIn(FTPClientSession session) {
         super(session);
     }
 

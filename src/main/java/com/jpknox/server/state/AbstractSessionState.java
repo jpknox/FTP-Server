@@ -2,7 +2,7 @@ package com.jpknox.server.state;
 
 import com.jpknox.server.authentication.LoginService;
 import com.jpknox.server.response.FTPResponseFactory;
-import com.jpknox.server.session.ClientSession;
+import com.jpknox.server.session.FTPClientSession;
 import com.jpknox.server.utility.FTPServerConfig;
 
 import static com.jpknox.server.utility.Logger.log;
@@ -12,13 +12,13 @@ import static com.jpknox.server.utility.Logger.log;
  */
 public abstract class AbstractSessionState implements SessionState {
     
-    protected ClientSession session;
+    protected FTPClientSession session;
 
     protected FTPServerConfig config = new FTPServerConfig();
 
     protected LoginService loginService = new LoginService();
 
-    public AbstractSessionState(ClientSession s) {
+    public AbstractSessionState(FTPClientSession s) {
         this.session = s;
     }
 
