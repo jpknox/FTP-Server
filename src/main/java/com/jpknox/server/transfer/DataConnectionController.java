@@ -9,6 +9,8 @@ import com.jpknox.server.transfer.connection.establish.DataPortGenerator;
 import com.jpknox.server.transfer.connection.transfer.DataReceiver;
 import com.jpknox.server.transfer.connection.transfer.DataSender;
 
+import java.io.File;
+
 import static com.jpknox.server.utility.Logger.log;
 
 /**
@@ -42,7 +44,7 @@ public class DataConnectionController {
         isListening = false;
     }
 
-    public void send(String data) {
+    public void send(Object data) {
         DataSender outboundDataSender = new DataSender(connectionQueue, data, session.getViewCommunicator());
         Thread dataSender = new Thread(outboundDataSender);
         dataSender.start();

@@ -28,6 +28,22 @@ public class FTPLocalFileDataStore implements DataStore {
 
     @Override
     public File get(String Url) {
+        if (!exists(Url)) return null;
+        DirectoryTransition[] transitions = DirectoryTransitionFactory.createDirectoryTransitions(Url);
+        File file = DirectoryTransitioner.performTransitions(transitions, currentDir);
+        if (file == null) {
+            //TODO: The resource identified by the URL does not exist.
+            //session.getViewCommunicator().write(FTPResponseFactory.createResponse(550));
+            return null;
+        } else if (file.isDirectory()) {
+            //TODO: The resource is a directory, not a file.
+        } else if (file.isFile()) {
+            return file;
+            //TODO: Return the file.
+        } else {
+            //TODO: Something unexpected has occurred.
+        }
+
         return null;
     }
 

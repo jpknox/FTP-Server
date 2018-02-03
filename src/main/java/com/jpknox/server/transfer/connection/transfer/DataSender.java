@@ -13,10 +13,10 @@ import java.net.Socket;
 public class DataSender implements Runnable {
 
     private ConnectionQueue connectionQueue;
-    private String data;
+    private Object data;
     private ClientViewCommunicator clientViewCommunicator;
 
-    public DataSender(ConnectionQueue connectionQueue, String data, ClientViewCommunicator clientViewCommunicator) {
+    public DataSender(ConnectionQueue connectionQueue, Object data, ClientViewCommunicator clientViewCommunicator) {
         this.connectionQueue = connectionQueue;
         this.data = data;
         this.clientViewCommunicator = clientViewCommunicator;
@@ -25,18 +25,34 @@ public class DataSender implements Runnable {
 
     @Override
     public void run() {
-        try {
-            Socket connection = connectionQueue.getConnection();
-            BufferedOutputStream bos = new BufferedOutputStream(connection.getOutputStream());
-            byte[] bytes = data.getBytes();
-            ByteArrayInputStream isr = new ByteArrayInputStream(bytes);
-            for (int c; (c = isr.read()) != -1; bos.write(c));
-            bos.close();
-            isr.close();
-            connection.close();
-            clientViewCommunicator.write(FTPResponseFactory.createResponse(226));
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (data.getClass() == File.class) {
+            try ( BufferedInputStream bis =
+                          new BufferedInputStream(new FileInputStream((File)data));
+                  BufferedOutputStream bos =
+                          new BufferedOutputStream(connectionQueue.getConnection().getOutputStream())) {
+                for (int c; (c = bis.read()) != -1; bos.write(c));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
+        else if (data.getClass() == String.class) {
+            byte[] bytes = ((String) data).getBytes();
+            try (Socket connection =
+                         connectionQueue.getConnection();
+                 BufferedOutputStream bos =
+                         new BufferedOutputStream(connection.getOutputStream());
+                 ByteArrayInputStream isr =
+                         new ByteArrayInputStream(bytes)) {
+
+                for (int c;
+                     (c = isr.read()) != -1;
+                     bos.write(c))
+                    ;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        //TODO: Transfer this bit of logic generating the response, into the calling state.
+        clientViewCommunicator.write(FTPResponseFactory.createResponse(226));
     }
 }
