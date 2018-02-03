@@ -1,6 +1,6 @@
 package com.jpknox.server.storage.file.transition.concrete;
 
-import com.jpknox.server.storage.file.DirectoryTransition;
+import com.jpknox.server.storage.file.Transition;
 
 import java.io.File;
 import java.io.IOException;
@@ -8,11 +8,11 @@ import java.io.IOException;
 /**
  * Created by JoaoPaulo on 04-Jan-18.
  */
-public class DownDirectoryTransition implements DirectoryTransition {
+public class DownTransition implements Transition {
 
     private String next;
 
-    public DownDirectoryTransition(String next) {
+    public DownTransition(String next) {
         this.next = next;
     }
 

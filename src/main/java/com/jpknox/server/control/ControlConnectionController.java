@@ -76,6 +76,8 @@ public class ControlConnectionController {
                                   break;
                     case STOR:    session.getState().stor(ftpCommand.getParams()[0]);
                                   break;
+                    case RETR:    session.getState().retr(ftpCommand.getParams()[0]);
+                                  break;
                     case AUTH:    session.getState().auth();
                                   break;
                     case SYST:    session.getState().syst();

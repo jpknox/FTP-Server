@@ -12,7 +12,6 @@ import java.io.File;
  * Created by joaok on 24/09/2017.
  */
 public class StateLoggedIn extends AbstractSessionState {
-
     public StateLoggedIn(ClientSession session) {
         super(session);
     }
@@ -51,6 +50,23 @@ public class StateLoggedIn extends AbstractSessionState {
     }
 
     @Override
+    public void retr(String Url) {
+        DataStore dataStore = session.getFileSystem();
+        DataConnectionController dataController = session.getDataConnectionController();
+
+        //TODO: Response for an attempt to get a file which does not exist.
+        if (!dataStore.exists(Url)) return;
+
+        //TODO: Responses for 'get' command without a prior-listening data connection having already been established.
+        if (!isDataConnectionListening()) return;
+
+        File file = dataStore.get(Url);
+
+        dataController.send(file);
+        //TODO: Give a timely response when the data transfer completes successfully.
+    }
+
+    @Override
     public void stor(String Url) {
         if (!isDataConnectionListening()) return;
         System.out.println("State logged in has entered 'stor'");
@@ -73,22 +89,5 @@ public class StateLoggedIn extends AbstractSessionState {
         }
 
         session.getFileSystem().changeWorkingDirectory(Url);
-    }
-
-    @Override
-    public void get(String Url) {
-        DataStore dataStore = session.getFileSystem();
-        DataConnectionController dataController = session.getDataConnectionController();
-
-        //TODO: Response for an attempt to get a file which does not exist.
-        if (!dataStore.exists(Url)) return;
-
-        //TODO: Responses for 'get' command without a prior-listening data connection having already been established.
-        if (!isDataConnectionListening()) return;
-
-        File file = dataStore.get(Url);
-
-        dataController.send(file);
-        //TODO: Give a timely response when the data transfer completes successfully.
     }
 }

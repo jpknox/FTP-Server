@@ -23,5 +23,4 @@ public interface SessionState {
     void nlst();                          //A list of all files/folders within the current directory
     void list();                          //List information about files in the current directory
     void cwd(String Url);                 //Change current working directory
-    void get(String Url);                 //Retrieve a file from the server's filestore
 }

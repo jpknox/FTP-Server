@@ -5,11 +5,11 @@ import java.io.File;
 /**
  * Created by JoaoPaulo on 04-Jan-18.
  */
-public class DirectoryTransitioner {
+public class Transitioner {
 
-    public static File performTransitions(DirectoryTransition[] transitions, File startingPoint) {
+    public static File performTransitions(Transition[] transitions, File startingPoint) {
         File destination = new File(startingPoint.getPath());
-        for (DirectoryTransition transition : transitions) {
+        for (Transition transition : transitions) {
             destination = transition.transition(destination);
         }
 

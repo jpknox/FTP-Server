@@ -2,20 +2,18 @@ package com.jpknox.server.storage;
 
 import com.jpknox.server.response.FTPResponseFactory;
 import com.jpknox.server.session.ClientSession;
+import com.jpknox.server.storage.file.Transition;
+import com.jpknox.server.storage.file.Transitioner;
+import com.jpknox.server.storage.file.transition.factory.TransitionFactory;
 import com.jpknox.server.storage.internaltransfer.*;
 import com.jpknox.server.storage.internaltransfer.FileWriter;
-import com.jpknox.server.storage.file.DirectoryTransition;
-import com.jpknox.server.storage.file.DirectoryTransitioner;
-import com.jpknox.server.storage.file.transition.factory.DirectoryTransitionFactory;
 
-import javax.swing.text.DateFormatter;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 
 /**
  * Created by joaok on 26/12/2017.
@@ -36,8 +34,8 @@ public class FTPLocalFileDataStore implements DataStore {
     @Override
     public File get(String Url) {
         if (!exists(Url)) return null;
-        DirectoryTransition[] transitions = DirectoryTransitionFactory.createDirectoryTransitions(Url);
-        File file = DirectoryTransitioner.performTransitions(transitions, currentDir);
+        Transition[] transitions = TransitionFactory.createTransitions(Url);
+        File file = Transitioner.performTransitions(transitions, currentDir);
         if (file == null) {
             //TODO: The resource identified by the URL does not exist.
             //session.getViewCommunicator().write(FTPResponseFactory.createResponse(550));
@@ -94,7 +92,9 @@ public class FTPLocalFileDataStore implements DataStore {
 
     @Override
     public boolean exists(String Url) {
-        return new File(Url).exists();
+        Transition[] transitions = TransitionFactory.createTransitions(Url);
+        File file = Transitioner.performTransitions(transitions, currentDir);
+        return file.exists();
     }
 
     @Override
@@ -105,10 +105,10 @@ public class FTPLocalFileDataStore implements DataStore {
     @Override
     public void changeWorkingDirectory(String Url) {
 
-        DirectoryTransition[] transitions = DirectoryTransitionFactory.createDirectoryTransitions(Url);
+        Transition[] transitions = TransitionFactory.createTransitions(Url);
 
         File rollbackDir = currentDir;
-        File newDir = DirectoryTransitioner.performTransitions(transitions, currentDir);
+        File newDir = Transitioner.performTransitions(transitions, currentDir);
 
         if (newDir == null) {
             currentDir = rollbackDir;
@@ -143,8 +143,8 @@ public class FTPLocalFileDataStore implements DataStore {
         //TODO: Get list of files within the folder specified by the URL.
         //TODO: Generate and return an order-sensitive, formatted list of the files within the folder
 
-        //DirectoryTransition[] transitions = DirectoryTransitionFactory.createDirectoryTransitions(Url);
-        //File parentFile = DirectoryTransitioner.performTransitions(transitions, currentDir);
+        //Transition[] transitions = TransitionFactory.createTransitions(Url);
+        //File parentFile = Transitioner.performTransitions(transitions, currentDir);
         StringBuilder string = null;
         //if (parentFile.isDirectory()) {
             File parentFile = currentDir;

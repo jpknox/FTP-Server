@@ -130,11 +130,6 @@ public abstract class AbstractSessionState implements SessionState {
         session.getViewCommunicator().write(FTPResponseFactory.createResponse(530));
     }
 
-    @Override
-    public void get(String Url)  {
-        session.getViewCommunicator().write(FTPResponseFactory.createResponse(530));
-    }
-
     public void setLoginService(LoginService loginService) {
         this.loginService = loginService;
     }

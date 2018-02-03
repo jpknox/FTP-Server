@@ -1,11 +1,10 @@
 package com.jpknox.server.storage.file.transition.factory;
 
 
-import com.jpknox.server.storage.file.transition.concrete.DownDirectoryTransition;
-import com.jpknox.server.storage.file.DirectoryTransition;
-import com.jpknox.server.storage.file.transition.concrete.RootDirectoryTransition;
-import com.jpknox.server.storage.file.transition.concrete.StationaryDirectoryTransition;
-import com.jpknox.server.storage.file.transition.concrete.UpDirectoryTransition;
+import com.jpknox.server.storage.file.Transition;
+import com.jpknox.server.storage.file.transition.concrete.*;
+import com.jpknox.server.storage.file.transition.concrete.RootTransition;
+import com.jpknox.server.storage.file.transition.concrete.UpTransition;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
@@ -20,16 +19,16 @@ import java.util.stream.Stream;
 /**
  * Created by JoaoPaulo on 04-Jan-18.
  */
-public class DirectoryTransitionFactory {
+public class TransitionFactory {
 
     /**
      * Given the URL of a directory to navigate towards, this method will create
-     * the necessary concrete (@code DirectoryTransition} instances to get to
+     * the necessary concrete (@code Transition} instances to get to
      * the desired directory.
      * @param commands
      * @return
      */
-    public static DirectoryTransition[] createDirectoryTransitions(String commands) {
+    public static Transition[] createTransitions(String commands) {
         //Remove quotes " and '
         List<String> quotesToRemove = Arrays.asList("\"", "\'");
         String noQuotesCommands = Pattern.compile("")
@@ -47,11 +46,11 @@ public class DirectoryTransitionFactory {
         }
 
         int i = 0;
-        DirectoryTransition[] transitions = new DirectoryTransition[segments.size() + startsAtRoot];
+        Transition[] transitions = new Transition[segments.size() + startsAtRoot];
 
         //Account for navigation relative to root
         if (startsAtRoot == 1) {
-            transitions[i++] = new RootDirectoryTransition();
+            transitions[i++] = new RootTransition();
         }
 
         //Create all the transitions
@@ -60,13 +59,16 @@ public class DirectoryTransitionFactory {
         while (iter.hasNext()) {
             command = (String)iter.next();
             if (command.equals("..")) {
-                transitions[i++] = new UpDirectoryTransition();
+                transitions[i++] = new UpTransition();
                 continue;
             } else if (command.equals(".")) {
-                transitions[i++] = new StationaryDirectoryTransition();
+                transitions[i++] = new StationaryTransition();
+                continue;
+            } else if (Pattern.matches("(\\w+\\.\\w+)", command)) {
+                transitions[i++] = new DestinationFileTransition(command);
                 continue;
             } else {
-                transitions[i++] = new DownDirectoryTransition(command);
+                transitions[i++] = new DownTransition(command);
                 continue;
             }
         }
