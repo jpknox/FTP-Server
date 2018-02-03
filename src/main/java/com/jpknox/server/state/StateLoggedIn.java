@@ -46,7 +46,7 @@ public class StateLoggedIn extends AbstractSessionState {
     @Override
     public void list() {
         if (!isDataConnectionListening()) return;
-        String data = session.getFileSystem().getFileList("Dummy URL");
+        String data = session.getFileSystem().getFileList();
         session.getDataConnectionController().send(data);
     }
 

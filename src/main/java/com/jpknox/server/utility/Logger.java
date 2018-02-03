@@ -10,7 +10,7 @@ import java.util.Date;
 public class Logger {
 
     public static int log(String text) {
-        DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+        DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss:S");
         Date date = new Date();
         System.out.println(dateFormat.format(date) + ":\t" + text);
         return 0;

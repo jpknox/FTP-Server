@@ -8,7 +8,14 @@ import com.jpknox.server.storage.file.DirectoryTransition;
 import com.jpknox.server.storage.file.DirectoryTransitioner;
 import com.jpknox.server.storage.file.transition.factory.DirectoryTransitionFactory;
 
+import javax.swing.text.DateFormatter;
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 
 /**
  * Created by joaok on 26/12/2017.
@@ -131,8 +138,62 @@ public class FTPLocalFileDataStore implements DataStore {
     }
 
     @Override
-    public String getFileList(String Url) {
-        return "-rw-r--r--    1 0        0        1073741824000 Feb 19  2016 1000GB.zip";
+    public String getFileList() {
+
+        //TODO: Get list of files within the folder specified by the URL.
+        //TODO: Generate and return an order-sensitive, formatted list of the files within the folder
+
+        //DirectoryTransition[] transitions = DirectoryTransitionFactory.createDirectoryTransitions(Url);
+        //File parentFile = DirectoryTransitioner.performTransitions(transitions, currentDir);
+        StringBuilder string = null;
+        //if (parentFile.isDirectory()) {
+            File parentFile = currentDir;
+            string = new StringBuilder();
+            for (File childFile : parentFile.listFiles()) {
+                try {
+                    //TODO: Verify that Paths.get() is retrieving a valid path relative to the project's location.
+                    Path file = Paths.get(childFile.getPath());
+
+                    BasicFileAttributes attr = Files.readAttributes(file, BasicFileAttributes.class);
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("M");
+                    String month = dateFormat.format(attr.creationTime().toMillis());
+                    dateFormat.applyPattern("d");
+                    String dayOfMonth = dateFormat.format(attr.creationTime().toMillis());
+                    dateFormat.applyPattern("y");
+                    String year = dateFormat.format(attr.creationTime().toMillis());
+
+                    string.append("-rw-r--r--");        //Permissions
+                    string.append("\t");
+                    string.append("1");                 //?
+                    string.append(" ");
+                    string.append("0");                 //?
+                    string.append("\t");
+                    string.append("0");                 //?
+                    string.append("\t");
+                    string.append(childFile.length());  //Length
+                    string.append(" ");
+                    string.append(month); //Month
+                    string.append(" ");
+                    string.append(dayOfMonth); //Day
+                    string.append(" ");
+                    string.append(" ");
+                    string.append(year); //Year
+                    string.append(" ");
+                    string.append(childFile.getName());
+                    string.append(System.getProperty("line.separator"));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        //}
+
+        String format = "%S\t%d %d\t%d\t%d %S %d  %d %S";
+        //return "-rw-r--r--    1 0        0        1073741824000 Feb 19  2016 1000GB.zip";
+        if (!string.equals(null)) {
+            return string.toString();
+        } else {
+            return "Error when creating file list.";
+        }
     }
 
     @Override

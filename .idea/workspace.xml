@@ -5,14 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="01bb38b3-e68b-49fb-9160-adee50d0e7f4" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/jpknox/server/state/AbstractSessionState.java" afterPath="$PROJECT_DIR$/src/main/java/com/jpknox/server/state/AbstractSessionState.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/jpknox/server/state/SessionState.java" afterPath="$PROJECT_DIR$/src/main/java/com/jpknox/server/state/SessionState.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/jpknox/server/state/StateLoggedIn.java" afterPath="$PROJECT_DIR$/src/main/java/com/jpknox/server/state/StateLoggedIn.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/jpknox/server/storage/DataStore.java" afterPath="$PROJECT_DIR$/src/main/java/com/jpknox/server/storage/DataStore.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/jpknox/server/storage/FTPLocalFileDataStore.java" afterPath="$PROJECT_DIR$/src/main/java/com/jpknox/server/storage/FTPLocalFileDataStore.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/jpknox/server/transfer/DataConnectionController.java" afterPath="$PROJECT_DIR$/src/main/java/com/jpknox/server/transfer/DataConnectionController.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/jpknox/server/transfer/connection/transfer/DataSender.java" afterPath="$PROJECT_DIR$/src/main/java/com/jpknox/server/transfer/connection/transfer/DataSender.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/jpknox/server/utility/Logger.java" afterPath="$PROJECT_DIR$/src/main/java/com/jpknox/server/utility/Logger.java" />
     </list>
     <ignored path="StatePatternFTP.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -47,7 +43,7 @@
         <entry file="file://$PROJECT_DIR$/src/main/java/com/jpknox/server/transfer/DataConnectionController.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="293">
-              <caret line="47" column="76" lean-forward="false" selection-start-line="47" selection-start-column="76" selection-end-line="47" selection-end-column="76" />
+              <caret line="30" column="58" lean-forward="false" selection-start-line="30" selection-start-column="58" selection-end-line="30" selection-end-column="58" />
               <folding />
             </state>
           </provider>
@@ -56,14 +52,14 @@
       <file leaf-file-name="Main.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/jpknox/Main.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="126">
-              <caret line="9" column="25" lean-forward="true" selection-start-line="9" selection-start-column="25" selection-end-line="9" selection-end-column="25" />
+            <state relative-caret-position="231">
+              <caret line="14" column="9" lean-forward="true" selection-start-line="14" selection-start-column="9" selection-end-line="14" selection-end-column="9" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="DataSender.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="DataSender.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/jpknox/server/transfer/connection/transfer/DataSender.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="83">
@@ -73,24 +69,12 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="FileWriter.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/jpknox/server/storage/internaltransfer/FileWriter.java">
+      <file leaf-file-name="DirectoryTransitionFactory.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/jpknox/server/storage/file/transition/factory/DirectoryTransitionFactory.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="441">
-              <caret line="21" column="0" lean-forward="false" selection-start-line="21" selection-start-column="0" selection-end-line="35" selection-end-column="9" />
+            <state relative-caret-position="447">
+              <caret line="42" column="37" lean-forward="false" selection-start-line="42" selection-start-column="37" selection-end-line="42" selection-end-column="37" />
               <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="StateLoggedIn.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/jpknox/server/state/StateLoggedIn.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="272">
-              <caret line="49" column="49" lean-forward="true" selection-start-line="49" selection-start-column="49" selection-end-line="49" selection-end-column="49" />
-              <folding>
-                <marker date="1517674254161" expanded="false" signature="499:505" ph=" }" />
-              </folding>
             </state>
           </provider>
         </entry>
@@ -98,22 +82,14 @@
       <file leaf-file-name="FTPLocalFileDataStore.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/jpknox/server/storage/FTPLocalFileDataStore.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="252">
-              <caret line="32" column="60" lean-forward="false" selection-start-line="32" selection-start-column="42" selection-end-line="32" selection-end-column="60" />
+            <state relative-caret-position="331">
+              <caret line="151" column="32" lean-forward="false" selection-start-line="151" selection-start-column="32" selection-end-line="151" selection-end-column="32" />
               <folding>
-                <element signature="e#3084#3085#0" expanded="true" />
-                <element signature="e#3129#3130#0" expanded="true" />
+                <element signature="e#3321#3322#0" expanded="true" />
+                <element signature="e#3366#3367#0" expanded="true" />
+                <element signature="e#3423#3424#0" expanded="true" />
+                <element signature="e#3509#3510#0" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="SessionState.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/jpknox/server/state/SessionState.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="525">
-              <caret line="25" column="9" lean-forward="false" selection-start-line="25" selection-start-column="9" selection-end-line="25" selection-end-column="9" />
-              <folding />
             </state>
           </provider>
         </entry>
@@ -171,7 +147,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/com/jpknox/server/transfer/connection/ConnectionCreator.java" />
         <option value="$PROJECT_DIR$/src/com/jpknox/server/transfer/connection/ConnectionFactory.java" />
         <option value="$PROJECT_DIR$/src/com/jpknox/server/transfer/connection/InboundConnectionListener.java" />
         <option value="$PROJECT_DIR$/src/com/jpknox/server/transfer/connection/establish/DataPortGenerator.java" />
@@ -205,7 +180,6 @@
         <option value="$PROJECT_DIR$/pom.xml" />
         <option value="$PROJECT_DIR$/src/main/java/com/jpknox/server/storage/refactor/file/DirectoryTransitioner.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/jpknox/server/storage/refactor/file/transition/factory/DirectoryTransitionFactory.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/jpknox/server/storage/DataStore.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/jpknox/server/response/ResponseFactory.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/jpknox/server/control/ControlConnectionController.java" />
         <option value="$PROJECT_DIR$/test/com/jpknox/server/response/FTPResponseFactoryTest.java" />
@@ -218,10 +192,12 @@
         <option value="$PROJECT_DIR$/src/main/java/com/jpknox/server/state/SessionState.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/jpknox/server/state/AbstractSessionState.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/jpknox/server/storage/internaltransfer/FileQueue.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/jpknox/server/storage/FTPLocalFileDataStore.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/jpknox/server/state/StateLoggedIn.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/jpknox/server/transfer/DataConnectionController.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/jpknox/server/transfer/connection/transfer/DataSender.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/jpknox/server/state/StateLoggedIn.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/jpknox/server/storage/DataStore.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/jpknox/server/storage/FTPLocalFileDataStore.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/jpknox/server/utility/Logger.java" />
       </list>
     </option>
   </component>
@@ -416,6 +392,20 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="FTP-Server" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="FTP-Server" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="RealFtpStorage" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
         </subPane>
       </pane>
       <pane id="Scope" />
@@ -429,7 +419,7 @@
     <property name="project.structure.last.edited" value="Problems" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
-    <property name="SearchEverywhereHistoryKey" value="File&#9;PSI&#9;JAVA://com.jpknox.server.storage.internaltransfer.FileWriter&#10;dataC&#9;FILE&#9;file://C:/dev/Repos/FTP-Server/src/main/java/com/jpknox/server/transfer/DataConnectionController.java&#10;FTPSt&#9;FILE&#9;file://C:/dev/Repos/FTP-Server/src/main/java/com/jpknox/server/storage/FTPLocalFileDataStore.java&#10;StateLogg&#9;FILE&#9;file://C:/dev/Repos/FTP-Server/src/main/java/com/jpknox/server/state/StateLoggedIn.java&#10;Stor&#9;FILE&#9;file://C:/dev/Repos/FTP-Server/src/com/jpknox/server/storage/FTPLocalFileDataStore.java&#10;FTP&#9;FILE&#9;file://C:/dev/Repos/FTP-Server/src/com/jpknox/server/storage/FTPLocalFileDataStore.java&#10;Queue&#9;FILE&#9;file://C:/dev/Repos/FTP-Server/src/com/jpknox/server/transfer/connection/establish/ConnectionQueue.java&#10;FTPS&#9;FILE&#9;file://C:/Dev/RandomProgramming/StatePatternFTP/test/com/jpknox/server/FTPServerIntegrationTest.java&#10;Commad&#9;FILE&#9;file://C:/Dev/RandomProgramming/StatePatternFTP/src/com/jpknox/server/command/FTPCommandDecoder.java&#10;FTPREs&#9;FILE&#9;file://C:/Dev/RandomProgramming/StatePatternFTP/src/com/jpknox/server/response/FTPResponseFactory.java&#10;FTPRes&#9;FILE&#9;file://C:/Dev/RandomProgramming/StatePatternFTP/test/com/jpknox/server/response/FTPResponseFactoryTest.java&#10;Clien&#9;FILE&#9;file://C:/Dev/RandomProgramming/StatePatternFTP/src/com/jpknox/server/session/ClientSession.java&#10;FTPFi&#9;FILE&#9;file://C:/Dev/RandomProgramming/StatePatternFTP/src/com/jpknox/server/storage/FTPLocalFileDataStore.java&#10;integ&#9;FILE&#9;file://C:/Dev/RandomProgramming/StatePatternFTP/test/com/jpknox/server/FTPServerIntegrationTest.java&#10;ControlC&#9;FILE&#9;file://C:/Dev/RandomProgramming/StatePatternFTP/src/com/jpknox/server/ControlConnectionController.java&#10;abst&#9;FILE&#9;file://C:/Dev/RandomProgramming/StatePatternFTP/src/com/jpknox/server/state/AbstractSessionState.java&#10;StateNot&#9;FILE&#9;file://C:/Dev/RandomProgramming/StatePatternFTP/src/com/jpknox/server/state/StateNotLoggedIn.java&#10;StateLogged&#9;FILE&#9;file://C:/Dev/RandomProgramming/StatePatternFTP/test/com/jpknox/server/state/StateNotLoggedInTest.java&#10;PrintWriter&#9;PSI&#9;JAVA://java.io.PrintWriter&#10;Buffere&#9;FILE&#9;jar://C:/Program Files/Java/jdk1.8.0_91/src.zip!/java/io/BufferedOutputStream.java&#10;ByteA&#9;FILE&#9;jar://C:/Program Files/Java/jdk1.8.0_91/src.zip!/java/io/ByteArrayOutputStream.java&#10;FTPResponse&#9;PSI&#9;JAVA://com.jpknox.server.response.FTPResponseFactoryTest&#10;ResponseFactory =&#9;null&#9;null" />
+    <property name="SearchEverywhereHistoryKey" value="logger&#9;PSI&#9;JAVA://com.jpknox.server.utility.Logger&#10;File&#9;PSI&#9;JAVA://com.jpknox.server.storage.internaltransfer.FileWriter&#10;dataC&#9;FILE&#9;file://C:/dev/Repos/FTP-Server/src/main/java/com/jpknox/server/transfer/DataConnectionController.java&#10;FTPSt&#9;FILE&#9;file://C:/dev/Repos/FTP-Server/src/main/java/com/jpknox/server/storage/FTPLocalFileDataStore.java&#10;StateLogg&#9;FILE&#9;file://C:/dev/Repos/FTP-Server/src/main/java/com/jpknox/server/state/StateLoggedIn.java&#10;Stor&#9;FILE&#9;file://C:/dev/Repos/FTP-Server/src/com/jpknox/server/storage/FTPLocalFileDataStore.java&#10;FTP&#9;FILE&#9;file://C:/dev/Repos/FTP-Server/src/com/jpknox/server/storage/FTPLocalFileDataStore.java&#10;Queue&#9;FILE&#9;file://C:/dev/Repos/FTP-Server/src/com/jpknox/server/transfer/connection/establish/ConnectionQueue.java&#10;FTPS&#9;FILE&#9;file://C:/Dev/RandomProgramming/StatePatternFTP/test/com/jpknox/server/FTPServerIntegrationTest.java&#10;Commad&#9;FILE&#9;file://C:/Dev/RandomProgramming/StatePatternFTP/src/com/jpknox/server/command/FTPCommandDecoder.java&#10;FTPREs&#9;FILE&#9;file://C:/Dev/RandomProgramming/StatePatternFTP/src/com/jpknox/server/response/FTPResponseFactory.java&#10;FTPRes&#9;FILE&#9;file://C:/Dev/RandomProgramming/StatePatternFTP/test/com/jpknox/server/response/FTPResponseFactoryTest.java&#10;Clien&#9;FILE&#9;file://C:/Dev/RandomProgramming/StatePatternFTP/src/com/jpknox/server/session/ClientSession.java&#10;FTPFi&#9;FILE&#9;file://C:/Dev/RandomProgramming/StatePatternFTP/src/com/jpknox/server/storage/FTPLocalFileDataStore.java&#10;integ&#9;FILE&#9;file://C:/Dev/RandomProgramming/StatePatternFTP/test/com/jpknox/server/FTPServerIntegrationTest.java&#10;ControlC&#9;FILE&#9;file://C:/Dev/RandomProgramming/StatePatternFTP/src/com/jpknox/server/ControlConnectionController.java&#10;abst&#9;FILE&#9;file://C:/Dev/RandomProgramming/StatePatternFTP/src/com/jpknox/server/state/AbstractSessionState.java&#10;StateNot&#9;FILE&#9;file://C:/Dev/RandomProgramming/StatePatternFTP/src/com/jpknox/server/state/StateNotLoggedIn.java&#10;StateLogged&#9;FILE&#9;file://C:/Dev/RandomProgramming/StatePatternFTP/test/com/jpknox/server/state/StateNotLoggedInTest.java&#10;PrintWriter&#9;PSI&#9;JAVA://java.io.PrintWriter&#10;Buffere&#9;FILE&#9;jar://C:/Program Files/Java/jdk1.8.0_91/src.zip!/java/io/BufferedOutputStream.java&#10;ByteA&#9;FILE&#9;jar://C:/Program Files/Java/jdk1.8.0_91/src.zip!/java/io/ByteArrayOutputStream.java&#10;FTPResponse&#9;PSI&#9;JAVA://com.jpknox.server.response.FTPResponseFactoryTest&#10;ResponseFactory =&#9;null&#9;null" />
   </component>
   <component name="RecentsManager">
     <key name="ExtractSuperBase.RECENT_KEYS">
@@ -1022,8 +1012,20 @@
           <properties />
           <option name="timeStamp" value="116" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/jpknox/server/storage/FTPLocalFileDataStore.java</url>
+          <line>148</line>
+          <properties />
+          <option name="timeStamp" value="119" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/jpknox/server/storage/FTPLocalFileDataStore.java</url>
+          <line>149</line>
+          <properties />
+          <option name="timeStamp" value="120" />
+        </line-breakpoint>
       </breakpoints>
-      <option name="time" value="117" />
+      <option name="time" value="121" />
     </breakpoint-manager>
     <watches-manager>
       <configuration name="JUnit">
@@ -1040,23 +1042,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/a.txt" />
-    <entry file="file://$PROJECT_DIR$/RealFtpStorage/sentBeforeStoreCommand.txt" />
-    <entry file="file://$PROJECT_DIR$/RealFtpStorage/sentAfterStoreCommand.txt" />
-    <entry file="file://$PROJECT_DIR$/FTP Work Log/Commands and their response code messages.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/RealFtpStorage/newtext.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/test/com/jpknox/server/authentication/LoginServiceTest.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="420">
@@ -1173,6 +1158,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="206">
           <caret line="240" column="13" lean-forward="false" selection-start-line="240" selection-start-column="13" selection-end-line="240" selection-end-column="13" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1199,14 +1185,6 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/jpknox/server/response/ResponseFactory.java" />
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/jpknox/server/storage/DataStore.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="298">
-          <caret line="23" column="9" lean-forward="false" selection-start-line="23" selection-start-column="9" selection-end-line="23" selection-end-column="9" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/jpknox/server/session/ClientSession.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="697">
@@ -1282,14 +1260,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/jpknox/server/storage/file/transition/factory/DirectoryTransitionFactory.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="258">
-          <caret line="33" column="0" lean-forward="false" selection-start-line="33" selection-start-column="0" selection-end-line="33" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/test/com/jpknox/server/command/FTPCommandDecoderIntegrationTest.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="218">
@@ -1362,31 +1332,28 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/jpknox/server/storage/FTPLocalFileDataStore.java">
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_45/src.zip!/java/io/File.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="252">
-          <caret line="32" column="60" lean-forward="false" selection-start-line="32" selection-start-column="42" selection-end-line="32" selection-end-column="60" />
+        <state relative-caret-position="766">
+          <caret line="965" column="16" lean-forward="false" selection-start-line="965" selection-start-column="16" selection-end-line="965" selection-end-column="16" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_45/src.zip!/java/nio/file/attribute/BasicFileAttributes.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="346">
+          <caret line="83" column="34" lean-forward="false" selection-start-line="83" selection-start-column="26" selection-end-line="83" selection-end-column="34" />
           <folding>
-            <element signature="e#3084#3085#0" expanded="true" />
-            <element signature="e#3129#3130#0" expanded="true" />
+            <element signature="e#0#4954#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/jpknox/server/state/StateLoggedIn.java">
+    <entry file="file://$PROJECT_DIR$/RealFtpStorage/simpletext.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="272">
-          <caret line="49" column="49" lean-forward="true" selection-start-line="49" selection-start-column="49" selection-end-line="49" selection-end-column="49" />
-          <folding>
-            <marker date="1517674254161" expanded="false" signature="499:505" ph=" }" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/jpknox/Main.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="126">
-          <caret line="9" column="25" lean-forward="true" selection-start-line="9" selection-start-column="25" selection-end-line="9" selection-end-column="25" />
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -1394,7 +1361,36 @@
     <entry file="file://$PROJECT_DIR$/src/main/java/com/jpknox/server/transfer/DataConnectionController.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="293">
-          <caret line="47" column="76" lean-forward="false" selection-start-line="47" selection-start-column="76" selection-end-line="47" selection-end-column="76" />
+          <caret line="30" column="58" lean-forward="false" selection-start-line="30" selection-start-column="58" selection-end-line="30" selection-end-column="58" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_45/src.zip!/java/lang/Override.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="450">
+          <caret line="50" column="18" lean-forward="false" selection-start-line="50" selection-start-column="18" selection-end-line="50" selection-end-column="18" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/jpknox/server/storage/FTPLocalFileDataStore.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="331">
+          <caret line="151" column="32" lean-forward="false" selection-start-line="151" selection-start-column="32" selection-end-line="151" selection-end-column="32" />
+          <folding>
+            <element signature="e#3321#3322#0" expanded="true" />
+            <element signature="e#3366#3367#0" expanded="true" />
+            <element signature="e#3423#3424#0" expanded="true" />
+            <element signature="e#3509#3510#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/jpknox/Main.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="231">
+          <caret line="14" column="9" lean-forward="true" selection-start-line="14" selection-start-column="9" selection-end-line="14" selection-end-column="9" />
           <folding />
         </state>
       </provider>
@@ -1403,6 +1399,40 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="83">
           <caret line="21" column="5" lean-forward="false" selection-start-line="21" selection-start-column="5" selection-end-line="21" selection-end-column="5" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/jpknox/server/utility/Logger.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="315">
+          <caret line="17" column="1" lean-forward="true" selection-start-line="17" selection-start-column="1" selection-end-line="17" selection-end-column="1" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/jpknox/server/state/StateLoggedIn.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="251">
+          <caret line="48" column="54" lean-forward="false" selection-start-line="48" selection-start-column="54" selection-end-line="48" selection-end-column="54" />
+          <folding>
+            <marker date="1517677654075" expanded="false" signature="499:505" ph=" }" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/jpknox/server/storage/DataStore.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="378">
+          <caret line="29" column="23" lean-forward="false" selection-start-line="29" selection-start-column="23" selection-end-line="29" selection-end-column="23" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/jpknox/server/storage/file/transition/factory/DirectoryTransitionFactory.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="447">
+          <caret line="42" column="37" lean-forward="false" selection-start-line="42" selection-start-column="37" selection-end-line="42" selection-end-column="37" />
           <folding />
         </state>
       </provider>
