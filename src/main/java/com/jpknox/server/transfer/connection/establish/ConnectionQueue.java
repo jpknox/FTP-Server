@@ -17,7 +17,7 @@ public class ConnectionQueue {
         this.connection = connection;
         isSet = true;
         notify();
-        System.out.println("Connection queue has a connection");
+        System.out.printf("Connection queue has a connection on port '%d'\n", connection.getPort());
     }
 
     public synchronized Socket getConnection() {
@@ -26,7 +26,7 @@ public class ConnectionQueue {
         }
         isSet = false;
         notify();
-        System.out.println("Connection queue has handed over its connection");
+        System.out.printf("Connection queue has handed over its connection on port '%d'\n", connection.getPort());
         return connection;
     }
 }

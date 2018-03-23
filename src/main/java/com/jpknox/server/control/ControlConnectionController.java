@@ -15,7 +15,7 @@ import static com.jpknox.server.utility.Logger.log;
 /**
  * Created by JoaoPaulo on 14-Oct-17.
  */
-public class ControlConnectionController {
+public class ControlConnectionController implements Runnable {
 
     private final Socket clientConnection;
     private final ClientViewCommunicator viewCommunicator = new ClientViewCommunicator();
@@ -28,7 +28,7 @@ public class ControlConnectionController {
         this.clientConnection = clientConnection;
     }
 
-    public void start() {
+    public void run() {
         try {
             //log("Setting up I/O.");
             viewCommunicator.setOutput(new PrintWriter(new OutputStreamWriter(this.clientConnection.getOutputStream())));
@@ -54,7 +54,7 @@ public class ControlConnectionController {
                         break;
                     } else {
                         log("Sleeping for 100 millis");
-                        Thread.sleep(100);
+                        Thread.sleep(500);
                     }
                 }
                 log(session.getUsername() + ": " + dataFromClient);
@@ -98,9 +98,7 @@ public class ControlConnectionController {
                                   break;
                     case ERROR_1: session.getViewCommunicator().write(FTPResponseFactory.createResponse(501));
                 }
-
             }
-
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }

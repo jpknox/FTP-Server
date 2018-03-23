@@ -8,6 +8,8 @@ import com.jpknox.server.transfer.DataConnectionController;
 
 import java.io.File;
 
+import static com.jpknox.server.utility.Logger.log;
+
 /**
  * Created by joaok on 24/09/2017.
  */
@@ -44,6 +46,7 @@ public class StateLoggedIn extends AbstractSessionState {
 
     @Override
     public void list() {
+
         if (!isDataConnectionListening()) return;
         String data = session.getFileSystem().getFileList();
         session.getDataConnectionController().send(data);
@@ -79,6 +82,7 @@ public class StateLoggedIn extends AbstractSessionState {
     public void pwd() {
         String currentDirectory = session.getFileSystem().getCurrentDirectory();
         session.getViewCommunicator().write(FTPResponseFactory.createResponse(257, currentDirectory));
+        log(String.format("Sent the current directory to the client '%s'", currentDirectory));
     }
 
     @Override

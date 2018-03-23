@@ -8,10 +8,6 @@ import java.net.ServerSocket;
 public class Main {
 
     public static void main(String[] args) {
-        try {
-            FTPServer ftpServer = new FTPServer(new ServerSocket(21));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        FTPServer ftpServer = new FTPServer();
     }
 }

@@ -9,8 +9,6 @@ import com.jpknox.server.transfer.connection.establish.DataPortGenerator;
 import com.jpknox.server.transfer.connection.transfer.DataReceiver;
 import com.jpknox.server.transfer.connection.transfer.DataSender;
 
-import java.io.File;
-
 import static com.jpknox.server.utility.Logger.log;
 
 /**
@@ -32,7 +30,7 @@ public class DataConnectionController {
         Thread connectionListener = new Thread(inboundConnectionListener);
         connectionListener.start();
         isListening = true;
-        log("Opening new port: " + port);
+        log(String.format("Created a new port to listen on '%d'", port));
         return DataPortGenerator.encodeDataPort(port);
     }
 

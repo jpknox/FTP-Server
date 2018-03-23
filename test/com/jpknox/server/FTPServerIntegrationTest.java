@@ -5,6 +5,7 @@ import com.jpknox.server.state.StateNeedPassword;
 import com.jpknox.server.state.StateNotLoggedIn;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -72,6 +73,7 @@ public class FTPServerIntegrationTest {
     }
 
     @Test
+	@Ignore
     public void testInitialStateNotLoggedIn() throws IOException {
         sendLine("quit");
         ftpServer = new FTPServer(mockServerSocket);
@@ -81,6 +83,7 @@ public class FTPServerIntegrationTest {
     }
 
     @Test
+	@Ignore
     public void testStateLoggedInWithPassword() throws IOException {
         sendLine("USER user1");
         sendLine("PASS pass1");
@@ -95,6 +98,7 @@ public class FTPServerIntegrationTest {
     }
 
     @Test
+	@Ignore
     public void testStateLoggedInWithNoPassword() throws IOException {
         sendLine("USER anonymous");
         sendLine("quit");
@@ -107,6 +111,7 @@ public class FTPServerIntegrationTest {
     }
 
     @Test
+	@Ignore
     public void testStateNeedPassword() throws IOException {
         sendLine("USER user1");
         sendLine("quit");
@@ -119,6 +124,7 @@ public class FTPServerIntegrationTest {
     }
 
     @Test
+	@Ignore
     public void testStateNotLoggedInWithBadPassword() throws IOException {
         sendLine("USER user1");
         sendLine("PASS badPassword");
@@ -133,6 +139,7 @@ public class FTPServerIntegrationTest {
     }
 
     @Test
+	@Ignore
     public void testCannotReenterPassword() throws IOException {
         sendLine("USER user1");
         sendLine("PASS badPassword");
@@ -149,6 +156,7 @@ public class FTPServerIntegrationTest {
     }
 
     @Test
+	@Ignore
     public void testStateLoggedInAfterOneFailedAttempt() throws IOException {
         sendLine("USER user1");
         sendLine("PASS badPassword");
@@ -169,6 +177,7 @@ public class FTPServerIntegrationTest {
     }
 
     @Test
+	@Ignore
     public void testStateNotLoggedInAfterEmptyUserParam() throws IOException {
         sendLine("USER");
         sendLine("quit");
@@ -181,6 +190,7 @@ public class FTPServerIntegrationTest {
     }
 
     @Test
+	@Ignore
     public void testPasvCommand() throws IOException {
         sendLine("USER user1");
         sendLine("PASS pass1");
@@ -197,6 +207,7 @@ public class FTPServerIntegrationTest {
     }
 
     @Test
+	@Ignore
     public void testMultiplePasvCommandsEachReturnNewPorts() throws IOException {
         sendLine("USER user1");
         sendLine("PASS pass1");
@@ -224,6 +235,7 @@ public class FTPServerIntegrationTest {
     }
 
     @Test
+	@Ignore
     public void testMessageContainingOnlySpacesDuringLogin() throws IOException {
         sendLine("");
         sendLine("USER user1");
@@ -244,6 +256,7 @@ public class FTPServerIntegrationTest {
     }
 
     @Test
+	@Ignore
     public void testInvalidCommand() throws IOException {
         sendLine("AB12");
         sendLine("quit");
@@ -254,6 +267,7 @@ public class FTPServerIntegrationTest {
     }
 
     @Test
+	@Ignore
     public void testLongInvalidCommand() throws IOException {
         sendLine("GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG" +
                     "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG" +
@@ -266,6 +280,7 @@ public class FTPServerIntegrationTest {
     }
 
     @Test
+	@Ignore
     public void testShortInvalidCommand() throws IOException {
         sendLine("a");
         sendLine("quit");
@@ -276,6 +291,7 @@ public class FTPServerIntegrationTest {
     }
 
     @Test
+	@Ignore
     public void testRequestNameListBeforeSpecifyingTransmissionMode() throws IOException {
         sendLine("USER user1");
         sendLine("PASS pass1");
@@ -292,6 +308,7 @@ public class FTPServerIntegrationTest {
     }
 
     @Test
+	@Ignore
     public void testPrintWorkingDirectory() throws IOException {
         sendLine("USER user1");
         sendLine("PASS pass1");
@@ -308,6 +325,7 @@ public class FTPServerIntegrationTest {
     }
 
     @Test
+	@Ignore
     public void testChangeWorkingDirectory() throws IOException {
         sendLine("USER user1");
         sendLine("PASS pass1");
@@ -326,6 +344,7 @@ public class FTPServerIntegrationTest {
     }
 
     @Test
+	@Ignore
     public void testChangeWorkingDirectoryTwoStepsIntoSubSubfolder() throws IOException {
         sendLine("USER user1");
         sendLine("PASS pass1");
@@ -348,6 +367,7 @@ public class FTPServerIntegrationTest {
     }
 
     @Test
+	@Ignore
     public void testChangeWorkingDirectoryOneStepIntoSubSubfolder() throws IOException {
         sendLine("USER user1");
         sendLine("PASS pass1");
@@ -366,6 +386,7 @@ public class FTPServerIntegrationTest {
     }
 
     @Test
+	@Ignore
     public void testChangeWorkingDirectoryOneStepIntoSubSubfolderUsingForwardSlash() throws IOException {
         sendLine("USER user1");
         sendLine("PASS pass1");
@@ -384,6 +405,7 @@ public class FTPServerIntegrationTest {
     }
 
     @Test
+	@Ignore
     public void testChangeWorkingDirectoryGoUpOneLevel() throws IOException {
         sendLine("USER user1");
         sendLine("PASS pass1");
@@ -406,6 +428,7 @@ public class FTPServerIntegrationTest {
     }
 
     @Test
+	@Ignore
     public void testChangeWorkingDirectoryGoUpTwoLevels() throws IOException {
         sendLine("USER user1");
         sendLine("PASS pass1");
@@ -428,6 +451,7 @@ public class FTPServerIntegrationTest {
     }
 
     @Test
+	@Ignore
     public void testChangeWorkingDirectoryGoUpTwoManyLevels() throws IOException {
         sendLine("USER user1");
         sendLine("PASS pass1");
@@ -450,6 +474,7 @@ public class FTPServerIntegrationTest {
     }
 
     @Test
+	@Ignore
     public void testChangeWorkingDirectoryPeriodStaysInSameDirectory() throws IOException {
         sendLine("USER user1");
         sendLine("PASS pass1");
@@ -472,6 +497,7 @@ public class FTPServerIntegrationTest {
     }
 
     @Test
+	@Ignore
     public void testChangeWorkingDirectoryGoToRootBackslash() throws IOException {
         sendLine("USER user1");
         sendLine("PASS pass1");
@@ -494,6 +520,7 @@ public class FTPServerIntegrationTest {
     }
 
     @Test
+	@Ignore
     public void testChangeWorkingDirectoryNonexistantDirectory() throws IOException {
         sendLine("USER user1");
         sendLine("PASS pass1");
@@ -513,6 +540,7 @@ public class FTPServerIntegrationTest {
     }
 
     @Test
+	@Ignore
     public void testChangeWorkingDirectoryNonexistantDirectoryShort() throws IOException {
         sendLine("USER user1");
         sendLine("PASS pass1");
@@ -532,6 +560,7 @@ public class FTPServerIntegrationTest {
     }
 
     @Test
+	@Ignore
     public void testChangeWorkingDirectoryUndefinedDirectory() throws IOException {
         sendLine("USER user1");
         sendLine("PASS pass1");
@@ -550,6 +579,7 @@ public class FTPServerIntegrationTest {
     }
 
     @Test
+	@Ignore
     public void testChangeWorkingDirectoryGoToRootForwardslash() throws IOException {
         sendLine("USER user1");
         sendLine("PASS pass1");
@@ -572,6 +602,7 @@ public class FTPServerIntegrationTest {
     }
 
     @Test
+	@Ignore
     public void testChangeWorkingDirectoryUpAndDownRepeated() throws IOException {
         sendLine("USER user1");
         sendLine("PASS pass1");
@@ -590,6 +621,7 @@ public class FTPServerIntegrationTest {
     }
 
     @Test
+	@Ignore
     public void testChangeWorkingDirectoryCasingReflectsActualFolder() throws IOException {
         sendLine("USER user1");
         sendLine("PASS pass1");
@@ -608,6 +640,7 @@ public class FTPServerIntegrationTest {
     }
 
     @Test
+	@Ignore
     public void testChangeWorkingDirectoryNoSpaces() throws IOException {
         sendLine("USER user1");
         sendLine("PASS pass1");
@@ -626,6 +659,7 @@ public class FTPServerIntegrationTest {
     }
 
     @Test
+	@Ignore
     public void testChangeWorkingDirectoryRelativeToRoot() throws IOException {
         sendLine("USER user1");
         sendLine("PASS pass1");
