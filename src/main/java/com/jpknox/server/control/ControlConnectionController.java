@@ -78,6 +78,8 @@ public class ControlConnectionController implements Runnable {
                                   break;
                     case RETR:    session.getState().retr(ftpCommand.getParams()[0]);
                                   break;
+                    case DELE:    session.getState().dele(ftpCommand.getParams()[0]);
+                                  break;
                     case AUTH:    session.getState().auth();
                                   break;
                     case SYST:    session.getState().syst();

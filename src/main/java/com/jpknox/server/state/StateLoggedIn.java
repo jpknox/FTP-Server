@@ -1,5 +1,6 @@
 package com.jpknox.server.state;
 
+import com.jpknox.server.response.ClientViewCommunicator;
 import com.jpknox.server.response.FTPResponseFactory;
 import com.jpknox.server.session.ClientSession;
 import com.jpknox.server.storage.DataStore;
@@ -20,7 +21,7 @@ public class StateLoggedIn extends AbstractSessionState {
 
     private boolean isDataConnectionListening() {
         if (!session.getDataConnectionController().isListening()) {
-            session.getViewCommunicator().write(FTPResponseFactory.createResponse(425));
+            getClientCommunicator().write(FTPResponseFactory.createResponse(425));
             return false;
         }
         return true;
@@ -28,15 +29,14 @@ public class StateLoggedIn extends AbstractSessionState {
 
     @Override
     public void pasv() {
-        //"TODO: Pick port and start listening to it"
-        // (h1,h2,h3,h4,p1,p2)
         int[] encodedDataPort = session.getDataConnectionController().createDataConnectionListener();
-        session.getViewCommunicator().write("227 Entering Passive Mode (" + config.IP_FIRST_OCTET + "," +
-                                             config.IP_SECOND_OCTET + "," +
-                                             config.IP_THIRD_OCTET + "," +
-                                             config.IP_FOURTH_OCTET + "," +
-                                             encodedDataPort[0] + "," +
-                                             encodedDataPort[1] + ")");
+        getClientCommunicator().write("227 Entering Passive Mode (" +
+                                                config.IP_FIRST_OCTET + "," +
+                                                config.IP_SECOND_OCTET + "," +
+                                                config.IP_THIRD_OCTET + "," +
+                                                config.IP_FOURTH_OCTET + "," +
+                                                encodedDataPort[0] + "," +
+                                                encodedDataPort[1] + ")");
     }
 
     public void nlst() {
@@ -46,7 +46,6 @@ public class StateLoggedIn extends AbstractSessionState {
 
     @Override
     public void list() {
-
         if (!isDataConnectionListening()) return;
         String data = session.getFileSystem().getFileList();
         session.getDataConnectionController().send(data);
@@ -70,6 +69,22 @@ public class StateLoggedIn extends AbstractSessionState {
     }
 
     @Override
+    public void dele(String pathToFile) {
+        DataStore dataStore = session.getFileSystem();
+        if (!dataStore.exists(pathToFile)) {
+            getClientCommunicator().write(FTPResponseFactory.createResponse(550));
+            //TODO: Add more detail to response.
+        }
+        boolean deleted = dataStore.delete(pathToFile);
+        if (deleted) {
+            getClientCommunicator().write(FTPResponseFactory.createResponse(250));
+        } else {
+            getClientCommunicator().write(FTPResponseFactory.createResponse(550));
+            //TODO: Add more detail to response.
+        }
+    }
+
+    @Override
     public void stor(String Url) {
         if (!isDataConnectionListening()) return;
         System.out.println("State logged in has entered 'stor'");
@@ -81,7 +96,7 @@ public class StateLoggedIn extends AbstractSessionState {
     @Override
     public void pwd() {
         String currentDirectory = session.getFileSystem().getCurrentDirectory();
-        session.getViewCommunicator().write(FTPResponseFactory.createResponse(257, currentDirectory));
+        getClientCommunicator().write(FTPResponseFactory.createResponse(257, currentDirectory));
         log(String.format("Sent the current directory to the client '%s'", currentDirectory));
     }
 
@@ -89,7 +104,7 @@ public class StateLoggedIn extends AbstractSessionState {
     public void cwd(String Url) {
         DataStore fileSystem = session.getFileSystem();
         if (!fileSystem.validUrl(Url)) {
-            session.getViewCommunicator().write(FTPResponseFactory.createResponse(501));
+            getClientCommunicator().write(FTPResponseFactory.createResponse(501));
         }
 
         session.getFileSystem().changeWorkingDirectory(Url);

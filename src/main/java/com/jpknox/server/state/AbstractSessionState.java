@@ -1,6 +1,7 @@
 package com.jpknox.server.state;
 
 import com.jpknox.server.authentication.LoginService;
+import com.jpknox.server.response.ClientViewCommunicator;
 import com.jpknox.server.response.FTPResponseFactory;
 import com.jpknox.server.session.ClientSession;
 import com.jpknox.server.utility.FTPServerConfig;
@@ -17,6 +18,8 @@ public abstract class AbstractSessionState implements SessionState {
     protected FTPServerConfig config = new FTPServerConfig();
 
     protected LoginService loginService = new LoginService();
+
+    private ClientViewCommunicator clientCommunicator;
 
     public AbstractSessionState(ClientSession s) {
         this.session = s;
@@ -63,7 +66,7 @@ public abstract class AbstractSessionState implements SessionState {
     public void type(String format) {
         session.getViewCommunicator().write(FTPResponseFactory.createResponse(530));
     }
-    
+
     @Override
     public void mode(String modeToUse) {
         session.getViewCommunicator().write(FTPResponseFactory.createResponse(530));
@@ -76,6 +79,11 @@ public abstract class AbstractSessionState implements SessionState {
 
     @Override
     public void retr(String Url) {
+        session.getViewCommunicator().write(FTPResponseFactory.createResponse(530));
+    }
+
+    @Override
+    public void dele(String pathToFile) {
         session.getViewCommunicator().write(FTPResponseFactory.createResponse(530));
     }
 
@@ -112,12 +120,12 @@ public abstract class AbstractSessionState implements SessionState {
 
     @Override
     public void pasv() {
-        session.getViewCommunicator().write(FTPResponseFactory.createResponse(530)); 
+        session.getViewCommunicator().write(FTPResponseFactory.createResponse(530));
     }
 
     @Override
     public void nlst() {
-        session.getViewCommunicator().write(FTPResponseFactory.createResponse(530)); 
+        session.getViewCommunicator().write(FTPResponseFactory.createResponse(530));
     }
 
     @Override
@@ -132,6 +140,13 @@ public abstract class AbstractSessionState implements SessionState {
 
     public void setLoginService(LoginService loginService) {
         this.loginService = loginService;
+    }
+
+    protected ClientViewCommunicator getClientCommunicator() {
+        if (clientCommunicator == null) {
+            clientCommunicator = session.getViewCommunicator();
+        }
+        return clientCommunicator;
     }
 
 

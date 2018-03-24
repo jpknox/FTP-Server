@@ -9,6 +9,9 @@ import com.jpknox.server.transfer.connection.establish.DataPortGenerator;
 import com.jpknox.server.transfer.connection.transfer.DataReceiver;
 import com.jpknox.server.transfer.connection.transfer.DataSender;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 import static com.jpknox.server.utility.Logger.log;
 
 /**
@@ -19,6 +22,7 @@ public class DataConnectionController {
     private final ClientSession session;
     private final ConnectionQueue connectionQueue = new ConnectionQueue();
     private boolean isListening = false;
+    private final ExecutorService threadPool = Executors.newFixedThreadPool(5);
 
     public DataConnectionController(ClientSession session) {
         this.session = session;
@@ -26,11 +30,10 @@ public class DataConnectionController {
 
     public int[] createDataConnectionListener() {
         int port = DataPortGenerator.createPassiveDataPort();
+        log(String.format("Listening for a data connection on port '%d'.", port));
         InboundConnectionListener inboundConnectionListener = new InboundConnectionListener(port, connectionQueue);
-        Thread connectionListener = new Thread(inboundConnectionListener);
-        connectionListener.start();
+        threadPool.execute(inboundConnectionListener);
         isListening = true;
-        log(String.format("Created a new port to listen on '%d'", port));
         return DataPortGenerator.encodeDataPort(port);
     }
 

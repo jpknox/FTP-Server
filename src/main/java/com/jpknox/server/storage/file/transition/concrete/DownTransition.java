@@ -5,6 +5,8 @@ import com.jpknox.server.storage.file.Transition;
 import java.io.File;
 import java.io.IOException;
 
+import static com.jpknox.server.utility.Logger.log;
+
 /**
  * Created by JoaoPaulo on 04-Jan-18.
  */
@@ -26,7 +28,10 @@ public class DownTransition implements Transition {
         }
         File nextDir = new File(current.getPath() + File.separator + correctCasingName);
         if (nextDir.isDirectory()) {
-            System.out.println("Switching to subdirectory " + nextDir.getPath() + ".");
+            log("Switching to subdirectory " + nextDir.getPath() + ".");
+            return nextDir;
+        } else if (nextDir.isFile()) {
+            log("Switching to file " + nextDir.getPath() + ".");
             return nextDir;
         } else {
             return null;

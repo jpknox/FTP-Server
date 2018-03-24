@@ -15,7 +15,7 @@ public interface DataStore {
 
     FileQueue store(String Url);
 
-    void delete(String Url);
+    boolean delete(String Url);
 
     boolean exists(String Url);
 

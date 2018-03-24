@@ -13,6 +13,7 @@ public interface SessionState {
     void mode(String modeToUse);          //Data send mode (Default: Stream)
     void stru(String structureToUse);     //File structure representation (Default: File)
     void retr(String pathToFile);         //Download file
+    void dele(String pathToFile);         //Delete a file
     void stor(String pathToFile);         //Upload file
     void noop();                          //Server status check
     void auth();                          //Authentication type

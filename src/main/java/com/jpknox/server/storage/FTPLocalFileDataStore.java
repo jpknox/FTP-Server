@@ -86,8 +86,11 @@ public class FTPLocalFileDataStore implements DataStore {
     }
 
     @Override
-    public void delete(String Url) {
-
+    public boolean delete(String Url) {
+        Transition[] transitions = TransitionFactory.createTransitions(Url);
+        File file = Transitioner.performTransitions(transitions, currentDir);
+        boolean deleted = file.delete();
+        return deleted;
     }
 
     @Override
@@ -162,7 +165,8 @@ public class FTPLocalFileDataStore implements DataStore {
                     dateFormat.applyPattern("y");
                     String year = dateFormat.format(attr.creationTime().toMillis());
 
-                    string.append("-rw-r--r--");        //Permissions
+                    char fileType = childFile.isDirectory() ? 'd' : '-'; //'-' represents a file.
+                    string.append(String.format("%srw-r--r--", fileType)); //Linux style permissions
                     string.append("\t");
                     string.append("1");                 //?
                     string.append(" ");

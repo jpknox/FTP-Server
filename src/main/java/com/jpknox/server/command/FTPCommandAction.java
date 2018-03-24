@@ -17,6 +17,7 @@ public enum FTPCommandAction {
     MODE("MODE", 1),
     STRU("STRU", 0),
     RETR("RETR", 1),
+    DELE("DELE", 1),
     STOR("STOR", 1),
     NOOP("NOOP", 0),
     AUTH("AUTH", 0),
@@ -31,7 +32,6 @@ public enum FTPCommandAction {
     ERROR_0("GENERIC_ERROR", 0);
 
     private String name;
-
     private int numberOfParams;
 
     FTPCommandAction(String name, int numberOfParams) {
