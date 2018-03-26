@@ -1,6 +1,7 @@
 package com.jpknox.server.command;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -24,10 +25,16 @@ public class FTPCommandDecoder {
 
 
         //Remove spaces unless they're within double quotes
-        List<String> constituentComponents = new ArrayList<>();
-        Matcher m = Pattern.compile("([^\"|\']\\S*|\".+?\"|\'.+?\')\\s*").matcher(telnetCommand);
-        while (m.find()) {
-            constituentComponents.add(m.group(1));
+        List<String> constituentComponents;
+        if (isTypeCommand(telnetCommand)) {
+            Matcher m = Pattern.compile("([^\"|\']\\S*|\".+?\"|\'.+?\')\\s*").matcher(telnetCommand);
+            constituentComponents = new ArrayList();
+            while (m.find()) {                          //Split by all spaces
+                constituentComponents.add(m.group(1));
+            }
+        } else {
+            constituentComponents = Arrays.asList(      //Split by first space
+                    telnetCommand.split(" ", 2));
         }
 
 
@@ -72,6 +79,11 @@ public class FTPCommandDecoder {
 
 
         return new FTPCommand(commandAction, commandParams);
+    }
+
+    private boolean isTypeCommand(String telnetCommand) {
+        return telnetCommand.length() > 3 &&
+                telnetCommand.substring(0, 4).toUpperCase().equals(FTPCommandAction.TYPE.name());
     }
 
 
