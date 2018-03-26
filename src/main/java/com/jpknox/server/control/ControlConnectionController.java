@@ -50,11 +50,16 @@ public class ControlConnectionController implements Runnable {
                     //log("Entered the keep-alive input loop.");
                     dataFromClient = viewCommunicator.readLine();
                     //log("Received input from client.");
-                    if (!dataFromClient.equals(null)) {
-                        break;
-                    } else {
-                        log("Sleeping for 100 millis");
-                        Thread.sleep(500);
+                    try {
+                        if (!dataFromClient.equals(null)) {
+                            break;
+                        } else {
+                            log("Sleeping for 100 millis");
+                            Thread.sleep(500);
+                        }
+                    } catch (NullPointerException npe) {
+                        log(String.format("User '%s' has disconnected.", session.getUsername()));
+                        break inputLoop;
                     }
                 }
                 log(session.getUsername() + ": " + dataFromClient);
