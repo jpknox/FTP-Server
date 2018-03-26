@@ -16,7 +16,7 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.text.SimpleDateFormat;
 
 /**
- * Created by joaok on 26/12/2017.
+ * Created by João Paulo Knox on 26/12/2017.
  */
 public class FTPLocalFileDataStore implements DataStore {
 

@@ -9,7 +9,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
- * Created by joaok on 23/12/2017.
+ * Created by João Paulo Knox on 23/12/2017.
  */
 public class DataPortGeneratorTest {
 

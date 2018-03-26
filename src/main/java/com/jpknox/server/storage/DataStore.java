@@ -5,7 +5,7 @@ import com.jpknox.server.storage.internaltransfer.FileQueue;
 import java.io.File;
 
 /**
- * Created by joaok on 26/12/2017.
+ * Created by João Paulo Knox on 26/12/2017.
  */
 public interface DataStore {
 

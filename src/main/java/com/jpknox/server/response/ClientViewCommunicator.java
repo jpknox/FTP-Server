@@ -7,7 +7,7 @@ import java.io.PrintWriter;
 import static com.jpknox.server.utility.Logger.log;
 
 /**
- * Created by joaok on 26/12/2017.
+ * Created by João Paulo Knox on 26/12/2017.
  */
 public class ClientViewCommunicator {
 

@@ -1,7 +1,7 @@
 package com.jpknox.server.state;
 
 /**
- * Created by joaok on 24/09/2017.
+ * Created by João Paulo Knox on 24/09/2017.
  */
 public interface SessionState {
 

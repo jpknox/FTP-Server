@@ -7,7 +7,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
 /**
- * Created by joaok on 25/12/2017.
+ * Created by João Paulo Knox on 25/12/2017.
  */
 public class FTPResponseFactoryTest {
 

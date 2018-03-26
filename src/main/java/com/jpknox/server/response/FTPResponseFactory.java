@@ -4,7 +4,7 @@ import java.util.Formatter;
 import java.util.Locale;
 
 /**
- * Created by joaok on 25/12/2017.
+ * Created by João Paulo Knox on 25/12/2017.
  * All responses from the factory will come in the form of a {@code String}
  * both the content and format of the {@code String} will be delegated to
  * the factory. The response is requested by providing a standard {@code code}

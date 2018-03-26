@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by joaok on 24/09/2017.
+ * Created by João Paulo Knox on 24/09/2017.
  */
 public class LoginService {
 

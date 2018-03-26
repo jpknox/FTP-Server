@@ -15,7 +15,7 @@ import java.util.concurrent.Executors;
 import static com.jpknox.server.utility.Logger.log;
 
 /**
- * Created by joaok on 23/12/2017.
+ * Created by João Paulo Knox on 23/12/2017.
  */
 public class DataConnectionController {
 

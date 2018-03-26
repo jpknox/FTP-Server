@@ -12,7 +12,7 @@ import java.io.File;
 import static com.jpknox.server.utility.Logger.log;
 
 /**
- * Created by joaok on 24/09/2017.
+ * Created by João Paulo Knox on 24/09/2017.
  */
 public class StateLoggedIn extends AbstractSessionState {
     public StateLoggedIn(ClientSession session) {

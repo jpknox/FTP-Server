@@ -24,35 +24,35 @@ public class FTPCommandDecoder {
 
 
         //Remove spaces unless they're within double quotes
-        List<String> list = new ArrayList<String>();
+        List<String> constituentComponents = new ArrayList<>();
         Matcher m = Pattern.compile("([^\"|\']\\S*|\".+?\"|\'.+?\')\\s*").matcher(telnetCommand);
         while (m.find()) {
-            list.add(m.group(1));
+            constituentComponents.add(m.group(1));
         }
 
 
         //Extract the action
         FTPCommandAction commandAction = null;
         try {
-            commandAction = FTPCommandAction.valueOf(list.get(ACTION).toUpperCase());
+            commandAction = FTPCommandAction.valueOf(constituentComponents.get(ACTION).toUpperCase());
         } catch (IllegalArgumentException | NullPointerException | IndexOutOfBoundsException exception) {
-            if (list.size() == 0 || list.get(0).trim().equals("")) {
+            if (constituentComponents.size() == 0 || constituentComponents.get(0).trim().equals("")) {
                 log("The client has entered a command consisting entirely of spaces");
                 return new FTPCommand(FTPCommandAction.ERROR_1, defaultParams());
             } else {
-                log("Error when creating an instance of the command ENUM with '" + list.get(ACTION) + "'");
+                log("Error when creating an instance of the command ENUM with '" + constituentComponents.get(ACTION) + "'");
                 return new FTPCommand(FTPCommandAction.ERROR_0, defaultParams());
             }
         }
 
         //Extract the params
-        boolean hasParams = list.size() > 1;
+        boolean hasParams = constituentComponents.size() > 1;
         String[] commandParams;
         if (hasParams) {
-            int numOfParams = list.size()-1;
+            int numOfParams = constituentComponents.size()-1;
             commandParams = new String[numOfParams];
             for (int i = 1; i <= numOfParams; i++) {
-                commandParams[i-1] = list.get(i);
+                commandParams[i-1] = constituentComponents.get(i);
             }
         } else {
             // Safer to populate with non-null data if no params are given to the decoder

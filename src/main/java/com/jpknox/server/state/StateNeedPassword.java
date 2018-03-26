@@ -6,7 +6,7 @@ import com.jpknox.server.session.ClientSession;
 import static com.jpknox.server.utility.Logger.log;
 
 /**
- * Created by joaok on 03/10/2017.
+ * Created by João Paulo Knox on 03/10/2017.
  */
 public class StateNeedPassword extends AbstractSessionState {
 

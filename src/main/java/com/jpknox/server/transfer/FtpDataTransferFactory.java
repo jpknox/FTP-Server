@@ -1,7 +1,7 @@
 package com.jpknox.server.transfer;
 
 /**
- * Created by joaok on 27/12/2017.
+ * Created by João Paulo Knox on 27/12/2017.
  */
 public class FtpDataTransferFactory {
 
