@@ -23,5 +23,5 @@ public interface SessionState {
     void pasv();                          //Specifies the passive data send method
     void nlst();                          //A list of all files/folders within the current directory
     void list();                          //List information about files in the current directory
-    void cwd(String Url);                 //Change current working directory
+    void cwd(String path);                 //Change current working directory
 }

@@ -30,7 +30,7 @@ public class DataConnectionController {
 
     public int[] createDataConnectionListener() {
         int port = DataPortGenerator.createPassiveDataPort();
-        log(String.format("Listening for a data connection on port '%d'.", port));
+//        log(String.format("Listening for a data connection on port '%d'.", port));
         InboundConnectionListener inboundConnectionListener = new InboundConnectionListener(port, connectionQueue);
         threadPool.execute(inboundConnectionListener);
         isListening = true;

@@ -2,6 +2,8 @@ package com.jpknox.server.storage.internaltransfer;
 
 import java.io.File;
 
+import static com.jpknox.server.utility.Logger.log;
+
 /**
  * Created by JoaoPaulo on 01-Jan-18.
  */
@@ -17,7 +19,7 @@ public class FileQueue {
         isSet = true;
         this.file = file;
         notify();
-        System.out.println("File queue has a file");
+        log("File queue has a file");
     }
 
     public synchronized File getFile() {
@@ -26,7 +28,7 @@ public class FileQueue {
         }
         isSet = true;
         notify();
-        System.out.println("File queue has handed over its file");
+        log("File queue has handed over its file");
         return file;
     }
 }

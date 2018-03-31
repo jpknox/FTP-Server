@@ -40,7 +40,6 @@ public class FTPServer {
                     log("Shutting down connection listener.");
                     break;
                 }
-                threadPool.
             }
         } catch (IOException e) {
             e.printStackTrace();

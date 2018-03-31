@@ -4,6 +4,8 @@ import com.jpknox.server.storage.file.Transition;
 
 import java.io.File;
 
+import static com.jpknox.server.utility.Logger.log;
+
 /**
  * Created by JoaoPaulo on 04-Jan-18.
  */
@@ -13,7 +15,7 @@ public class UpTransition implements Transition {
     public File transition(File current) {
         File parent = null;
         try {
-            System.out.println("Switching to parent directory " + current.getParentFile().getPath() + ".");
+            log("Switching to parent directory " + current.getParentFile().getPath() + ".");
             parent = current.getParentFile();
             return parent;
         } catch (NullPointerException e) {

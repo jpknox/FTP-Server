@@ -11,8 +11,8 @@ public class Logger {
 
     public static int log(String text) {
         DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss:S");
-        Date date = new Date();
-        System.out.println(dateFormat.format(date) + ":\t" + text);
+        Date timestamp = new Date();
+        System.out.println(dateFormat.format(timestamp) + ":\t" + text);
         return 0;
     }
 }

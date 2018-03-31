@@ -69,13 +69,13 @@ public class StateLoggedIn extends AbstractSessionState {
     }
 
     @Override
-    public void dele(String pathToFile) {
+    public void dele(String filePath) {
         DataStore dataStore = session.getFileSystem();
-        if (!dataStore.exists(pathToFile)) {
+        if (!dataStore.exists(filePath)) {
             getClientCommunicator().write(FTPResponseFactory.createResponse(550));
             //TODO: Add more detail to response.
         }
-        boolean deleted = dataStore.delete(pathToFile);
+        boolean deleted = dataStore.delete(filePath);
         if (deleted) {
             getClientCommunicator().write(FTPResponseFactory.createResponse(250));
         } else {
@@ -85,12 +85,19 @@ public class StateLoggedIn extends AbstractSessionState {
     }
 
     @Override
-    public void stor(String Url) {
+    public void stor(String filePath) {
         if (!isDataConnectionListening()) return;
-        System.out.println("State logged in has entered 'stor'");
-        FileQueue fileQueue = session.getFileSystem().store(Url);
-        session.getDataConnectionController().receive(fileQueue, Url);
-        System.out.println("State logged is leaving left 'stor'");
+        DataStore dataStore = session.getFileSystem();
+        if (dataStore.exists(filePath)) {
+            getClientCommunicator().write(FTPResponseFactory.createResponse(550));
+            return;
+            //TODO: Add more detail to response.
+        }
+        log("Current directory, within 'stor' method is '"+dataStore.getCurrentDirectory()+"'");
+        //TODO: Get destination folder from filePath
+        //TODO: Refactor
+        FileQueue fileQueue = session.getFileSystem().store(filePath);
+        session.getDataConnectionController().receive(fileQueue, filePath);
     }
 
     @Override
@@ -101,12 +108,12 @@ public class StateLoggedIn extends AbstractSessionState {
     }
 
     @Override
-    public void cwd(String Url) {
+    public void cwd(String path) {
         DataStore fileSystem = session.getFileSystem();
-        if (!fileSystem.validUrl(Url)) {
+        if (!fileSystem.validUrl(path)) {
             getClientCommunicator().write(FTPResponseFactory.createResponse(501));
         }
 
-        session.getFileSystem().changeWorkingDirectory(Url);
+        session.getFileSystem().changeWorkingDirectory(path);
     }
 }

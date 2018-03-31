@@ -134,7 +134,7 @@ public abstract class AbstractSessionState implements SessionState {
     }
 
     @Override
-    public void cwd(String Url) {
+    public void cwd(String path) {
         session.getViewCommunicator().write(FTPResponseFactory.createResponse(530));
     }
 

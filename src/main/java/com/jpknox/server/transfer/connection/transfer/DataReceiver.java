@@ -8,6 +8,8 @@ import com.jpknox.server.transfer.connection.establish.ConnectionQueue;
 import java.io.*;
 import java.net.Socket;
 
+import static com.jpknox.server.utility.Logger.log;
+
 /**
  * Created by JoaoPaulo on 01-Jan-18.
  */
@@ -28,7 +30,7 @@ public class DataReceiver implements Runnable{
 
     @Override
     public void run() {
-        System.out.println("Receiving " + filename);
+        log("Receiving " + filename);
         BufferedInputStream bis;
         BufferedOutputStream bos = null;
         try {
@@ -43,7 +45,7 @@ public class DataReceiver implements Runnable{
             bis.close();
             connection.close();
             clientViewCommunicator.write(FTPResponseFactory.createResponse(226));
-            System.out.println("Finished recieving " + filename + ", size " + tempTransferFile.length());
+            log("Finished recieving " + filename + ", size " + tempTransferFile.length());
             fileQueue.setFile(tempTransferFile);
         } catch (IOException e) {
             e.printStackTrace();

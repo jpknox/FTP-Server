@@ -2,6 +2,8 @@ package com.jpknox.server.transfer.connection.establish;
 
 import java.net.Socket;
 
+import static com.jpknox.server.utility.Logger.log;
+
 /**
  * Created by JoaoPaulo on 01-Jan-18.
  */
@@ -17,7 +19,7 @@ public class ConnectionQueue {
         this.connection = connection;
         isSet = true;
         notify();
-        System.out.printf("Connection queue has a connection on port '%d'\n", connection.getPort());
+        log(String.format("Connection queue has a connection on port '%d'", connection.getPort()));
     }
 
     public synchronized Socket getConnection() {
@@ -26,7 +28,7 @@ public class ConnectionQueue {
         }
         isSet = false;
         notify();
-        System.out.printf("Connection queue has handed over its connection on port '%d'\n", connection.getPort());
+        log(String.format("Connection queue has handed over its connection on port '%d'", connection.getPort()));
         return connection;
     }
 }

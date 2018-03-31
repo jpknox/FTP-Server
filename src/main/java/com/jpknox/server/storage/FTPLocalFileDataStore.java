@@ -6,7 +6,7 @@ import com.jpknox.server.storage.file.Transition;
 import com.jpknox.server.storage.file.Transitioner;
 import com.jpknox.server.storage.file.transition.factory.TransitionFactory;
 import com.jpknox.server.storage.internaltransfer.*;
-import com.jpknox.server.storage.internaltransfer.FileWriter;
+import com.jpknox.server.storage.internaltransfer.LocalFileWriter;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -14,6 +14,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.text.SimpleDateFormat;
+
+import static com.jpknox.server.utility.Logger.log;
 
 /**
  * Created by João Paulo Knox on 26/12/2017.
@@ -57,7 +59,7 @@ public class FTPLocalFileDataStore implements DataStore {
 //    public File store(String Url, InputStream inputStream) {
 //        if (exists(Url)) return null;
 //        File file = new File(rootDir.getPath() + File.separatorChar + Url);
-//        System.out.println(file.toString());
+//        log(file.toString());
 //        try {
 //            file.createNewFile();
 //            FileOutputStream fos = new FileOutputStream(file);
@@ -73,14 +75,15 @@ public class FTPLocalFileDataStore implements DataStore {
 //    }
 
     @Override
-    public FileQueue store(String Url) {
-        if (exists(Url)) {
-            System.out.println("Cannot store " + Url);
+    public FileQueue store(String fileName) {
+        if (exists(fileName)) {
+            log("Cannot store file because it already exists. '"+fileName+"'");
             return null;
         }
-        System.out.println("Attempting to store " + Url);
-        FileWriter permanentFileWriter = new FileWriter(fileQueue, Url, rootDir);
-        Thread fileWriter = new Thread(permanentFileWriter);
+        log("Attempting to store file at path: '"+fileName+"'");
+        log("currentDir.getPath is: '"+currentDir.getPath()+"'");
+        LocalFileWriter persistentLocalFileWriter = new LocalFileWriter(fileQueue, fileName, currentDir);
+        Thread fileWriter = new Thread(persistentLocalFileWriter);
         fileWriter.start();
         return fileQueue;
     }
@@ -97,7 +100,7 @@ public class FTPLocalFileDataStore implements DataStore {
     public boolean exists(String Url) {
         Transition[] transitions = TransitionFactory.createTransitions(Url);
         File file = Transitioner.performTransitions(transitions, currentDir);
-        return file.exists();
+        return file != null ? file.exists() : false;
     }
 
     @Override

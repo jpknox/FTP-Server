@@ -13,7 +13,7 @@ public interface DataStore {
 
     //File store(String Url, InputStream inputStream);
 
-    FileQueue store(String Url);
+    FileQueue store(String fileName);
 
     boolean delete(String Url);
 
