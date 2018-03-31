@@ -10,7 +10,7 @@ import static com.jpknox.server.utility.Logger.log;
 public class FileQueue {
 
     private File file;
-    private boolean isSet = false;
+    private boolean isSet;
 
     public synchronized void setFile(File file) {
         if (isSet) {
@@ -26,7 +26,7 @@ public class FileQueue {
         if (!isSet) {
             try { wait(); } catch (InterruptedException ie) {}
         }
-        isSet = true;
+        isSet = false;
         notify();
         log("File queue has handed over its file");
         return file;

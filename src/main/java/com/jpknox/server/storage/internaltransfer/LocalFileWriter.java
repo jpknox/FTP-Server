@@ -23,6 +23,7 @@ public class LocalFileWriter implements Runnable {
     public void run() {
         try {
             File tempFile = fileQueue.getFile();
+            log("tempFile.isFile " + tempFile.isFile());
             BufferedInputStream bis = new BufferedInputStream(new FileInputStream(tempFile));
             File permanentFile = new File(insertionFolder.getPath() + System.getProperty("file.separator") + filename);
             BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(permanentFile));
@@ -32,7 +33,7 @@ public class LocalFileWriter implements Runnable {
             tempFile.delete();
             log("Finished writing filename '" + filename + "', size " + permanentFile.length());
             log("Final location " + permanentFile.getCanonicalPath());
-            log("Is a file " + permanentFile.isFile());
+            log("permanentFile.isFile " + permanentFile.isFile());
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -3,6 +3,7 @@ package com.jpknox.server.response;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.SocketException;
 
 import static com.jpknox.server.utility.Logger.log;
 
@@ -20,7 +21,7 @@ public class ClientViewCommunicator {
         output.flush();
     }
 
-    public String readLine() {
+    public String readLine() throws SocketException {
         String line = "";
         try {
             line = input.readLine();

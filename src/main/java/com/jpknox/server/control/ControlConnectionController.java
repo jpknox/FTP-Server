@@ -9,6 +9,7 @@ import com.jpknox.server.session.ClientSession;
 
 import java.io.*;
 import java.net.Socket;
+import java.net.SocketException;
 
 import static com.jpknox.server.utility.Logger.log;
 
@@ -48,16 +49,16 @@ public class ControlConnectionController implements Runnable {
                 //Loop over never ending null chars sent by FTP clients
                 while (true) {
                     //log("Entered the keep-alive input loop.");
-                    dataFromClient = viewCommunicator.readLine();
                     //log("Received input from client.");
                     try {
+                        dataFromClient = viewCommunicator.readLine();
                         if (!dataFromClient.equals(null)) {
                             break;
                         } else {
                             log("Sleeping for 100 millis");
                             Thread.sleep(500);
                         }
-                    } catch (NullPointerException npe) {
+                    } catch (NullPointerException | SocketException e) {
                         log(String.format("User '%s' has disconnected.", session.getUsername()));
                         break inputLoop;
                     }
