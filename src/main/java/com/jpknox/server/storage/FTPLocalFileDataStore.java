@@ -91,8 +91,7 @@ public class FTPLocalFileDataStore implements DataStore {
     public boolean delete(String path) {
         Transition[] transitions = TransitionFactory.createTransitions(path);
         File file = Transitioner.performTransitions(transitions, currentDir);
-        boolean deleted = file.delete();
-        return deleted;
+        return file != null ? file.delete() : false;
     }
 
     @Override
