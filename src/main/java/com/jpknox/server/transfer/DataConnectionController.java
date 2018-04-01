@@ -40,8 +40,7 @@ public class DataConnectionController {
     public void receive(FileQueue fileQueue, String filename) {
         DataReceiver inboundDataReceiver = new DataReceiver(
                 connectionQueue, fileQueue, filename, session.getViewCommunicator());
-        Thread dataReceiver = new Thread(inboundDataReceiver);
-        dataReceiver.start();
+        new Thread(inboundDataReceiver).start();
         isListening = false;
     }
 

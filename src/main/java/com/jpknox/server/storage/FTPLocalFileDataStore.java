@@ -83,14 +83,13 @@ public class FTPLocalFileDataStore implements DataStore {
         log("Attempting to store file at path: '"+fileName+"'");
         log("currentDir.getPath is: '"+currentDir.getPath()+"'");
         LocalFileWriter persistentLocalFileWriter = new LocalFileWriter(fileQueue, fileName, currentDir);
-        Thread fileWriter = new Thread(persistentLocalFileWriter);
-        fileWriter.start();
+        new Thread(persistentLocalFileWriter).start();
         return fileQueue;
     }
 
     @Override
-    public boolean delete(String Url) {
-        Transition[] transitions = TransitionFactory.createTransitions(Url);
+    public boolean delete(String path) {
+        Transition[] transitions = TransitionFactory.createTransitions(path);
         File file = Transitioner.performTransitions(transitions, currentDir);
         boolean deleted = file.delete();
         return deleted;

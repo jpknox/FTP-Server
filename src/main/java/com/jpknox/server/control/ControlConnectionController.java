@@ -24,6 +24,7 @@ public class ControlConnectionController implements Runnable {
     private final ClientSession session = new ClientSession(viewCommunicator);
     private FTPCommand ftpCommand;
     private FTPCommandAction ftpCommandAction;
+    private String parameter;
 
     public ControlConnectionController(Socket clientConnection) {
         this.clientConnection = clientConnection;
@@ -68,10 +69,11 @@ public class ControlConnectionController implements Runnable {
 
                 ftpCommand = FTPCommandDecoder.decode(dataFromClient);
                 ftpCommandAction = ftpCommand.getAction();
+                parameter = ftpCommand.getParams()[0];
                 switch (ftpCommandAction) {
-                    case USER:    session.getState().user(ftpCommand.getParams()[0]); //Extract username
+                    case USER:    session.getState().user(parameter); //Extract username
                                   break;
-                    case PASS:    session.getState().pass(ftpCommand.getParams()[0]); //Extract password
+                    case PASS:    session.getState().pass(parameter); //Extract password
                                   break;
                     case PASV:    session.getState().pasv();
                                   break;
@@ -80,11 +82,11 @@ public class ControlConnectionController implements Runnable {
                                   break inputLoop;
                     case NLST:    session.getState().nlst();
                                   break;
-                    case STOR:    session.getState().stor(ftpCommand.getParams()[0]);
+                    case STOR:    session.getState().stor(parameter);
                                   break;
-                    case RETR:    session.getState().retr(ftpCommand.getParams()[0]);
+                    case RETR:    session.getState().retr(parameter);
                                   break;
-                    case DELE:    session.getState().dele(ftpCommand.getParams()[0]);
+                    case DELE:    session.getState().dele(parameter);
                                   break;
                     case AUTH:    session.getState().auth();
                                   break;
@@ -92,9 +94,11 @@ public class ControlConnectionController implements Runnable {
                                   break;
                     case FEAT:    session.getState().feat();
                                   break;
+                    case RMD:     session.getState().rmd(parameter);
+                                  break;
                     case PWD:     session.getState().pwd();
                                   break;
-                    case CWD:     session.getState().cwd(ftpCommand.getParams()[0]);
+                    case CWD:     session.getState().cwd(parameter);
                                   break;
                     case NOOP:    session.getState().noop();
                                   break;

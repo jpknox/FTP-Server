@@ -23,6 +23,7 @@ public enum FTPCommandAction {
     AUTH("AUTH", 0),
     SYST("SYST", 0),
     FEAT("FEAT", 0),
+    RMD("RMD", 1),
     PWD("PWD", 0),
     CWD("CWD", 1),
     PASV("PASV", 0),

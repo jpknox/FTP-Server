@@ -1,6 +1,5 @@
 package com.jpknox.server.state;
 
-import com.jpknox.server.response.ClientViewCommunicator;
 import com.jpknox.server.response.FTPResponseFactory;
 import com.jpknox.server.session.ClientSession;
 import com.jpknox.server.storage.DataStore;
@@ -98,6 +97,11 @@ public class StateLoggedIn extends AbstractSessionState {
         //TODO: Refactor
         FileQueue fileQueue = session.getFileSystem().store(filePath);
         session.getDataConnectionController().receive(fileQueue, filePath);
+    }
+
+    @Override
+    public void rmd(String pathToFolder) {
+        dele(pathToFolder);
     }
 
     @Override

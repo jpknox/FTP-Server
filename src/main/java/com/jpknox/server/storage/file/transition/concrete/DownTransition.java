@@ -28,10 +28,10 @@ public class DownTransition implements Transition {
         }
         File nextDir = new File(current.getPath() + File.separator + correctCasingName);
         if (nextDir.isDirectory()) {
-            log("Switching to subdirectory " + nextDir.getPath() + ".");
+            //log("Switching to subdirectory " + nextDir.getPath() + ".");
             return nextDir;
         } else if (nextDir.isFile()) {
-            log("Switching to file " + nextDir.getPath() + ".");
+            //log("Switching to file " + nextDir.getPath() + ".");
             return nextDir;
         } else {
             return null;

@@ -19,7 +19,8 @@ public interface SessionState {
     void auth();                          //Authentication type
     void syst();                          //System settings
     void feat();                          //Features
-    void pwd ();                          //Working directory
+    void rmd(String pathToFolder);        //Delete directory
+    void pwd();                           //Display the working directory
     void pasv();                          //Specifies the passive data send method
     void nlst();                          //A list of all files/folders within the current directory
     void list();                          //List information about files in the current directory
