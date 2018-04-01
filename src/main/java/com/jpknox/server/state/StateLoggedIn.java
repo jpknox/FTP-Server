@@ -97,6 +97,24 @@ public class StateLoggedIn extends AbstractSessionState {
         //TODO: Refactor
         FileQueue fileQueue = session.getFileSystem().store(filePath);
         session.getDataConnectionController().receive(fileQueue, filePath);
+
+        int elapsed = 0;
+        int max = 30;
+        while (!dataStore.exists(filePath) && elapsed != max) {
+            try {
+                Thread.sleep(100);  //Wait for transfer to complete
+                elapsed++;
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        if (elapsed != max) {
+            getClientCommunicator().write(FTPResponseFactory.createResponse(250));
+        } else {
+            getClientCommunicator().write(FTPResponseFactory.createResponse(550));
+        }
+
+
     }
 
     @Override
