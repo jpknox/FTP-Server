@@ -72,6 +72,7 @@ public class StateLoggedIn extends AbstractSessionState {
         DataStore dataStore = session.getFileSystem();
         if (!dataStore.exists(filePath)) {
             getClientCommunicator().write(FTPResponseFactory.createResponse(550));
+            return;
             //TODO: Add more detail to response.
         }
         boolean deleted = dataStore.delete(filePath);
