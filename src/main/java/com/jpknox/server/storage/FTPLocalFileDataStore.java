@@ -37,7 +37,7 @@ public class FTPLocalFileDataStore implements DataStore {
     public File get(String Url) {
         if (!exists(Url)) return null;
         Transition[] transitions = TransitionFactory.createTransitions(Url);
-        File file = Transitioner.performTransitions(transitions, currentDir);
+        File file = Transitioner.performTransitions(transitions, currentDir, false);
         if (file == null) {
             //TODO: The resource identified by the URL does not exist.
             //session.getViewCommunicator().write(FTPResponseFactory.createResponse(550));
@@ -90,14 +90,14 @@ public class FTPLocalFileDataStore implements DataStore {
     @Override
     public boolean delete(String path) {
         Transition[] transitions = TransitionFactory.createTransitions(path);
-        File file = Transitioner.performTransitions(transitions, currentDir);
+        File file = Transitioner.performTransitions(transitions, currentDir, false);
         return file != null ? file.delete() : false;
     }
 
     @Override
     public boolean exists(String Url) {
         Transition[] transitions = TransitionFactory.createTransitions(Url);
-        File file = Transitioner.performTransitions(transitions, currentDir);
+        File file = Transitioner.performTransitions(transitions, currentDir, false);
         return file != null ? file.exists() : false;
     }
 
@@ -112,7 +112,7 @@ public class FTPLocalFileDataStore implements DataStore {
         Transition[] transitions = TransitionFactory.createTransitions(Url);
 
         File rollbackDir = currentDir;
-        File newDir = Transitioner.performTransitions(transitions, currentDir);
+        File newDir = Transitioner.performTransitions(transitions, currentDir, false);
 
         if (newDir == null) {
             currentDir = rollbackDir;
@@ -126,8 +126,13 @@ public class FTPLocalFileDataStore implements DataStore {
 
 
     @Override
-    public void mkDir(String Url) {
-
+    public boolean mkDir(String path) {
+        if (exists(path)) {
+            return false;
+        }
+        Transition[] transitions = TransitionFactory.createTransitions(path);
+        File directory = Transitioner.performTransitions(transitions, currentDir, true);
+        return directory.isDirectory();
     }
 
     @Override

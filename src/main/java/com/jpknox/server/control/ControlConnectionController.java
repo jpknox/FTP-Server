@@ -96,6 +96,8 @@ public class ControlConnectionController implements Runnable {
                                   break;
                     case RMD:     session.getState().rmd(parameter);
                                   break;
+                    case MKD:     session.getState().mkd(parameter);
+                                  break;
                     case PWD:     session.getState().pwd();
                                   break;
                     case CWD:     session.getState().cwd(parameter);

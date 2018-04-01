@@ -20,6 +20,7 @@ public interface SessionState {
     void syst();                          //System settings
     void feat();                          //Features
     void rmd(String pathToFolder);        //Delete directory
+    void mkd(String pathToFolder);        //Make new directory
     void pwd();                           //Display the working directory
     void pasv();                          //Specifies the passive data send method
     void nlst();                          //A list of all files/folders within the current directory

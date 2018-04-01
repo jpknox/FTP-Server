@@ -23,7 +23,7 @@ public interface DataStore {
 
     void changeWorkingDirectory(String Url);
 
-    void mkDir(String Url);
+    boolean mkDir(String path);
 
     String getNameList(String Url);
 

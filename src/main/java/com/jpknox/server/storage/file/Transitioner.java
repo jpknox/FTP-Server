@@ -1,5 +1,7 @@
 package com.jpknox.server.storage.file;
 
+import com.jpknox.server.storage.file.transition.concrete.DownTransition;
+
 import java.io.File;
 
 /**
@@ -7,10 +9,14 @@ import java.io.File;
  */
 public class Transitioner {
 
-    public static File performTransitions(Transition[] transitions, File startingPoint) {
+    public static File performTransitions(Transition[] transitions, File startingPoint, boolean makeNewDir) {
         File destination = new File(startingPoint.getPath());
         for (Transition transition : transitions) {
-            destination = transition.transition(destination);
+            if (makeNewDir && transition instanceof DownTransition) {
+                destination = ((DownTransition)transition).transition(destination, makeNewDir);
+            } else {
+                destination = transition.transition(destination);
+            }
         }
 
         return destination;

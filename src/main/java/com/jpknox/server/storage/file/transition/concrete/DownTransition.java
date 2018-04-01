@@ -20,6 +20,10 @@ public class DownTransition implements Transition {
 
     @Override
     public File transition(File current) {
+        return transition(current, false);
+    }
+
+    public File transition(File current, boolean makeNewDir) {
         String correctCasingName = next;
         try {
             correctCasingName = (new File(current.getPath() + File.separator + next).getCanonicalFile().getName());
@@ -32,6 +36,9 @@ public class DownTransition implements Transition {
             return nextDir;
         } else if (nextDir.isFile()) {
             //log("Switching to file " + nextDir.getPath() + ".");
+            return nextDir;
+        } else if (makeNewDir){
+            nextDir.mkdir();
             return nextDir;
         } else {
             return null;

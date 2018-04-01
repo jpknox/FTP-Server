@@ -124,6 +124,17 @@ public class StateLoggedIn extends AbstractSessionState {
     }
 
     @Override
+    public void mkd(String pathToFolder) {
+        DataStore dataStore = session.getFileSystem();
+        boolean created = dataStore.mkDir(pathToFolder);
+        if (created) {
+            getClientCommunicator().write(FTPResponseFactory.createResponse(250));
+        } else {
+            getClientCommunicator().write(FTPResponseFactory.createResponse(550));
+        }
+    }
+
+    @Override
     public void pwd() {
         String currentDirectory = session.getFileSystem().getCurrentDirectory();
         getClientCommunicator().write(FTPResponseFactory.createResponse(257, currentDirectory));

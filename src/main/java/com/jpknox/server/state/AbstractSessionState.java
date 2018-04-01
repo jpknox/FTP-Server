@@ -119,6 +119,11 @@ public abstract class AbstractSessionState implements SessionState {
     }
 
     @Override
+    public void mkd(String pathToFolder) {
+        session.getViewCommunicator().write(FTPResponseFactory.createResponse(530));
+    }
+
+    @Override
     public void pwd() {
         session.getViewCommunicator().write(FTPResponseFactory.createResponse(257, session.getFileSystem().getCurrentDirectory()));
     }
