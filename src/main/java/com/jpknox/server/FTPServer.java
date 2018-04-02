@@ -21,14 +21,14 @@ public class FTPServer {
     private int controllerIndex = 0;
     private int clientCount = 0;
     private final ExecutorService threadPool = Executors.newFixedThreadPool(MAXIMUM_INSTANCES);
-    private boolean testOveride = false;
+    private boolean testOverride = false;
 
     public FTPServer() {
         try {
             log("Server is starting up.");
             ServerSocket serverSocket = new ServerSocket(STANDARD_CONTROL_PORT);
             serverSocket.setReuseAddress(true);
-            while (true && !testOveride) {
+            while (true && !testOverride) {
                 log("Waiting for client...");
                 Socket clientConnection = serverSocket.accept();
                 log(String.format("Controller number '%d' has a new connection on port '%d'.",
@@ -52,7 +52,7 @@ public class FTPServer {
         return controlConnectionControllers[id];
     }
 
-    public void setTestOveride(boolean testOveride) {
-        this.testOveride = testOveride;
+    public void setTestOverride(boolean testOverride) {
+        this.testOverride = testOverride;
     }
 }

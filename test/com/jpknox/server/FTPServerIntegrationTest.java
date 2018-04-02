@@ -1,21 +1,17 @@
 package com.jpknox.server;
-
-import com.jpknox.server.state.StateLoggedIn;
-import com.jpknox.server.state.StateNeedPassword;
-import com.jpknox.server.state.StateNotLoggedIn;
+import junit.framework.TestCase;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.*;
-import java.net.InetSocketAddress;
-import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 
 import static junit.framework.TestCase.assertFalse;
+import static org.apache.commons.io.FileUtils.contentEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.when;
 
 /**
  * Created by JoaoPaulo on 08-Oct-17.
@@ -23,6 +19,8 @@ import static org.mockito.Mockito.when;
 public class FTPServerIntegrationTest {
 
     public static final String NEWLINE = System.getProperty("line.separator");
+    public static final String SEPARATOR = System.getProperty("file.separator");
+    public static final String ROOT_DIR_NAME = "RealFtpStorage";
 
     private PrintWriter outputWriter;
     private BufferedReader inputReader;
@@ -30,6 +28,8 @@ public class FTPServerIntegrationTest {
     private Thread integrationTestWrapperThread;
     private static boolean setUpIsDone;
     private Socket controlConnectionToServer;
+    private Socket dataConnectionFromServer;
+    private BufferedReader dataConnectionLineReader;
 
     @Before
     public void setup() throws IOException {
@@ -39,9 +39,7 @@ public class FTPServerIntegrationTest {
             integrationTestWrapperThread.start();
         }
 
-        controlConnectionToServer = new Socket();
-        InetSocketAddress inetSocketAddress = new InetSocketAddress("127.0.0.1", 21);
-        controlConnectionToServer.connect(inetSocketAddress);
+        controlConnectionToServer = new Socket((String)null, 21); //null address defaults to loopback interface
 
         //To send data to the server
         outputWriter = new PrintWriter(new BufferedWriter(new OutputStreamWriter(controlConnectionToServer.getOutputStream())));
@@ -64,9 +62,7 @@ public class FTPServerIntegrationTest {
     @Test
     public void testInitialStateNotLoggedIn() throws IOException {
         sendLine("quit");
-        //String state = ftpServer.getClientSessionController(0).getSession().getState().getClass().getSimpleName();
         assertTrue(inputReader.readLine().equals("220 Welcome to Jay's FTP Server!"));
-        ////assertEquals(StateNotLoggedIn.class.getSimpleName(), state);
     }
 
     @Test
@@ -87,8 +83,6 @@ public class FTPServerIntegrationTest {
         assertTrue(inputReader.readLine().equals("220 Welcome to Jay's FTP Server!"));
         assertTrue(inputReader.readLine().equals("230 Anonymous logged in, proceed."));
         assertTrue(inputReader.readLine().equals("221 Service closing control connection."));
-        //String state = ftpServer.getClientSessionController(0).getSession().getState().getClass().getSimpleName();
-        //assertEquals(StateLoggedIn.class.getSimpleName(), state);
     }
 
     @Test
@@ -98,8 +92,6 @@ public class FTPServerIntegrationTest {
         assertTrue(inputReader.readLine().equals("220 Welcome to Jay's FTP Server!"));
         assertTrue(inputReader.readLine().equals("331 User name okay, need password."));
         assertTrue(inputReader.readLine().equals("221 Service closing control connection."));
-        //String state = ftpServer.getClientSessionController(0).getSession().getState().getClass().getSimpleName();
-        //assertEquals(StateNeedPassword.class.getSimpleName(), state);
     }
 
     @Test
@@ -111,8 +103,6 @@ public class FTPServerIntegrationTest {
         assertTrue(inputReader.readLine().equals("331 User name okay, need password."));
         assertTrue(inputReader.readLine().equals("530 Not logged in."));
         assertTrue(inputReader.readLine().equals("221 Service closing control connection."));
-        //String state = ftpServer.getClientSessionController(0).getSession().getState().getClass().getSimpleName();
-        //assertEquals(StateNotLoggedIn.class.getSimpleName(), state);
     }
 
     @Test
@@ -126,8 +116,6 @@ public class FTPServerIntegrationTest {
         assertTrue(inputReader.readLine().equals("530 Not logged in."));
         assertTrue(inputReader.readLine().equals("503 Bad sequence of commands."));
         assertTrue(inputReader.readLine().equals("221 Service closing control connection."));
-        //String state = ftpServer.getClientSessionController(0).getSession().getState().getClass().getSimpleName();
-        //assertEquals(StateNotLoggedIn.class.getSimpleName(), state);
     }
 
     @Test
@@ -145,8 +133,6 @@ public class FTPServerIntegrationTest {
         assertTrue(inputReader.readLine().equals("331 User name okay, need password."));
         assertTrue(inputReader.readLine().equals("230 User1 logged in, proceed."));
         assertTrue(inputReader.readLine().equals("221 Service closing control connection."));
-        //String state = ftpServer.getClientSessionController(0).getSession().getState().getClass().getSimpleName();
-        //assertEquals(StateLoggedIn.class.getSimpleName(), state);
     }
 
     @Test
@@ -156,8 +142,6 @@ public class FTPServerIntegrationTest {
         assertEquals(("220 Welcome to Jay's FTP Server!"), inputReader.readLine());
         assertEquals(("501 Syntax error in parameters or arguments."), inputReader.readLine());
         assertEquals(("221 Service closing control connection."), inputReader.readLine());
-        //String state = ftpServer.getClientSessionController(0).getSession().getState().getClass().getSimpleName();
-        //assertEquals(StateNotLoggedIn.class.getSimpleName(), state);
     }
 
     @Test
@@ -171,8 +155,6 @@ public class FTPServerIntegrationTest {
         assertTrue(inputReader.readLine().equals("230 User1 logged in, proceed."));
         assertEquals("227 Entering Passive Mode (127,0,0,1,", inputReader.readLine().substring(0, 37));
         assertTrue(inputReader.readLine().equals("221 Service closing control connection."));
-        //String state = ftpServer.getClientSessionController(0).getSession().getState().getClass().getSimpleName();
-        //assertEquals(StateLoggedIn.class.getSimpleName(), state);
     }
 
     @Test
@@ -197,8 +179,6 @@ public class FTPServerIntegrationTest {
             }
         }
         assertTrue(inputReader.readLine().equals("221 Service closing control connection."));
-        //String state = ftpServer.getClientSessionController(0).getSession().getState().getClass().getSimpleName();
-        //assertEquals(StateLoggedIn.class.getSimpleName(), state);
     }
 
     @Test
@@ -216,8 +196,6 @@ public class FTPServerIntegrationTest {
         assertTrue(inputReader.readLine().equals("230 User1 logged in, proceed."));
         assertTrue(inputReader.readLine().equals("501 Syntax error in parameters or arguments."));
         assertTrue(inputReader.readLine().equals("221 Service closing control connection."));
-        //String state = ftpServer.getClientSessionController(0).getSession().getState().getClass().getSimpleName();
-        //assertEquals(StateLoggedIn.class.getSimpleName(), state);
     }
 
     @Test
@@ -260,8 +238,6 @@ public class FTPServerIntegrationTest {
         assertEquals("230 User1 logged in, proceed.", inputReader.readLine());
         assertEquals("425 Can't open data connection. Enter PASV first.", inputReader.readLine());
         assertEquals("221 Service closing control connection.", inputReader.readLine());
-        //String state = ftpServer.getClientSessionController(0).getSession().getState().getClass().getSimpleName();
-        //assertEquals(StateLoggedIn.class.getSimpleName(), state);
     }
 
     @Test
@@ -275,32 +251,28 @@ public class FTPServerIntegrationTest {
         assertEquals("230 User1 logged in, proceed.", inputReader.readLine());
         assertEquals("257 \\", inputReader.readLine());
         assertEquals("221 Service closing control connection.", inputReader.readLine());
-        //String state = ftpServer.getClientSessionController(0).getSession().getState().getClass().getSimpleName();
-        //assertEquals(StateLoggedIn.class.getSimpleName(), state);
     }
 
     @Test
     public void testChangeWorkingDirectory() throws IOException {
         sendLine("USER user1");
         sendLine("PASS pass1");
-        sendLine("CWD \"Folder 1\"");
+        sendLine("CWD \"TestData\\Folder 1\"");
         sendLine("PWD");
         sendLine("quit");
         assertEquals("220 Welcome to Jay's FTP Server!", inputReader.readLine());
         assertEquals("331 User name okay, need password.", inputReader.readLine());
         assertEquals("230 User1 logged in, proceed.", inputReader.readLine());
         assertEquals("250 Requested file action okay, completed.", inputReader.readLine());
-        assertEquals("257 \\Folder 1\\", inputReader.readLine());
+        assertEquals("257 \\TestData\\Folder 1\\", inputReader.readLine());
         assertEquals("221 Service closing control connection.", inputReader.readLine());
-        //String state = ftpServer.getClientSessionController(0).getSession().getState().getClass().getSimpleName();
-        //assertEquals(StateLoggedIn.class.getSimpleName(), state);
     }
 
     @Test
     public void testChangeWorkingDirectoryTwoStepsIntoSubSubfolder() throws IOException {
         sendLine("USER user1");
         sendLine("PASS pass1");
-        sendLine("CWD \"Folder 1\"");
+        sendLine("CWD \"TestData\\Folder 1\"");
         sendLine("PWD");
         sendLine("CWD \"Subfolder 1\"");
         sendLine("PWD");
@@ -309,53 +281,47 @@ public class FTPServerIntegrationTest {
         assertEquals("331 User name okay, need password.", inputReader.readLine());
         assertEquals("230 User1 logged in, proceed.", inputReader.readLine());
         assertEquals("250 Requested file action okay, completed.", inputReader.readLine());
-        assertEquals("257 \\Folder 1\\", inputReader.readLine());
+        assertEquals("257 \\TestData\\Folder 1\\", inputReader.readLine());
         assertEquals("250 Requested file action okay, completed.", inputReader.readLine());
-        assertEquals("257 \\Folder 1\\Subfolder 1\\", inputReader.readLine());
+        assertEquals("257 \\TestData\\Folder 1\\Subfolder 1\\", inputReader.readLine());
         assertEquals("221 Service closing control connection.", inputReader.readLine());
-        //String state = ftpServer.getClientSessionController(0).getSession().getState().getClass().getSimpleName();
-        //assertEquals(StateLoggedIn.class.getSimpleName(), state);
     }
 
     @Test
     public void testChangeWorkingDirectoryOneStepIntoSubSubfolder() throws IOException {
         sendLine("USER user1");
         sendLine("PASS pass1");
-        sendLine("CWD \"Folder 1\\Subfolder 1\"");
+        sendLine("CWD \"TestData/Folder 1\\Subfolder 1\"");
         sendLine("PWD");
         sendLine("quit");
         assertEquals("220 Welcome to Jay's FTP Server!", inputReader.readLine());
         assertEquals("331 User name okay, need password.", inputReader.readLine());
         assertEquals("230 User1 logged in, proceed.", inputReader.readLine());
         assertEquals("250 Requested file action okay, completed.", inputReader.readLine());
-        assertEquals("257 \\Folder 1\\Subfolder 1\\", inputReader.readLine());
+        assertEquals("257 \\TestData\\Folder 1\\Subfolder 1\\", inputReader.readLine());
         assertEquals("221 Service closing control connection.", inputReader.readLine());
-        //String state = ftpServer.getClientSessionController(0).getSession().getState().getClass().getSimpleName();
-        //assertEquals(StateLoggedIn.class.getSimpleName(), state);
     }
 
     @Test
     public void testChangeWorkingDirectoryOneStepIntoSubSubfolderUsingForwardSlash() throws IOException {
         sendLine("USER user1");
         sendLine("PASS pass1");
-        sendLine("CWD \"Folder 1/Subfolder 1\"");
+        sendLine("CWD \"TestData/Folder 1/Subfolder 1\"");
         sendLine("PWD");
         sendLine("quit");
         assertEquals("220 Welcome to Jay's FTP Server!", inputReader.readLine());
         assertEquals("331 User name okay, need password.", inputReader.readLine());
         assertEquals("230 User1 logged in, proceed.", inputReader.readLine());
         assertEquals("250 Requested file action okay, completed.", inputReader.readLine());
-        assertEquals("257 \\Folder 1\\Subfolder 1\\", inputReader.readLine());
+        assertEquals("257 \\TestData\\Folder 1\\Subfolder 1\\", inputReader.readLine());
         assertEquals("221 Service closing control connection.", inputReader.readLine());
-        //String state = ftpServer.getClientSessionController(0).getSession().getState().getClass().getSimpleName();
-        //assertEquals(StateLoggedIn.class.getSimpleName(), state);
     }
 
     @Test
     public void testChangeWorkingDirectoryGoUpOneLevel() throws IOException {
         sendLine("USER user1");
         sendLine("PASS pass1");
-        sendLine("CWD \"Folder 1/Subfolder 1\"");
+        sendLine("CWD \"TestData/Folder 1/Subfolder 1\"");
         sendLine("PWD");
         sendLine("CWD ..");
         sendLine("PWD");
@@ -364,19 +330,17 @@ public class FTPServerIntegrationTest {
         assertEquals("331 User name okay, need password.", inputReader.readLine());
         assertEquals("230 User1 logged in, proceed.", inputReader.readLine());
         assertEquals("250 Requested file action okay, completed.", inputReader.readLine());
-        assertEquals("257 \\Folder 1\\Subfolder 1\\", inputReader.readLine());
+        assertEquals("257 \\TestData\\Folder 1\\Subfolder 1\\", inputReader.readLine());
         assertEquals("250 Requested file action okay, completed.", inputReader.readLine());
-        assertEquals("257 \\Folder 1\\", inputReader.readLine());
+        assertEquals("257 \\TestData\\Folder 1\\", inputReader.readLine());
         assertEquals("221 Service closing control connection.", inputReader.readLine());
-        //String state = ftpServer.getClientSessionController(0).getSession().getState().getClass().getSimpleName();
-        //assertEquals(StateLoggedIn.class.getSimpleName(), state);
     }
 
     @Test
     public void testChangeWorkingDirectoryGoUpTwoLevels() throws IOException {
         sendLine("USER user1");
         sendLine("PASS pass1");
-        sendLine("CWD \"Folder 1/Subfolder 1\"");
+        sendLine("CWD \"TestData/Folder 1/Subfolder 1\"");
         sendLine("PWD");
         sendLine("CWD ..\\..");
         sendLine("PWD");
@@ -385,19 +349,17 @@ public class FTPServerIntegrationTest {
         assertEquals("331 User name okay, need password.", inputReader.readLine());
         assertEquals("230 User1 logged in, proceed.", inputReader.readLine());
         assertEquals("250 Requested file action okay, completed.", inputReader.readLine());
-        assertEquals("257 \\Folder 1\\Subfolder 1\\", inputReader.readLine());
+        assertEquals("257 \\TestData\\Folder 1\\Subfolder 1\\", inputReader.readLine());
         assertEquals("250 Requested file action okay, completed.", inputReader.readLine());
-        assertEquals("257 \\", inputReader.readLine());
+        assertEquals("257 \\TestData\\", inputReader.readLine());
         assertEquals("221 Service closing control connection.", inputReader.readLine());
-        //String state = ftpServer.getClientSessionController(0).getSession().getState().getClass().getSimpleName();
-        //assertEquals(StateLoggedIn.class.getSimpleName(), state);
     }
 
     @Test
-    public void testChangeWorkingDirectoryGoUpTwoManyLevels() throws IOException {
+    public void testChangeWorkingDirectoryGoUpTooManyLevels() throws IOException {
         sendLine("USER user1");
         sendLine("PASS pass1");
-        sendLine("CWD \"Folder 1/Subfolder 1\"");
+        sendLine("CWD \"TestData/Folder 1/Subfolder 1\"");
         sendLine("PWD");
         sendLine("CWD ..\\..\\..");
         sendLine("PWD");
@@ -406,19 +368,17 @@ public class FTPServerIntegrationTest {
         assertEquals("331 User name okay, need password.", inputReader.readLine());
         assertEquals("230 User1 logged in, proceed.", inputReader.readLine());
         assertEquals("250 Requested file action okay, completed.", inputReader.readLine());
-        assertEquals("257 \\Folder 1\\Subfolder 1\\", inputReader.readLine());
+        assertEquals("257 \\TestData\\Folder 1\\Subfolder 1\\", inputReader.readLine());
         assertEquals("250 Requested file action okay, completed.", inputReader.readLine());
         assertEquals("257 \\", inputReader.readLine());
         assertEquals("221 Service closing control connection.", inputReader.readLine());
-        //String state = ftpServer.getClientSessionController(0).getSession().getState().getClass().getSimpleName();
-        //assertEquals(StateLoggedIn.class.getSimpleName(), state);
     }
 
     @Test
     public void testChangeWorkingDirectoryPeriodStaysInSameDirectory() throws IOException {
         sendLine("USER user1");
         sendLine("PASS pass1");
-        sendLine("CWD \"Folder 1/Subfolder 1\"");
+        sendLine("CWD \"TestData\\Folder 1/Subfolder 1\"");
         sendLine("PWD");
         sendLine("CWD .");
         sendLine("PWD");
@@ -427,19 +387,17 @@ public class FTPServerIntegrationTest {
         assertEquals("331 User name okay, need password.", inputReader.readLine());
         assertEquals("230 User1 logged in, proceed.", inputReader.readLine());
         assertEquals("250 Requested file action okay, completed.", inputReader.readLine());
-        assertEquals("257 \\Folder 1\\Subfolder 1\\", inputReader.readLine());
+        assertEquals("257 \\TestData\\Folder 1\\Subfolder 1\\", inputReader.readLine());
         assertEquals("250 Requested file action okay, completed.", inputReader.readLine());
-        assertEquals("257 \\Folder 1\\Subfolder 1\\", inputReader.readLine());
+        assertEquals("257 \\TestData\\Folder 1\\Subfolder 1\\", inputReader.readLine());
         assertEquals("221 Service closing control connection.", inputReader.readLine());
-        //String state = ftpServer.getClientSessionController(0).getSession().getState().getClass().getSimpleName();
-        //assertEquals(StateLoggedIn.class.getSimpleName(), state);
     }
 
     @Test
     public void testChangeWorkingDirectoryGoToRootBackslash() throws IOException {
         sendLine("USER user1");
         sendLine("PASS pass1");
-        sendLine("CWD \"Folder 1/Subfolder 1\"");
+        sendLine("CWD \"TestData/Folder 1/Subfolder 1\"");
         sendLine("PWD");
         sendLine("CWD \\");
         sendLine("PWD");
@@ -448,12 +406,10 @@ public class FTPServerIntegrationTest {
         assertEquals("331 User name okay, need password.", inputReader.readLine());
         assertEquals("230 User1 logged in, proceed.", inputReader.readLine());
         assertEquals("250 Requested file action okay, completed.", inputReader.readLine());
-        assertEquals("257 \\Folder 1\\Subfolder 1\\", inputReader.readLine());
+        assertEquals("257 \\TestData\\Folder 1\\Subfolder 1\\", inputReader.readLine());
         assertEquals("250 Requested file action okay, completed.", inputReader.readLine());
         assertEquals("257 \\", inputReader.readLine());
         assertEquals("221 Service closing control connection.", inputReader.readLine());
-        //String state = ftpServer.getClientSessionController(0).getSession().getState().getClass().getSimpleName();
-        //assertEquals(StateLoggedIn.class.getSimpleName(), state);
     }
 
     @Test
@@ -470,8 +426,6 @@ public class FTPServerIntegrationTest {
                 , inputReader.readLine());
         assertEquals("257 \\", inputReader.readLine());
         assertEquals("221 Service closing control connection.", inputReader.readLine());
-        //String state = ftpServer.getClientSessionController(0).getSession().getState().getClass().getSimpleName();
-        //assertEquals(StateLoggedIn.class.getSimpleName(), state);
     }
 
     @Test
@@ -488,8 +442,6 @@ public class FTPServerIntegrationTest {
                 , inputReader.readLine());
         assertEquals("257 \\", inputReader.readLine());
         assertEquals("221 Service closing control connection.", inputReader.readLine());
-        //String state = ftpServer.getClientSessionController(0).getSession().getState().getClass().getSimpleName();
-        //assertEquals(StateLoggedIn.class.getSimpleName(), state);
     }
 
     @Test
@@ -505,15 +457,13 @@ public class FTPServerIntegrationTest {
         assertEquals("501 Syntax error in parameters or arguments.", inputReader.readLine());
         assertEquals("257 \\", inputReader.readLine());
         assertEquals("221 Service closing control connection.", inputReader.readLine());
-        //String state = ftpServer.getClientSessionController(0).getSession().getState().getClass().getSimpleName();
-        //assertEquals(StateLoggedIn.class.getSimpleName(), state);
     }
 
     @Test
     public void testChangeWorkingDirectoryGoToRootForwardslash() throws IOException {
         sendLine("USER user1");
         sendLine("PASS pass1");
-        sendLine("CWD \"Folder 1/Subfolder 1\"");
+        sendLine("CWD \"TestData/Folder 1/Subfolder 1\"");
         sendLine("PWD");
         sendLine("CWD /");
         sendLine("PWD");
@@ -522,46 +472,40 @@ public class FTPServerIntegrationTest {
         assertEquals("331 User name okay, need password.", inputReader.readLine());
         assertEquals("230 User1 logged in, proceed.", inputReader.readLine());
         assertEquals("250 Requested file action okay, completed.", inputReader.readLine());
-        assertEquals("257 \\Folder 1\\Subfolder 1\\", inputReader.readLine());
+        assertEquals("257 \\TestData\\Folder 1\\Subfolder 1\\", inputReader.readLine());
         assertEquals("250 Requested file action okay, completed.", inputReader.readLine());
         assertEquals("257 \\", inputReader.readLine());
         assertEquals("221 Service closing control connection.", inputReader.readLine());
-        //String state = ftpServer.getClientSessionController(0).getSession().getState().getClass().getSimpleName();
-        //assertEquals(StateLoggedIn.class.getSimpleName(), state);
     }
 
     @Test
     public void testChangeWorkingDirectoryUpAndDownRepeated() throws IOException {
         sendLine("USER user1");
         sendLine("PASS pass1");
-        sendLine("CWD \"Folder 1/Subfolder 1/../Subfolder 1/../Subfolder 1/../Subfolder 1/..\"");
+        sendLine("CWD \"TestData/Folder 1/Subfolder 1/../Subfolder 1/../Subfolder 1/../Subfolder 1/..\"");
         sendLine("PWD");
         sendLine("quit");
         assertEquals("220 Welcome to Jay's FTP Server!", inputReader.readLine());
         assertEquals("331 User name okay, need password.", inputReader.readLine());
         assertEquals("230 User1 logged in, proceed.", inputReader.readLine());
         assertEquals("250 Requested file action okay, completed.", inputReader.readLine());
-        assertEquals("257 \\Folder 1\\", inputReader.readLine());
+        assertEquals("257 \\TestData\\Folder 1\\", inputReader.readLine());
         assertEquals("221 Service closing control connection.", inputReader.readLine());
-        //String state = ftpServer.getClientSessionController(0).getSession().getState().getClass().getSimpleName();
-        //assertEquals(StateLoggedIn.class.getSimpleName(), state);
     }
 
     @Test
     public void testChangeWorkingDirectoryCasingReflectsActualFolder() throws IOException {
         sendLine("USER user1");
         sendLine("PASS pass1");
-        sendLine("CWD \"folder 1\"");
+        sendLine("CWD \"TestData/folder 1\"");
         sendLine("PWD");
         sendLine("quit");
         assertEquals("220 Welcome to Jay's FTP Server!", inputReader.readLine());
         assertEquals("331 User name okay, need password.", inputReader.readLine());
         assertEquals("230 User1 logged in, proceed.", inputReader.readLine());
         assertEquals("250 Requested file action okay, completed.", inputReader.readLine());
-        assertEquals("257 \\Folder 1\\", inputReader.readLine());
+        assertEquals("257 \\TestData\\Folder 1\\", inputReader.readLine());
         assertEquals("221 Service closing control connection.", inputReader.readLine());
-        //String state = ftpServer.getClientSessionController(0).getSession().getState().getClass().getSimpleName();
-        //assertEquals(StateLoggedIn.class.getSimpleName(), state);
     }
 
     @Test
@@ -577,16 +521,14 @@ public class FTPServerIntegrationTest {
         assertEquals("250 Requested file action okay, completed.", inputReader.readLine());
         assertEquals("257 \\NoSpaces\\", inputReader.readLine());
         assertEquals("221 Service closing control connection.", inputReader.readLine());
-        //String state = ftpServer.getClientSessionController(0).getSession().getState().getClass().getSimpleName();
-        //assertEquals(StateLoggedIn.class.getSimpleName(), state);
     }
 
     @Test
     public void testChangeWorkingDirectoryRelativeToRoot() throws IOException {
         sendLine("USER user1");
         sendLine("PASS pass1");
-        sendLine("CWD \"Folder 2\"");
-        sendLine("CWD \"\\Folder 1\\Subfolder 1\"");
+        sendLine("CWD \"TestData\\Folder 2\"");
+        sendLine("CWD \"\\TestData\\Folder 1\\Subfolder 1\"");
         sendLine("PWD");
         sendLine("quit");
         assertEquals("220 Welcome to Jay's FTP Server!", inputReader.readLine());
@@ -594,10 +536,92 @@ public class FTPServerIntegrationTest {
         assertEquals("230 User1 logged in, proceed.", inputReader.readLine());
         assertEquals("250 Requested file action okay, completed.", inputReader.readLine());
         assertEquals("250 Requested file action okay, completed.", inputReader.readLine());
-        assertEquals("257 \\Folder 1\\Subfolder 1\\", inputReader.readLine());
+        assertEquals("257 \\TestData\\Folder 1\\Subfolder 1\\", inputReader.readLine());
         assertEquals("221 Service closing control connection.", inputReader.readLine());
-        //String state = ftpServer.getClientSessionController(0).getSession().getState().getClass().getSimpleName();
-        //assertEquals(StateLoggedIn.class.getSimpleName(), state);
+    }
+
+    @Test
+    public void testListCommand() throws IOException {
+        assertEquals("220 Welcome to Jay's FTP Server!", readLine());
+        sendLine("USER user1");
+        assertEquals("331 User name okay, need password.", readLine());
+        sendLine("PASS pass1");
+        assertEquals("230 User1 logged in, proceed.", readLine());
+        sendLine("CWD TestData");
+        assertEquals("250 Requested file action okay, completed.", readLine());
+
+        //Open the data connection
+        sendLine("PASV");
+        String pasvResponse = readLine();
+        assertEquals("227 Entering Passive Mode (127,0,0,1,", pasvResponse.substring(0, 37));
+        String[] encodedPort = new String[2];
+        pasvResponse = pasvResponse.replace(")", "");   //Remove trailing parenthesis
+        System.arraycopy(pasvResponse.split(","), 4, encodedPort, 0, 2);
+        int port = Integer.parseInt(encodedPort[0]) * 256 + Integer.parseInt(encodedPort[1]);
+
+        sendLine("LIST");
+        dataConnectionFromServer = new Socket((String) null, port);
+        dataConnectionLineReader = new BufferedReader(new InputStreamReader(dataConnectionFromServer.getInputStream()));
+        ArrayList<String> linesOfData = new ArrayList();
+        String data = null;
+        while ((data = dataConnectionLineReader.readLine()) != null) {
+            linesOfData.add(data);
+        }
+        assertEquals("drw-r--r--\t1 0\t0\t0 12 31  2017 Folder 1", linesOfData.get(0));
+        assertEquals("drw-r--r--\t1 0\t0\t4096 12 31  2017 Folder 2", linesOfData.get(1));
+        assertEquals("drw-r--r--\t1 0\t0\t0 4 1  2018 Folder1", linesOfData.get(2));
+        assertEquals("drw-r--r--\t1 0\t0\t0 4 1  2018 Folder2", linesOfData.get(3));
+        assertEquals("drw-r--r--\t1 0\t0\t0 4 2  2018 TempDestination", linesOfData.get(4));
+        assertEquals("-rw-r--r--\t1 0\t0\t38 4 1  2018 textAtRootOfTestDirectory.txt", linesOfData.get(5));
+        assertEquals("226 Closing data connection.", readLine());
+
+        sendLine("quit");
+        assertEquals("221 Service closing control connection.", readLine());
+
+        dataConnectionLineReader.close();
+        dataConnectionFromServer.close();
+    }
+
+    @Test
+    public void testFileDownload_OneLayerDown_SameDirectory() throws IOException {
+        assertEquals("220 Welcome to Jay's FTP Server!", readLine());
+        sendLine("USER user1");
+        assertEquals("331 User name okay, need password.", readLine());
+        sendLine("PASS pass1");
+        assertEquals("230 User1 logged in, proceed.", readLine());
+        sendLine("CWD TestData");
+        assertEquals("250 Requested file action okay, completed.", readLine());
+
+        //Open the data connection.
+        sendLine("PASV");
+        String pasvResponse = readLine();
+        assertEquals("227 Entering Passive Mode (127,0,0,1,", pasvResponse.substring(0, 37));
+        String[] encodedPort = new String[2];
+        pasvResponse = pasvResponse.replace(")", "");   //Remove trailing parenthesis
+        System.arraycopy(pasvResponse.split(","), 4, encodedPort, 0, 2); //Extract encoded port
+        int port = Integer.parseInt(encodedPort[0]) * 256 + Integer.parseInt(encodedPort[1]); //Calculate port
+
+        sendLine("RETR textAtRootOfTestDirectory.txt");
+        dataConnectionFromServer = new Socket((String) null, port); //Null address is like loopback address
+        BufferedInputStream byteReader = new BufferedInputStream(dataConnectionFromServer.getInputStream());
+        File inboundTestFile = new File(ROOT_DIR_NAME + SEPARATOR +
+                "TestData" + SEPARATOR +
+                "TempDestination" + SEPARATOR +
+                "textAtRootOfTestDirectory.txt");
+        BufferedOutputStream fileWriter = new BufferedOutputStream(new FileOutputStream(inboundTestFile));
+        for (int i; (i = byteReader.read()) != -1; fileWriter.write(i));
+        byteReader.close();
+        fileWriter.close();
+        assertEquals("226 Closing data connection.", readLine());
+
+        sendLine("quit");
+        assertEquals("221 Service closing control connection.", readLine());
+
+        File sourceTestFile = new File(ROOT_DIR_NAME + SEPARATOR +
+                "TestData" + SEPARATOR + "textAtRootOfTestDirectory.txt");
+        TestCase.assertTrue(contentEquals(sourceTestFile, inboundTestFile));
+        inboundTestFile.delete();
+        dataConnectionFromServer.close();
     }
 
     //TODO: TDD for scenario of missing parameters e.g. "PASS " instead of "PASS password"
@@ -605,5 +629,9 @@ public class FTPServerIntegrationTest {
     private void sendLine(String txt) {
         outputWriter.print((txt + NEWLINE));
         outputWriter.flush();
+    }
+
+    private String readLine() throws IOException {
+        return inputReader.readLine();
     }
 }
