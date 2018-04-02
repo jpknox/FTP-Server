@@ -5,7 +5,7 @@ import com.jpknox.server.control.ControlConnectionController;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.concurrent.ExecutorService;
+import java.util.ArrayList;
 import java.util.concurrent.Executors;
 
 import static com.jpknox.server.utility.Logger.log;
@@ -16,12 +16,11 @@ import static com.jpknox.server.utility.Logger.log;
 public class FTPServer {
 
     public static final int STANDARD_CONTROL_PORT = 21;
-    public static final int MAXIMUM_INSTANCES = 50;
-    private ControlConnectionController[] controlConnectionControllers = new ControlConnectionController[MAXIMUM_INSTANCES];
+    private ArrayList<ControlConnectionController> allControllers = new ArrayList();
     private int controllerIndex = 0;
     private int clientCount = 0;
-    private final ExecutorService threadPool = Executors.newFixedThreadPool(MAXIMUM_INSTANCES);
     private boolean testOverride = false;
+    private ControlConnectionController newController;
 
     public FTPServer() {
         try {
@@ -32,24 +31,24 @@ public class FTPServer {
                 log("Waiting for client...");
                 Socket clientConnection = serverSocket.accept();
                 log(String.format("Controller number '%d' has a new connection on port '%d'.",
-                        controllerIndex++, clientConnection.getPort()));
-                threadPool.execute(new ControlConnectionController(clientConnection));
+                        ++controllerIndex, clientConnection.getPort()));
+                newController = new ControlConnectionController(clientConnection);
+                allControllers.add(newController);
+                Executors.callable(newController).call();
                 log("Client " + clientCount + " connection established.");
-                if (controllerIndex == MAXIMUM_INSTANCES) {
-                    log("Maximum number of client connections has been reached.");
-                    log("Shutting down connection listener.");
-                    break;
-                }
             }
         } catch (IOException e) {
             e.printStackTrace();
-            log("An error has occurred; server shutting down.");
+            log("An IOException has occurred. Server shutting down.");
+        } catch (Exception e) {
+            e.printStackTrace();
+            log("An Exception related to the callable ControlConnectionController has occurred. Server shutting down.");
         }
         log("server shutting down.");
     }
 
     public ControlConnectionController getClientSessionController(int id) {
-        return controlConnectionControllers[id];
+        return allControllers.get(id);
     }
 
     public void setTestOverride(boolean testOverride) {
