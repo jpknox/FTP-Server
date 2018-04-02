@@ -28,37 +28,37 @@ public class FTPServerIntegrationTest {
     private BufferedReader inputReader;
     private IntegrationTestWrapper integrationTestWrapper;
     private Thread integrationTestWrapperThread;
-    boolean setUpIsDone;
+    private static boolean setUpIsDone;
+    private Socket controlConnectionToServer;
 
     @Before
     public void setup() throws IOException {
-        if (setUpIsDone) {
-            return;
+        if (!setUpIsDone) {
+            integrationTestWrapper = new IntegrationTestWrapper();
+            integrationTestWrapperThread = new Thread(integrationTestWrapper);
+            integrationTestWrapperThread.start();
         }
-        integrationTestWrapper = new IntegrationTestWrapper();
-        integrationTestWrapperThread = new Thread(integrationTestWrapper);
-        integrationTestWrapperThread.start();
 
-        Socket socket = new Socket();
+        controlConnectionToServer = new Socket();
         InetSocketAddress inetSocketAddress = new InetSocketAddress("127.0.0.1", 21);
-        socket.connect(inetSocketAddress);
+        controlConnectionToServer.connect(inetSocketAddress);
 
         //To send data to the server
-        outputWriter = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())));
+        outputWriter = new PrintWriter(new BufferedWriter(new OutputStreamWriter(controlConnectionToServer.getOutputStream())));
 
         //To read data sent by the server
-        inputReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        inputReader = new BufferedReader(new InputStreamReader(controlConnectionToServer.getInputStream()));
 
         setUpIsDone = true;
     }
 
     @After
     public void teardown() throws IOException {
-        //integrationTestWrapper.getFtpServer().setTestOveride(true);
         outputWriter.close();
         outputWriter = null;
         inputReader.close();
         inputReader = null;
+        controlConnectionToServer.close();
     }
 
     @Test

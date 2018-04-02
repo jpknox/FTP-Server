@@ -1,0 +1,1 @@
+textAtRootOfTestDirectory. Text data.

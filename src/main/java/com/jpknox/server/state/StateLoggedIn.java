@@ -114,8 +114,6 @@ public class StateLoggedIn extends AbstractSessionState {
         } else {
             getClientCommunicator().write(FTPResponseFactory.createResponse(550));
         }
-
-
     }
 
     @Override

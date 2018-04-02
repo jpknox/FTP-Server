@@ -54,26 +54,6 @@ public class FTPLocalFileDataStore implements DataStore {
         return null;
     }
 
-    //TODO: Integration test
-//    @Override
-//    public File store(String Url, InputStream inputStream) {
-//        if (exists(Url)) return null;
-//        File file = new File(rootDir.getPath() + File.separatorChar + Url);
-//        log(file.toString());
-//        try {
-//            file.createNewFile();
-//            FileOutputStream fos = new FileOutputStream(file);
-//            BufferedInputStream bis = new BufferedInputStream(inputStream);
-//            byte[] buffer = new byte[8192];
-//            for (int len; (len = bis.read(buffer)) != -1; fos.write(buffer, 0, len));
-//            fos.close();
-//            bis.close();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        return file;
-//    }
-
     @Override
     public FileQueue store(String fileName) {
         if (exists(fileName)) {
