@@ -540,6 +540,23 @@ public class FTPServerIntegrationTest {
     }
 
     @Test
+    public void testChangeWorkingDirectoryRelativeToRoot_NoQuotes_FolderHasSpaceInName() throws IOException {
+        sendLine("USER user1");
+        sendLine("PASS pass1");
+        sendLine("CWD TestData\\Folder 2");
+        sendLine("CWD \\TestData\\Folder 1\\Subfolder 1");
+        sendLine("PWD");
+        sendLine("quit");
+        assertEquals("220 Welcome to Jay's FTP Server!", inputReader.readLine());
+        assertEquals("331 User name okay, need password.", inputReader.readLine());
+        assertEquals("230 User1 logged in, proceed.", inputReader.readLine());
+        assertEquals("250 Requested file action okay, completed.", inputReader.readLine());
+        assertEquals("250 Requested file action okay, completed.", inputReader.readLine());
+        assertEquals("257 \\TestData\\Folder 1\\Subfolder 1\\", inputReader.readLine());
+        assertEquals("221 Service closing control connection.", inputReader.readLine());
+    }
+
+    @Test
     public void testListCommand() throws IOException {
         assertEquals("220 Welcome to Jay's FTP Server!", readLine());
         sendLine("USER user1");
