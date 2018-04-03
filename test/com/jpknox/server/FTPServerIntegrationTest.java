@@ -1,5 +1,4 @@
 package com.jpknox.server;
-import junit.framework.TestCase;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -645,6 +644,32 @@ public class FTPServerIntegrationTest {
                 "aTestFolder");
         assertTrue(newlyCreatedFolder.isDirectory());
         newlyCreatedFolder.delete();
+
+        sendLine("quit");
+        assertEquals("221 Service closing control connection.", readLine());
+    }
+
+    @Test
+    public void testDeleteFolder() throws IOException {
+        File shouldBeDeletedByTest_Folder =
+                new File(ROOT_DIR_NAME + SEPARATOR +
+                        "TestData" + SEPARATOR +
+                        "TempDestination" + SEPARATOR +
+                        "shouldBeDeletedByTest_Folder");
+        shouldBeDeletedByTest_Folder.mkdir();
+        assertTrue(shouldBeDeletedByTest_Folder.isDirectory());
+        
+        assertEquals("220 Welcome to Jay's FTP Server!", readLine());
+        sendLine("USER user1");
+        assertEquals("331 User name okay, need password.", readLine());
+        sendLine("PASS pass1");
+        assertEquals("230 User1 logged in, proceed.", readLine());
+        sendLine("CWD TestData/TempDestination");
+        assertEquals("250 Requested file action okay, completed.", readLine());
+
+        sendLine("RMD shouldBeDeletedByTest_Folder");
+        assertEquals("250 Requested file action okay, completed.", readLine());
+        assertFalse(shouldBeDeletedByTest_Folder.isDirectory());
 
         sendLine("quit");
         assertEquals("221 Service closing control connection.", readLine());
