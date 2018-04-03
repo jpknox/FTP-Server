@@ -568,11 +568,11 @@ public class FTPServerIntegrationTest {
             linesOfData.add(data);
         }
         assertEquals("drw-r--r--\t1 0\t0\t0 12 31  2017 Folder 1", linesOfData.get(0));
-        assertEquals("drw-r--r--\t1 0\t0\t4096 12 31  2017 Folder 2", linesOfData.get(1));
-        assertEquals("drw-r--r--\t1 0\t0\t0 4 1  2018 Folder1", linesOfData.get(2));
-        assertEquals("drw-r--r--\t1 0\t0\t0 4 1  2018 Folder2", linesOfData.get(3));
+        assertEquals("drw-r--r--\t1 0\t0\t0 4 3  2018 Folder 2", linesOfData.get(1));
+        assertEquals("drw-r--r--\t1 0\t0\t0 4 3  2018 Folder1", linesOfData.get(2));
+        assertEquals("drw-r--r--\t1 0\t0\t0 4 3  2018 Folder2", linesOfData.get(3));
         assertEquals("drw-r--r--\t1 0\t0\t0 4 2  2018 TempDestination", linesOfData.get(4));
-        assertEquals("-rw-r--r--\t1 0\t0\t38 4 1  2018 textAtRootOfTestDirectory.txt", linesOfData.get(5));
+        assertEquals("-rw-r--r--\t1 0\t0\t38 4 3  2018 textAtRootOfTestDirectory.txt", linesOfData.get(5));
         assertEquals("226 Closing data connection.", readLine());
 
         sendLine("quit");
@@ -583,7 +583,7 @@ public class FTPServerIntegrationTest {
     }
 
     @Test
-    public void testFileDownload_OneLayerDown_SameDirectory() throws IOException {
+    public void testFileDownload_SameDirectory() throws IOException {
         assertEquals("220 Welcome to Jay's FTP Server!", readLine());
         sendLine("USER user1");
         assertEquals("331 User name okay, need password.", readLine());
@@ -604,7 +604,8 @@ public class FTPServerIntegrationTest {
         sendLine("RETR textAtRootOfTestDirectory.txt");
         dataConnectionFromServer = new Socket((String) null, port); //Null address is like loopback address
         BufferedInputStream byteReader = new BufferedInputStream(dataConnectionFromServer.getInputStream());
-        File inboundTestFile = new File(ROOT_DIR_NAME + SEPARATOR +
+        File inboundTestFile =
+                new File(ROOT_DIR_NAME + SEPARATOR +
                 "TestData" + SEPARATOR +
                 "TempDestination" + SEPARATOR +
                 "textAtRootOfTestDirectory.txt");
@@ -619,9 +620,34 @@ public class FTPServerIntegrationTest {
 
         File sourceTestFile = new File(ROOT_DIR_NAME + SEPARATOR +
                 "TestData" + SEPARATOR + "textAtRootOfTestDirectory.txt");
-        TestCase.assertTrue(contentEquals(sourceTestFile, inboundTestFile));
+        assertTrue(contentEquals(sourceTestFile, inboundTestFile));
         inboundTestFile.delete();
         dataConnectionFromServer.close();
+    }
+
+    @Test
+    public void testCreateNewFolder() throws IOException {
+        assertEquals("220 Welcome to Jay's FTP Server!", readLine());
+        sendLine("USER user1");
+        assertEquals("331 User name okay, need password.", readLine());
+        sendLine("PASS pass1");
+        assertEquals("230 User1 logged in, proceed.", readLine());
+        sendLine("CWD TestData/TempDestination");
+        assertEquals("250 Requested file action okay, completed.", readLine());
+
+        sendLine("MKD aTestFolder");
+        assertEquals("250 Requested file action okay, completed.", readLine());
+
+        File newlyCreatedFolder =
+                new File(ROOT_DIR_NAME + SEPARATOR +
+                "TestData" + SEPARATOR +
+                "TempDestination" + SEPARATOR +
+                "aTestFolder");
+        assertTrue(newlyCreatedFolder.isDirectory());
+        newlyCreatedFolder.delete();
+
+        sendLine("quit");
+        assertEquals("221 Service closing control connection.", readLine());
     }
 
     //TODO: TDD for scenario of missing parameters e.g. "PASS " instead of "PASS password"
